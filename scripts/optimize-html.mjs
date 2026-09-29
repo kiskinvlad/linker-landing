@@ -26,6 +26,11 @@ const FACES = {
   en: [
     /^bricolage-grotesque-latin-wght-normal-[\w-]+\.woff2$/, // headings, incl. every h1
     /^ibm-plex-sans-latin-400-normal-[\w-]+\.woff2$/, // body copy
+    // Buttons (the hero CTAs). Without it, CI's Linux fallback font set the CTAs
+    // wide enough to wrap to a second row, then Plex 600 arrived and the hero
+    // mockup below jumped up twice: CLS 0.156 on / (not reproducible on Windows,
+    // whose fallback happened to fit).
+    /^ibm-plex-sans-latin-600-normal-[\w-]+\.woff2$/,
   ],
   uk: [
     /^ibm-plex-sans-cyrillic-600-normal-[\w-]+\.woff2$/, // headings
