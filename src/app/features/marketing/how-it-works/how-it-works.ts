@@ -90,15 +90,15 @@ import { GUIDE_STEPS } from './how-it-works.content';
       height: 48px;
       border-radius: 50%;
       background: var(--accent);
-      color: var(--accent-ink);
+      color: var(--on-accent);
       font: 600 1.125rem var(--font-mono);
       box-shadow: 0 0 0 6px var(--bg);
     }
     .guide__card {
       padding: 24px 28px;
-      border: 1px solid var(--line);
+      border: 1px solid var(--border);
       border-radius: var(--radius-lg);
-      background: var(--panel);
+      background: var(--surface);
     }
     .guide__card h2 {
       font-size: 1.5rem;

@@ -14,9 +14,9 @@
 
 .card {
   padding: 24px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  background: var(--panel);
+  background: var(--surface);
   transition:
     transform 0.25s var(--ease-out),
     box-shadow 0.25s var(--ease-out),
@@ -25,8 +25,8 @@
 
 .card:hover {
   transform: translateY(-3px);
-  box-shadow: var(--shadow);
-  border-color: var(--line-strong);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-strong);
 }
 
 .card h3 {
@@ -64,7 +64,7 @@
 /* ---- Trust strip ---- */
 
 .trust {
-  border-block: 1px solid var(--line);
+  border-block: 1px solid var(--border);
 }
 
 .trust__list {
@@ -91,8 +91,8 @@
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--ok) 15%, transparent);
-  color: var(--ok);
+  background: color-mix(in srgb, var(--success) 15%, transparent);
+  color: var(--success);
   font-size: 0.75rem;
   font-weight: 700;
 }
@@ -122,7 +122,7 @@
   display: flex;
   gap: 20px;
   padding-block: 24px;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--border);
 }
 
 .benefit:first-child {
@@ -166,7 +166,7 @@
   border-radius: var(--radius);
   background:
     radial-gradient(circle at 1px 1px, var(--grid-dot) 1px, transparent 0) 0 0 / 14px 14px,
-    var(--bg-soft);
+    var(--bg-2);
 }
 
 .m-line,
@@ -175,7 +175,7 @@
   display: block;
   height: 10px;
   border-radius: 5px;
-  background: var(--line-strong);
+  background: var(--border-strong);
 }
 
 .m-line--lg {
@@ -191,8 +191,8 @@
 
 .m-field {
   height: 18px;
-  background: var(--panel);
-  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
 }
 
 .m-btn {
@@ -241,8 +241,8 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: var(--panel);
-  border: 1px solid var(--line);
+  background: var(--surface);
+  border: 1px solid var(--border);
   font-style: normal;
   font-size: 1rem;
 }

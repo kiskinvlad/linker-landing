@@ -32,6 +32,10 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      # The portal imports @kiskinvlad/linker-tokens from the workspace; its dist/ is
+      # generated, not committed, and pnpm does not run workspace `prepare` on install.
+      - run: pnpm tokens
+
       - run: pnpm format:check
 
       - run: pnpm lint
@@ -76,6 +80,13 @@ jobs:
             # re-renders it: a layout jump (i18n blocks do this without withI18nSupport).
             if grep -q 'ngskiphydration' "$OUT/$page"; then
               echo "::error file=$OUT/$page::prerendered page skips hydration"
+              exit 1
+            fi
+            # The dark palette must be in the inlined critical CSS, or dark-mode
+            # visitors get a light first paint and then a flash. The inliner drops
+            # selectors it can't evaluate (:lang(), :root:not(...)) without a word.
+            if ! grep -q 'prefers-color-scheme:dark){:root{--bg' "$OUT/$page"; then
+              echo "::error file=$OUT/$page::dark palette missing from the critical CSS"
               exit 1
             fi
           done

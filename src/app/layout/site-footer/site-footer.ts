@@ -60,8 +60,8 @@ import { Logo } from '../../shared/ui/logo';
   styles: `
     .footer {
       padding-top: 64px;
-      background: var(--bg-soft);
-      border-top: 1px solid var(--line);
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
       color: var(--ink-2);
       font-size: 0.9375rem;
     }
@@ -105,7 +105,7 @@ import { Logo } from '../../shared/ui/logo';
     .footer__base {
       margin-top: 56px;
       padding-block: 24px;
-      border-top: 1px solid var(--line);
+      border-top: 1px solid var(--border);
       font-size: 0.875rem;
       color: var(--ink-3);
     }

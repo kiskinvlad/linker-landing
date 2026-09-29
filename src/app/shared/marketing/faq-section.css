@@ -5,7 +5,7 @@
 }
 
 .faq__item {
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--border);
 }
 
 .faq__item summary {
@@ -33,7 +33,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: var(--bg-soft);
+  background: var(--bg-2);
   color: var(--accent-text);
   font: 400 1.25rem var(--font-sans);
   transition: transform 0.25s var(--ease-out);
