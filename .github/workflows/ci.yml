@@ -36,6 +36,22 @@ jobs:
 
       - run: pnpm lint
 
+      # Every translation has exactly the source's labels and placeholders.
+      # The build already fails on a missing label; this also catches stale ones
+      # and broken placeholders, which the build would render wrong.
+      - run: node scripts/check-vocabulary.mjs
+
+      # The English source vocabulary is generated from the code. If a label was
+      # added, renamed or removed without re-running `pnpm i18n:extract`, this diff
+      # is where it shows.
+      - name: Source vocabulary matches the code
+        run: |
+          pnpm exec ng extract-i18n
+          git diff --exit-code -- src/locale/messages.json || {
+            echo "::error file=src/locale/messages.json::stale — run pnpm i18n:extract and commit"
+            exit 1
+          }
+
       # Also writes sitemap.xml/robots.txt, and fails if no prerendered page
       # carries a canonical URL — i.e. if prerendering silently produced nothing.
       - run: pnpm build
@@ -49,10 +65,17 @@ jobs:
         run: |
           set -eu
           OUT=dist/kitlet-portal/browser
-          for page in index.html pricing/index.html how-it-works/index.html; do
+          for page in index.html pricing/index.html how-it-works/index.html \
+            ua/index.html ua/pricing/index.html ua/how-it-works/index.html; do
             n=$(grep -o '<h1' "$OUT/$page" | wc -l | tr -d ' ')
             if [ "$n" != "1" ]; then
               echo "::error file=$OUT/$page::expected exactly one prerendered <h1>, found $n"
+              exit 1
+            fi
+            # Skipped hydration means the browser discards the prerendered DOM and
+            # re-renders it: a layout jump (i18n blocks do this without withI18nSupport).
+            if grep -q 'ngskiphydration' "$OUT/$page"; then
+              echo "::error file=$OUT/$page::prerendered page skips hydration"
               exit 1
             fi
           done

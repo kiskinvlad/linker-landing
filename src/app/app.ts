@@ -10,7 +10,7 @@ import { SiteHeader } from './layout/site-header/site-header';
   imports: [RouterOutlet, SiteHeader, SiteFooter],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <a class="skip-link" href="#main">Skip to content</a>
+    <a class="skip-link" href="#main" i18n="@@nav.skipToContent">Skip to content</a>
     <kit-site-header />
     <main id="main" tabindex="-1">
       <router-outlet />

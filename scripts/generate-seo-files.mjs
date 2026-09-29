@@ -39,14 +39,21 @@ ${urls.map((u) => `  <url><loc>${u}</loc><lastmod>${today}</lastmod></url>`).joi
 </urlset>
 `;
 
+// Private pages exist in every language build. Keep in sync with
+// src/app/core/i18n/locales.ts (prefixes).
+const LANGUAGE_PREFIXES = ['', '/ua'];
+const PRIVATE = [
+  '/account',
+  '/login',
+  '/register',
+  '/forgot-password',
+  '/reset-password',
+  '/verify-email',
+];
+
 const robots = `User-agent: *
 Disallow: /editor/
-Disallow: /account
-Disallow: /login
-Disallow: /register
-Disallow: /forgot-password
-Disallow: /reset-password
-Disallow: /verify-email
+${LANGUAGE_PREFIXES.flatMap((prefix) => PRIVATE.map((p) => `Disallow: ${prefix}${p}`)).join('\n')}
 
 Sitemap: ${origin}/sitemap.xml
 `;

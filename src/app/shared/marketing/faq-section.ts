@@ -18,7 +18,7 @@ export interface FaqItem {
     <section id="faq" class="section" aria-labelledby="faq-title">
       <div class="container faq">
         <div class="section-head" kitReveal>
-          <p class="eyebrow">FAQ</p>
+          <p class="eyebrow" i18n="@@footer.faq">FAQ</p>
           <h2 id="faq-title">{{ heading() }}</h2>
         </div>
 
@@ -37,5 +37,5 @@ export interface FaqItem {
 })
 export class FaqSection {
   readonly items = input.required<readonly FaqItem[]>();
-  readonly heading = input('Questions, answered');
+  readonly heading = input($localize`:@@faq.default.title:Questions, answered`);
 }

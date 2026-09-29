@@ -10,7 +10,9 @@
     "format": "prettier --write \"src/**/*.{ts,html,css}\" \"scripts/**/*.mjs\"",
     "lint": "oxlint --type-aware src/ scripts/",
     "format:check": "prettier --check \"src/**/*.{ts,html,css}\" \"scripts/**/*.mjs\"",
-    "lighthouse": "lhci autorun"
+    "lighthouse": "lhci autorun",
+    "start:ua": "ng serve --port 4000 --configuration uk",
+    "i18n:extract": "ng extract-i18n && node scripts/check-vocabulary.mjs"
   },
   "private": true,
   "packageManager": "pnpm@12.5.1",
@@ -33,6 +35,7 @@
     "@angular/build": "^22.2.0",
     "@angular/cli": "^22.2.0",
     "@angular/compiler-cli": "^22.2.0",
+    "@angular/localize": "^22.2.0",
     "@lhci/cli": "0.15.1",
     "@types/node": "^22.12.0",
     "jsdom": "^30.0.0",

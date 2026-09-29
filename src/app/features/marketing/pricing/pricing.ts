@@ -13,9 +13,9 @@ import { INCLUDED, PRICING_FAQ } from './pricing.content';
   template: `
     <header class="page-hero">
       <div class="container">
-        <p class="eyebrow">Pricing</p>
-        <h1>Start free. Upgrade when it pays for itself.</h1>
-        <p>
+        <p class="eyebrow" i18n="@@nav.pricing">Pricing</p>
+        <h1 i18n="@@pricing.title">Start free. Upgrade when it pays for itself.</h1>
+        <p i18n="@@pricing.lead">
           The Free plan is free for good, not a trial. Build, publish and measure a real offer
           before you spend anything.
         </p>
@@ -25,7 +25,7 @@ import { INCLUDED, PRICING_FAQ } from './pricing.content';
     <section class="section plans-section" aria-labelledby="plans-title">
       <div class="container">
         <!-- Keeps the outline h1 → h2 → h3; the plan cards' names are h3. -->
-        <h2 id="plans-title" class="visually-hidden">Plans</h2>
+        <h2 id="plans-title" class="visually-hidden" i18n="@@pricing.plansHeading">Plans</h2>
         <kit-plan-cards />
       </div>
     </section>
@@ -33,8 +33,10 @@ import { INCLUDED, PRICING_FAQ } from './pricing.content';
     <section class="section section--soft" aria-labelledby="included-title">
       <div class="container">
         <div class="section-head section-head--center" kitReveal>
-          <p class="eyebrow">Every plan</p>
-          <h2 id="included-title">Included on every plan, Free too</h2>
+          <p class="eyebrow" i18n="@@pricing.included.eyebrow">Every plan</p>
+          <h2 id="included-title" i18n="@@pricing.included.title">
+            Included on every plan, Free too
+          </h2>
         </div>
         <ul class="included">
           @for (item of included; track item.title; let i = $index) {
@@ -48,8 +50,8 @@ import { INCLUDED, PRICING_FAQ } from './pricing.content';
     </section>
 
     <kit-cocreate-band />
-    <kit-faq-section [items]="faq" heading="Pricing questions" />
-    <kit-cta-band heading="Your first offer is free." />
+    <kit-faq-section [items]="faq" i18n-heading="@@pricing.faq.title" heading="Pricing questions" />
+    <kit-cta-band i18n-heading="@@pricing.cta.title" heading="Your first offer is free." />
   `,
   styles: `
     .plans-section {

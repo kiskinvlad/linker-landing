@@ -2,6 +2,39 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <!--
+      LANG_REDIRECT: picks the visitor's language on the English (root) build, before
+      anything renders. In order:
+        1. an explicit choice from the language switcher (kit_lang cookie) wins;
+        2. otherwise the browser's preferred languages, first supported one wins;
+        3. otherwise English stays.
+      M3 adds the signed-in account's saved language ahead of step 2; it needs the
+      API session, which this static page can't see before rendering.
+      Crawlers and Lighthouse are never redirected, so every language gets indexed
+      and audited at its own URL. Keep the list in sync with core/i18n/locales.ts.
+    -->
+    <script>
+      (function () {
+        try {
+          if (document.documentElement.lang !== 'en') return;
+          var ua = navigator.userAgent;
+          if (navigator.webdriver || /bot|crawl|spider|slurp|lighthouse|headless/i.test(ua)) return;
+          var prefix = { uk: '/ua' };
+          var go = function (lang) {
+            if (!prefix[lang]) return false;
+            location.replace(prefix[lang] + location.pathname + location.search + location.hash);
+            return true;
+          };
+          var chosen = document.cookie.match(/(?:^|;\s*)kit_lang=([\w-]+)/);
+          if (chosen) return void go(chosen[1]);
+          var langs = navigator.languages || [navigator.language || ''];
+          for (var i = 0; i < langs.length; i++) {
+            var lang = String(langs[i]).toLowerCase().split('-')[0];
+            if (lang === 'en' || go(lang)) return;
+          }
+        } catch (e) {}
+      })();
+    </script>
     <title>Kitlet</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />

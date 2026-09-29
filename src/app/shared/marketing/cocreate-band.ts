@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { APP_IDENTITY } from '../../core/config/app-identity';
 import { RevealDirective } from '../ui/reveal.directive';
 
 /**
@@ -14,20 +15,31 @@ import { RevealDirective } from '../ui/reveal.directive';
       <div class="container">
         <div class="cocreate__card" kitReveal>
           <div>
-            <p class="eyebrow cocreate__eyebrow">Build Kitlet with us</p>
-            <h2 id="cocreate-title">
+            <p class="eyebrow cocreate__eyebrow" i18n="@@cocreate.eyebrow">
+              Build {{ identity.productName }} with us
+            </p>
+            <h2 id="cocreate-title" i18n="@@cocreate.title">
               Suggest a feature. If it ships in a paid plan, it’s yours for free.
             </h2>
-            <p class="cocreate__body">
+            <p class="cocreate__body" i18n="@@cocreate.body">
               Tell us what would help you sell more. If we build it as a paid-plan feature, we
               unlock it on your account at no cost, on any plan, for as long as your account is
               active. Everything else we ship reaches everyone anyway.
             </p>
           </div>
-          <ol class="cocreate__flow" aria-label="How the idea reward works">
-            <li><span>1</span> You suggest it</li>
-            <li><span>2</span> We build it</li>
-            <li><span>3</span> It’s unlocked for you</li>
+          <ol
+            class="cocreate__flow"
+            i18n-aria-label="@@cocreate.flowLabel"
+            aria-label="How the idea reward works"
+          >
+            <li>
+              <span>1</span> <ng-container i18n="@@cocreate.step1">You suggest it</ng-container>
+            </li>
+            <li><span>2</span> <ng-container i18n="@@cocreate.step2">We build it</ng-container></li>
+            <li>
+              <span>3</span>
+              <ng-container i18n="@@cocreate.step3">It’s unlocked for you</ng-container>
+            </li>
           </ol>
         </div>
       </div>
@@ -35,4 +47,6 @@ import { RevealDirective } from '../ui/reveal.directive';
   `,
   styleUrl: './cocreate-band.css',
 })
-export class CocreateBand {}
+export class CocreateBand {
+  protected readonly identity = inject(APP_IDENTITY);
+}

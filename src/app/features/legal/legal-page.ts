@@ -14,26 +14,26 @@ import { LegalDoc } from './legal.content';
     @if (doc(); as doc) {
       <header class="page-hero">
         <div class="container">
-          <p class="eyebrow">Legal</p>
+          <p class="eyebrow" i18n="@@footer.legal">Legal</p>
           <h1>{{ doc.title }}</h1>
         </div>
       </header>
 
       <section class="section legal">
         <div class="container prose">
-          <p class="legal__notice" role="note">
+          <p class="legal__notice" role="note" i18n="@@legal.notice">
             This document is being prepared and will be published here before
             {{ identity.productName }} launches.
           </p>
 
-          <h2>What it will cover</h2>
+          <h2 i18n="@@legal.coversTitle">What it will cover</h2>
           <ul>
             @for (item of doc.covers; track item) {
               <li>{{ item }}</li>
             }
           </ul>
 
-          <p class="legal__back"><a routerLink="/">Back to home</a></p>
+          <p class="legal__back"><a routerLink="/" i18n="@@common.backHome">Back to home</a></p>
         </div>
       </section>
     }

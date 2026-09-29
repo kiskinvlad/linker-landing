@@ -9,10 +9,19 @@
  * Lighthouse LCP dependency; dropping the two 500 weights bought ~270 ms of LCP.
  * Don't declare font-weight: 500 — nothing backs it.
  */
+/*
+ * Per-weight files (400.css), not per-subset ones (latin-400.css): only the former
+ * give each subset its unicode-range. Without it every face claims every
+ * character, so English pages downloaded the Cyrillic files and /ua/ the Latin
+ * ones, ~40 kB each way. With it a page fetches only the subsets it renders.
+ *
+ * Bricolage Grotesque has no Cyrillic, so /ua/ sets headings in IBM Plex Sans
+ * throughout (see :lang(uk) below) rather than mixing two faces per heading.
+ */
 @import '@fontsource-variable/bricolage-grotesque/wght.css';
-@import '@fontsource/ibm-plex-sans/latin-400.css';
-@import '@fontsource/ibm-plex-sans/latin-600.css';
-@import '@fontsource/ibm-plex-mono/latin-400.css';
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/600.css';
+@import '@fontsource/ibm-plex-mono/400.css';
 
 :root {
   /* Brand */
@@ -64,6 +73,16 @@
   color-scheme: light dark;
 }
 
+/* Ukrainian: headings in IBM Plex Sans. Bricolage would only cover the odd Latin
+   word ("Pro", "Kitlet") inside otherwise-Cyrillic headings, so a heading would mix
+   two typefaces, and every /ua/ page would pay for a 41 kB font it barely uses.
+   An attribute selector, not :lang(uk): the build's critical-CSS inliner (Beasties)
+   drops :lang(), so /ua/ first painted with the English stack and re-wrapped its
+   h1 when the full stylesheet arrived — a 0.107 CLS on /ua/pricing. */
+html[lang='uk'] {
+  --font-display: 'IBM Plex Sans', system-ui, sans-serif;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #0d1220;
@@ -78,7 +97,8 @@
     --accent: #5b8ef5;
     --accent-ink: #0d1220;
     --accent-soft: rgb(91 142 245 / 0.14);
-    --accent-text: var(--accent);
+    /* --accent is 4.2:1 on the tinted badge background; this is ~5.4:1. */
+    --accent-text: #7aa4f7;
     --spark-text: var(--spark);
     --spark-soft: rgb(255 107 53 / 0.14);
     --ok: #3ccf85;
