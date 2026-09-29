@@ -15,6 +15,9 @@ pnpm test      # Vitest unit tests
 pnpm format
 ```
 
-`linker.com` in `robots.txt`, `sitemap.xml` and `APP_IDENTITY`
-(`src/app/core/config/app-identity.ts`) is a placeholder until the Kitlet domain is
-registered (plan milestone M8).
+`pnpm build` also writes `sitemap.xml` and `robots.txt`
+(`scripts/generate-seo-files.mjs`), built from the canonical URL of each
+prerendered page, so `noindex` pages are left out automatically.
+
+The domain comes from `APP_IDENTITY` (`src/app/core/config/app-identity.ts`) and is
+the `linker.com` placeholder until the Kitlet domain is registered (plan milestone M8).

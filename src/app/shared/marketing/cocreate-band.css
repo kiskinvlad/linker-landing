@@ -1,0 +1,65 @@
+.cocreate {
+  padding-block: clamp(48px, 6vw, 80px);
+}
+
+.cocreate__card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 40px;
+  align-items: center;
+  padding: clamp(28px, 5vw, 56px);
+  border-radius: 28px;
+  background:
+    radial-gradient(420px 260px at 100% 0%, rgb(255 107 53 / 0.25), transparent 70%), var(--night);
+  color: #d5dbea;
+}
+
+.cocreate__card h2 {
+  color: #fff;
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.cocreate__eyebrow {
+  color: var(--spark);
+}
+
+.cocreate__body {
+  margin-top: 16px;
+  max-width: 560px;
+}
+
+.cocreate__flow {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cocreate__flow li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  border-radius: 14px;
+  background: rgb(255 255 255 / 0.04);
+  color: #fff;
+  font-weight: 500;
+}
+
+.cocreate__flow span {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--spark);
+  font: 600 0.875rem var(--font-mono);
+}
+
+@media (max-width: 860px) {
+  .cocreate__card {
+    grid-template-columns: 1fr;
+  }
+}

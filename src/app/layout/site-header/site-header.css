@@ -50,6 +50,11 @@
     background-color 0.15s;
 }
 
+.header__links a.is-active {
+  color: var(--ink);
+  background: var(--bg-soft);
+}
+
 .header__links a:hover,
 .header__login:hover {
   color: var(--ink);

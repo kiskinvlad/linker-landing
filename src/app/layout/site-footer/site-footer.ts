@@ -18,8 +18,8 @@ import { Logo } from '../../shared/ui/logo';
         <nav aria-label="Product">
           <h2 class="footer__title">Product</h2>
           <ul>
-            <li><a routerLink="/" fragment="how-it-works">How it works</a></li>
-            <li><a routerLink="/" fragment="pricing">Pricing</a></li>
+            <li><a routerLink="/how-it-works">How it works</a></li>
+            <li><a routerLink="/pricing">Pricing</a></li>
             <li><a routerLink="/" fragment="faq">FAQ</a></li>
             <li><a [href]="identity.editorPath">Open editor</a></li>
           </ul>
@@ -36,9 +36,10 @@ import { Logo } from '../../shared/ui/logo';
         <nav aria-label="Legal">
           <h2 class="footer__title">Legal</h2>
           <ul>
-            <li><a href="/legal/terms">Terms</a></li>
-            <li><a href="/legal/privacy">Privacy</a></li>
-            <li><a href="/legal/cookies">Cookies</a></li>
+            <li><a routerLink="/legal/terms">Terms</a></li>
+            <li><a routerLink="/legal/privacy">Privacy</a></li>
+            <li><a routerLink="/legal/cookies">Cookies</a></li>
+            <li><a routerLink="/legal/feedback-program">Feedback program</a></li>
           </ul>
         </nav>
       </div>

@@ -59,7 +59,7 @@ export const BENEFITS = [
   },
   {
     title: 'History and instant rollback',
-    body: 'Every save is a version. Went live with a typo? Roll back to the previous version in one click.',
+    body: 'Every save becomes a version. Went live with a typo? Roll back to the previous version in one click.',
   },
   {
     title: 'Analytics and notifications',
@@ -90,23 +90,6 @@ export const USE_CASES = [
   },
 ] as const;
 
-/**
- * Free plan limits, mirrored from the `free` row seeded by the backend migration
- * `AddPlansAndSubscriptions`. Plan §6 wants these read from `GET /billing/plans`
- * at build time; that endpoint arrives with backend Phase 5.
- */
-export const FREE_PLAN = {
-  name: 'Free',
-  price: '$0',
-  features: [
-    '1 live widget',
-    '10,000 widget views a month',
-    '10 saved versions with one-click rollback',
-    'Works on any website',
-    'Paid features you suggest, unlocked for free if we ship them',
-  ],
-} as const;
-
 export const FAQ = [
   {
     q: 'Do I need a developer?',
@@ -126,7 +109,7 @@ export const FAQ = [
   },
   {
     q: 'What if I publish a mistake?',
-    a: 'Every save is kept as a version. Roll back to any earlier version with one click and it’s live again straight away.',
+    a: 'Your saves are kept as versions — 10 per widget on the Free plan. Roll back to any of them with one click and it’s live again straight away.',
   },
   {
     q: 'How does the idea reward work?',

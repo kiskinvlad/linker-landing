@@ -1,3 +1,4 @@
+import { faqPage, softwareApplication } from '../../../core/seo/json-ld';
 import { RouteSeo } from '../../../core/seo/seo.service';
 import { FAQ } from './home.content';
 
@@ -21,23 +22,7 @@ export const HOME_SEO: RouteSeo = {
       name: productName,
       url: siteUrl,
     },
-    {
-      '@context': 'https://schema.org',
-      '@type': 'SoftwareApplication',
-      name: productName,
-      applicationCategory: 'BusinessApplication',
-      operatingSystem: 'Web',
-      url: siteUrl,
-      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD', name: 'Free' },
-    },
-    {
-      '@context': 'https://schema.org',
-      '@type': 'FAQPage',
-      mainEntity: FAQ.map((item) => ({
-        '@type': 'Question',
-        name: item.q,
-        acceptedAnswer: { '@type': 'Answer', text: item.a },
-      })),
-    },
+    softwareApplication(siteUrl, productName),
+    faqPage(FAQ),
   ],
 };
