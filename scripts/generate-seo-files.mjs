@@ -29,7 +29,7 @@ if (canonicals.size === 0) {
   process.exit(1);
 }
 
-const urls = [...canonicals].sort();
+const urls = [...canonicals].sort((a, b) => a.localeCompare(b));
 const origin = new URL(urls[0]).origin;
 const today = new Date().toISOString().slice(0, 10);
 

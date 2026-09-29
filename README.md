@@ -12,8 +12,12 @@ pnpm install
 pnpm start     # dev server on http://localhost:4000
 pnpm build     # static output in dist/kitlet-portal/browser
 pnpm test      # Vitest unit tests
-pnpm format
+pnpm lint      # oxlint --type-aware
+pnpm format    # prettier --write (CI runs format:check)
 ```
+
+CI (`.github/workflows/ci.yml`) runs format check, lint, build and tests on every
+PR to `develop`/`main`, and fails if a marketing page stops being prerendered.
 
 `pnpm build` also writes `sitemap.xml` and `robots.txt`
 (`scripts/generate-seo-files.mjs`), built from the canonical URL of each
