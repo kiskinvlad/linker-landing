@@ -1,0 +1,213 @@
+<kit-hero />
+
+<!-- 1a. Built for people who sell -->
+<section class="section section--soft" aria-labelledby="audience-title">
+  <div class="container">
+    <div class="section-head" kitReveal>
+      <p class="eyebrow">Built for people who sell</p>
+      <h2 id="audience-title">Made for stores, not for developers</h2>
+    </div>
+
+    <ul class="cards cards--4">
+      @for (a of audiences; track a.title; let i = $index) {
+        <li class="card" [kitReveal]="i * 80">
+          <span class="card__icon" aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              width="22"
+              height="22"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              @switch (a.icon) {
+                @case ('store') {
+                  <path d="M4 10v9h16v-9M3 5h18l-1.5 5H4.5z M9.5 19v-5h5v5" />
+                }
+                @case ('box') {
+                  <path d="M12 3 20 7.5v9L12 21l-8-4.5v-9z M4 7.5l8 4.5 8-4.5 M12 12v9" />
+                }
+                @case ('pin') {
+                  <path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z" />
+                  <circle cx="12" cy="9.5" r="2.5" />
+                }
+                @default {
+                  <path d="M12 3l2.2 5.8L20 11l-5.8 2.2L12 19l-2.2-5.8L4 11l5.8-2.2z" />
+                }
+              }
+            </svg>
+          </span>
+          <h3>{{ a.title }}</h3>
+          <p>{{ a.body }}</p>
+        </li>
+      }
+    </ul>
+  </div>
+</section>
+
+<!-- 2. Trust strip -->
+<section class="trust" aria-label="At a glance">
+  <ul class="container trust__list">
+    <li><span class="trust__tick" aria-hidden="true">✓</span> Free plan</li>
+    <li><span class="trust__tick" aria-hidden="true">✓</span> No credit card</li>
+    <li><span class="trust__tick" aria-hidden="true">✓</span> Works on any website</li>
+  </ul>
+</section>
+
+<!-- 3. How it works -->
+<kit-steps />
+
+<!-- 4. Benefits -->
+<section id="product" class="section section--soft" aria-labelledby="benefits-title">
+  <div class="container benefits">
+    <div class="section-head benefits__head" kitReveal>
+      <p class="eyebrow">Why it works</p>
+      <h2 id="benefits-title">Everything a store needs. Nothing it has to maintain.</h2>
+      <p>Your offers stay fast, safe and on-brand, and you stay in control of every change.</p>
+    </div>
+
+    <ul class="benefits__list">
+      @for (b of benefits; track b.title; let i = $index) {
+        <li class="benefit" [kitReveal]="i * 60">
+          <span class="benefit__mark" aria-hidden="true"></span>
+          <div>
+            <h3>{{ b.title }}</h3>
+            <p>{{ b.body }}</p>
+          </div>
+        </li>
+      }
+    </ul>
+  </div>
+</section>
+
+<!-- 5. Use cases -->
+<section class="section" aria-labelledby="usecases-title">
+  <div class="container">
+    <div class="section-head section-head--center" kitReveal>
+      <p class="eyebrow">Use cases</p>
+      <h2 id="usecases-title">One editor, every kind of offer</h2>
+    </div>
+
+    <ul class="cards cards--4">
+      @for (u of useCases; track u.kind; let i = $index) {
+        <li class="card usecase" [kitReveal]="i * 80">
+          <div class="usecase__art usecase__art--{{ u.kind }}" aria-hidden="true">
+            @switch (u.kind) {
+              @case ('lead') {
+                <span class="m-line m-line--lg"></span>
+                <span class="m-field"></span>
+                <span class="m-field"></span>
+                <span class="m-btn"></span>
+              }
+              @case ('promo') {
+                <span class="m-banner"><b>-20%</b> this weekend only</span>
+              }
+              @case ('news') {
+                <span class="m-line m-line--lg"></span>
+                <span class="m-row"
+                  ><span class="m-field"></span><span class="m-btn m-btn--sm"></span
+                ></span>
+              }
+              @default {
+                <span class="m-line"></span>
+                <span class="m-faces"><i>😞</i><i>😐</i><i class="is-on">🙂</i><i>😍</i></span>
+              }
+            }
+          </div>
+          <h3>{{ u.title }}</h3>
+          <p>{{ u.body }}</p>
+        </li>
+      }
+    </ul>
+  </div>
+</section>
+
+<!-- 6. Pricing teaser -->
+<section id="pricing" class="section section--soft" aria-labelledby="pricing-title">
+  <div class="container">
+    <div class="section-head section-head--center" kitReveal>
+      <p class="eyebrow">Pricing</p>
+      <h2 id="pricing-title">Start free. Upgrade when it pays for itself.</h2>
+    </div>
+
+    <div class="plans">
+      <article class="plan plan--free" kitReveal aria-labelledby="plan-free">
+        <p class="plan__badge">Available now</p>
+        <h3 id="plan-free">{{ freePlan.name }}</h3>
+        <p class="plan__price">{{ freePlan.price }} <span>/ forever</span></p>
+        <ul class="plan__features">
+          @for (f of freePlan.features; track f) {
+            <li>{{ f }}</li>
+          }
+        </ul>
+        <a class="btn btn--primary plan__cta" href="/register?plan=free">Start free</a>
+        <p class="plan__note">No credit card needed</p>
+      </article>
+
+      <article class="plan plan--pro" [kitReveal]="120" aria-labelledby="plan-pro">
+        <p class="plan__badge plan__badge--soon">Coming soon</p>
+        <h3 id="plan-pro">Pro</h3>
+        <p class="plan__lead">More widgets, more views and deeper analytics for growing stores.</p>
+        <ul class="plan__features plan__features--muted">
+          <li>More live widgets</li>
+          <li>Higher monthly view limits</li>
+          <li>Longer version history</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- Build Kitlet with us (plan §10a) -->
+<section class="section cocreate" aria-labelledby="cocreate-title">
+  <div class="container">
+    <div class="cocreate__card" kitReveal>
+      <div>
+        <p class="eyebrow cocreate__eyebrow">Build Kitlet with us</p>
+        <h2 id="cocreate-title">
+          Suggest a feature. If it ships in a paid plan, it’s yours for free.
+        </h2>
+        <p class="cocreate__body">
+          Tell us what would help you sell more. If we build it as a paid-plan feature, we unlock it
+          on your account at no cost, on any plan, for as long as your account is active. Everything
+          else we ship reaches everyone anyway.
+        </p>
+      </div>
+      <ol class="cocreate__flow" aria-label="How the idea reward works">
+        <li><span>1</span> You suggest it</li>
+        <li><span>2</span> We build it</li>
+        <li><span>3</span> It’s unlocked for you</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- 7. FAQ -->
+<section id="faq" class="section" aria-labelledby="faq-title">
+  <div class="container faq">
+    <div class="section-head" kitReveal>
+      <p class="eyebrow">FAQ</p>
+      <h2 id="faq-title">Questions, answered</h2>
+    </div>
+
+    <div class="faq__list">
+      @for (item of faq; track item.q) {
+        <details class="faq__item">
+          <summary>{{ item.q }}</summary>
+          <p>{{ item.a }}</p>
+        </details>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- 8. Final CTA -->
+<section class="final" aria-labelledby="final-title">
+  <div class="container final__inner" kitReveal>
+    <h2 id="final-title">Your next customer is already on your site.</h2>
+    <p>Give them a reason to buy. Set up your first offer in minutes.</p>
+    <a class="btn btn--lg final__btn" href="/register?plan=free">Start free</a>
+  </div>
+</section>

@@ -1,0 +1,69 @@
+<section id="how-it-works" class="section" aria-labelledby="steps-title">
+  <div class="container">
+    <div class="section-head section-head--center" kitReveal>
+      <p class="eyebrow">How it works</p>
+      <h2 id="steps-title">From idea to live offer in three steps</h2>
+      <p>No tickets to a developer, no theme edits, no waiting.</p>
+    </div>
+
+    <ol class="steps">
+      @for (step of steps; track step.n; let i = $index) {
+        <li class="step" [kitReveal]="i * 120">
+          <div class="step__art" aria-hidden="true">
+            @switch (i) {
+              @case (0) {
+                <svg viewBox="0 0 240 150" class="v-design">
+                  <rect x="10" y="10" width="220" height="130" rx="12" class="v-panel" />
+                  <rect x="22" y="24" width="44" height="102" rx="8" class="v-soft" />
+                  <rect x="30" y="34" width="28" height="8" rx="4" class="v-chip" />
+                  <rect x="30" y="50" width="28" height="8" rx="4" class="v-chip" />
+                  <rect x="30" y="66" width="28" height="8" rx="4" class="v-chip" />
+                  <rect x="80" y="24" width="138" height="102" rx="8" class="v-canvas" />
+                  <rect x="96" y="40" width="80" height="10" rx="5" class="v-ink" />
+                  <rect x="96" y="58" width="104" height="18" rx="6" class="v-field" />
+                  <g class="v-drag">
+                    <rect x="96" y="86" width="72" height="22" rx="11" class="v-btn" />
+                    <path d="M170 104 l10 14 l3 -6 l7 -1 z" class="v-cursor" />
+                  </g>
+                </svg>
+              }
+              @case (1) {
+                <svg viewBox="0 0 240 150" class="v-publish">
+                  <rect x="10" y="10" width="220" height="130" rx="12" class="v-panel" />
+                  <rect x="24" y="26" width="192" height="44" rx="8" class="v-code" />
+                  <text x="36" y="45" class="v-mono">&lt;script src="…/kit.js"</text>
+                  <text x="36" y="60" class="v-mono">data-widget="welcome"&gt;</text>
+                  <rect x="24" y="86" width="96" height="34" rx="17" class="v-btn" />
+                  <text x="72" y="107" class="v-btn-text" text-anchor="middle">Publish</text>
+                  <g class="v-live">
+                    <circle cx="160" cy="103" r="14" class="v-ok" />
+                    <path d="M153 103 l5 5 l9 -10" class="v-check" />
+                    <text x="182" y="108" class="v-live-text">Live</text>
+                  </g>
+                </svg>
+              }
+              @case (2) {
+                <svg viewBox="0 0 240 150" class="v-measure">
+                  <rect x="10" y="10" width="220" height="130" rx="12" class="v-panel" />
+                  <line x1="30" y1="118" x2="210" y2="118" class="v-axis" />
+                  <rect class="v-bar b1" x="40" y="58" width="22" height="60" rx="4" />
+                  <rect class="v-bar b2" x="76" y="78" width="22" height="40" rx="4" />
+                  <rect class="v-bar b3" x="112" y="48" width="22" height="70" rx="4" />
+                  <rect class="v-bar b4" x="148" y="66" width="22" height="52" rx="4" />
+                  <rect class="v-bar b5 v-bar--hot" x="184" y="32" width="22" height="86" rx="4" />
+                  <g class="v-ping">
+                    <rect x="120" y="18" width="92" height="22" rx="11" class="v-tag" />
+                    <text x="166" y="33" class="v-tag-text" text-anchor="middle">+1 new lead</text>
+                  </g>
+                </svg>
+              }
+            }
+          </div>
+          <p class="step__n">{{ step.n }}</p>
+          <h3>{{ step.title }}</h3>
+          <p class="step__body">{{ step.body }}</p>
+        </li>
+      }
+    </ol>
+  </div>
+</section>

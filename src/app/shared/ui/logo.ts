@@ -1,0 +1,78 @@
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+
+/**
+ * Kitlet logo, inlined from `brand/logos/kitlet-logo.svg` / `kitlet-mark.svg`.
+ * The navy strokes use `currentColor` so one component serves light, dark and
+ * inverse backgrounds; the spark diamond stays brand orange.
+ */
+@Component({
+  selector: 'kit-logo',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    @if (variant() === 'mark') {
+      <svg viewBox="0 0 64 64" [attr.height]="height()" aria-hidden="true" focusable="false">
+        <rect x="6" y="10" width="12" height="44" rx="6" fill="currentColor" />
+        <path
+          d="M26 32 L42 16 L58 32 L42 48 Z"
+          [attr.fill]="spark"
+          [attr.stroke]="spark"
+          stroke-width="4"
+          stroke-linejoin="round"
+        />
+      </svg>
+    } @else {
+      <svg viewBox="0 -2 316 68" [attr.height]="height()" aria-hidden="true" focusable="false">
+        <g transform="translate(0 -14.55) scale(1.4545)">
+          <rect x="6" y="10" width="12" height="44" rx="6" fill="currentColor" />
+          <path
+            d="M26 32 L42 16 L58 32 L42 48 Z"
+            [attr.fill]="spark"
+            [attr.stroke]="spark"
+            stroke-width="4"
+            stroke-linejoin="round"
+          />
+        </g>
+        <g transform="translate(104.4 0)">
+          <g
+            fill="none"
+            stroke="currentColor"
+            stroke-width="11"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M5.5 5.5 L5.5 58.5" />
+            <path d="M31.5 29.5 L14.5 44.0 L31.5 58.5" />
+            <path d="M51.5 35.5 L51.5 58.5" />
+            <path d="M79.5 13.5 V52 Q79.5 58.5 90.5 58.5" />
+            <path d="M71.5 30.0 L92.5 30.0" />
+            <path d="M106.0 5.5 V52 Q106.0 58.5 116.0 58.5" />
+            <path d="M130.5 44 H168.5 A19 19 0 1 0 164.1 56.2" />
+            <path d="M191.0 13.5 V52 Q191.0 58.5 202.0 58.5" />
+            <path d="M183.0 30.0 L204.0 30.0" />
+          </g>
+          <path
+            d="M44.5 11 L51.5 4 L58.5 11 L51.5 18 Z"
+            [attr.fill]="spark"
+            [attr.stroke]="spark"
+            stroke-width="3"
+            stroke-linejoin="round"
+          />
+        </g>
+      </svg>
+    }
+  `,
+  styles: `
+    :host {
+      display: inline-flex;
+      color: inherit;
+    }
+    svg {
+      width: auto;
+    }
+  `,
+})
+export class Logo {
+  readonly variant = input<'full' | 'mark'>('full');
+  readonly height = input(28);
+  protected readonly spark = '#ff6b35';
+}
