@@ -11,6 +11,11 @@ export interface RouteSeo {
   /** Path used for the canonical URL; defaults to the route's own URL. */
   path?: string;
   noindex?: boolean;
+  /**
+   * Share image slug: `public/og/<slug>.png`, rendered by
+   * `scripts/render-og-images.mjs`. Defaults to `home`.
+   */
+  ogImage?: 'home' | 'pricing' | 'how-it-works';
   /** Structured data objects, each rendered as its own `application/ld+json` script. */
   jsonLd?: (siteUrl: string, productName: string) => object[];
 }
@@ -54,9 +59,16 @@ export class SeoService {
     this.meta.updateTag({ property: 'og:title', content: fullTitle });
     this.meta.updateTag({ property: 'og:description', content: seo.description });
     this.meta.updateTag({ property: 'og:url', content: canonical });
+    // Absolute URLs: crawlers resolve og:image against nothing.
+    const image = `${siteUrl}/og/${seo.ogImage ?? 'home'}.png`;
+    this.meta.updateTag({ property: 'og:image', content: image });
+    this.meta.updateTag({ property: 'og:image:width', content: '1200' });
+    this.meta.updateTag({ property: 'og:image:height', content: '630' });
+    this.meta.updateTag({ property: 'og:image:alt', content: fullTitle });
     this.meta.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
     this.meta.updateTag({ name: 'twitter:title', content: fullTitle });
     this.meta.updateTag({ name: 'twitter:description', content: seo.description });
+    this.meta.updateTag({ name: 'twitter:image', content: image });
 
     this.setCanonical(seo.noindex ? null : canonical);
     this.setJsonLd(seo.jsonLd?.(siteUrl, productName) ?? []);
