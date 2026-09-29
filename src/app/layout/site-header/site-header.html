@@ -1,0 +1,58 @@
+<header class="header">
+  <div class="container header__bar">
+    <a class="header__brand" routerLink="/" [attr.aria-label]="identity.productName + ' home'">
+      <kit-logo [height]="26" />
+    </a>
+
+    <button
+      type="button"
+      class="header__toggle"
+      [attr.aria-expanded]="menuOpen()"
+      aria-controls="site-nav"
+      (click)="toggleMenu()"
+    >
+      <span class="visually-hidden">Menu</span>
+      <span class="header__burger" [class.is-open]="menuOpen()" aria-hidden="true"></span>
+    </button>
+
+    <nav id="site-nav" class="header__nav" [class.is-open]="menuOpen()" aria-label="Main">
+      <ul class="header__links">
+        @for (item of nav; track item.label) {
+          <li>
+            <a
+              [routerLink]="item.link"
+              [fragment]="item.fragment"
+              [routerLinkActive]="item.fragment ? '' : 'is-active'"
+              ariaCurrentWhenActive="page"
+              (click)="menuOpen.set(false)"
+              >{{ item.label }}</a
+            >
+          </li>
+        }
+      </ul>
+
+      <div class="header__actions">
+        <!-- A different app, so a plain href and a full navigation (plan §3). -->
+        <a class="open-editor" [href]="identity.editorPath">
+          <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
+            <rect
+              x="2.5"
+              y="3.5"
+              width="15"
+              height="13"
+              rx="2.5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+            />
+            <path d="M2.5 7.5h15" stroke="currentColor" stroke-width="1.6" />
+            <path d="M8 10.5l3 2-3 2z" fill="currentColor" />
+          </svg>
+          Open editor
+        </a>
+        <a class="header__login" href="/login">Log in</a>
+        <a class="btn btn--ghost header__signup" href="/register">Sign up</a>
+      </div>
+    </nav>
+  </div>
+</header>

@@ -1,0 +1,31 @@
+.final {
+  padding-block: clamp(72px, 10vw, 128px);
+  background:
+    radial-gradient(circle at 1px 1px, rgb(255 255 255 / 0.12) 1px, transparent 0) 0 0 / 22px 22px,
+    linear-gradient(135deg, var(--kit-blue), #1c4fc4);
+  color: #e3ebff;
+  text-align: center;
+}
+
+.final__inner h2 {
+  max-width: 760px;
+  margin-inline: auto;
+  color: #fff;
+}
+
+.final__inner p {
+  margin-top: 16px;
+  font-size: 1.125rem;
+}
+
+.final__btn {
+  margin-top: 32px;
+  background: #fff;
+  color: var(--night);
+  box-shadow: 0 16px 32px -12px rgb(0 0 0 / 0.4);
+}
+
+.final__btn:hover {
+  background: #fff;
+  box-shadow: 0 20px 36px -12px rgb(0 0 0 / 0.5);
+}

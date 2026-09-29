@@ -1,0 +1,212 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: saturate(1.6) blur(14px);
+  -webkit-backdrop-filter: saturate(1.6) blur(14px);
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+}
+
+.header__bar {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  height: 72px;
+}
+
+.header__brand {
+  display: inline-flex;
+  color: var(--ink);
+  flex-shrink: 0;
+}
+
+.header__nav {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 24px;
+}
+
+.header__links {
+  display: flex;
+  gap: 4px;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.header__links a,
+.header__login {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  color: var(--ink-2);
+  font-weight: 500;
+  font-size: 0.9375rem;
+  text-decoration: none;
+  transition:
+    color 0.15s,
+    background-color 0.15s;
+}
+
+.header__links a.is-active {
+  color: var(--ink);
+  background: var(--bg-soft);
+}
+
+.header__links a:hover,
+.header__login:hover {
+  color: var(--ink);
+  background: var(--bg-soft);
+}
+
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header__signup {
+  min-height: 40px;
+  padding: 8px 18px;
+  font-size: 0.9375rem;
+}
+
+/* "Open editor" reads as the app, not another content page (plan §3). */
+.open-editor {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 8px 18px 8px 14px;
+  margin-right: 4px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  text-decoration: none;
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 45%, transparent);
+  transition:
+    box-shadow 0.25s var(--ease-out),
+    transform 0.2s var(--ease-out);
+}
+
+.open-editor:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 0 0 6px color-mix(in srgb, var(--accent) 18%, transparent),
+    0 10px 24px -8px color-mix(in srgb, var(--accent) 70%, transparent);
+}
+
+.header__toggle {
+  display: none;
+  margin-left: auto;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel);
+  cursor: pointer;
+}
+
+.header__burger,
+.header__burger::before,
+.header__burger::after {
+  display: block;
+  width: 18px;
+  height: 2px;
+  margin-inline: auto;
+  border-radius: 2px;
+  background: var(--ink);
+  transition:
+    transform 0.25s var(--ease-out),
+    opacity 0.2s;
+}
+
+.header__burger {
+  position: relative;
+}
+
+.header__burger::before,
+.header__burger::after {
+  content: '';
+  position: absolute;
+  left: 0;
+}
+
+.header__burger::before {
+  top: -6px;
+}
+
+.header__burger::after {
+  top: 6px;
+}
+
+.header__burger.is-open {
+  background: transparent;
+}
+
+.header__burger.is-open::before {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.header__burger.is-open::after {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+@media (max-width: 960px) {
+  .header__toggle {
+    display: block;
+  }
+
+  .header__nav {
+    position: absolute;
+    top: 72px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    padding: 16px var(--gutter) 24px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    display: none;
+  }
+
+  .header__nav.is-open {
+    display: flex;
+  }
+
+  .header__links {
+    flex-direction: column;
+    margin: 0;
+  }
+
+  .header__links a {
+    display: block;
+    padding: 12px 8px;
+    font-size: 1.0625rem;
+  }
+
+  .header__actions {
+    flex-wrap: wrap;
+  }
+
+  .open-editor {
+    flex: 1 1 100%;
+    justify-content: center;
+    min-height: 48px;
+    margin: 0 0 4px;
+  }
+
+  .header__login,
+  .header__signup {
+    flex: 1;
+    text-align: center;
+    justify-content: center;
+    min-height: 48px;
+  }
+}

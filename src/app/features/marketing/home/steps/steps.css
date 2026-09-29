@@ -1,0 +1,255 @@
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: none;
+}
+
+.step {
+  position: relative;
+  padding: 16px 16px 28px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  box-shadow: var(--shadow-sm);
+}
+
+.step__art {
+  margin-bottom: 20px;
+  border-radius: var(--radius);
+  background:
+    radial-gradient(circle at 1px 1px, var(--grid-dot) 1px, transparent 0) 0 0 / 14px 14px,
+    var(--bg-soft);
+  overflow: hidden;
+}
+
+.step__n {
+  padding-inline: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--spark);
+}
+
+.step h3 {
+  margin-top: 6px;
+  padding-inline: 8px;
+  font-size: 1.5rem;
+}
+
+.step__body {
+  margin-top: 10px;
+  padding-inline: 8px;
+  color: var(--ink-2);
+}
+
+@media (max-width: 860px) {
+  .steps {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+    margin-inline: auto;
+  }
+}
+
+/* ---- Vignette palette ---- */
+
+.v-panel {
+  fill: var(--panel);
+  stroke: var(--line);
+}
+
+.v-soft,
+.v-code {
+  fill: var(--bg-soft);
+}
+
+.v-chip,
+.v-axis {
+  fill: var(--line-strong);
+  stroke: var(--line-strong);
+}
+
+.v-canvas {
+  fill: var(--panel);
+  stroke: var(--line);
+  stroke-dasharray: 4 4;
+}
+
+.v-ink {
+  fill: var(--ink);
+  opacity: 0.8;
+}
+
+.v-field {
+  fill: var(--bg-soft);
+  stroke: var(--line-strong);
+}
+
+.v-btn {
+  fill: var(--accent);
+}
+
+.v-btn-text {
+  fill: var(--accent-ink);
+  font: 600 13px var(--font-sans);
+}
+
+.v-cursor {
+  fill: var(--ink);
+  stroke: var(--panel);
+  stroke-width: 1.5;
+}
+
+.v-mono {
+  fill: var(--ink-2);
+  font: 500 10.5px var(--font-mono);
+  white-space: pre;
+}
+
+.v-ok {
+  fill: var(--ok);
+}
+
+.v-check {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.v-live-text {
+  fill: var(--ok);
+  font: 600 13px var(--font-sans);
+}
+
+.v-bar {
+  fill: color-mix(in srgb, var(--accent) 35%, var(--panel));
+}
+
+.v-bar--hot {
+  fill: var(--accent);
+}
+
+.v-tag {
+  fill: var(--spark);
+}
+
+.v-tag-text {
+  fill: #fff;
+  font: 600 11px var(--font-sans);
+}
+
+/* ---- Loops: each keyframe set ends (100%) on the finished frame ---- */
+
+.v-drag {
+  animation: drag 4s var(--ease-out) infinite;
+}
+
+@keyframes drag {
+  0%,
+  10% {
+    transform: translate(60px, 10px);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  60%,
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.v-live {
+  transform-box: fill-box;
+  transform-origin: 14px center;
+  animation: live 4s var(--ease-spring) infinite;
+}
+
+@keyframes live {
+  0%,
+  35% {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  55%,
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.v-publish .v-btn {
+  animation: press 4s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes press {
+  0%,
+  22%,
+  34%,
+  100% {
+    transform: none;
+  }
+  28% {
+    transform: scale(0.94);
+  }
+}
+
+.v-bar {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: grow 4.5s var(--ease-out) infinite;
+}
+
+.b2 {
+  animation-delay: 0.1s;
+}
+
+.b3 {
+  animation-delay: 0.2s;
+}
+
+.b4 {
+  animation-delay: 0.3s;
+}
+
+.b5 {
+  animation-delay: 0.4s;
+}
+
+@keyframes grow {
+  0%,
+  8% {
+    transform: scaleY(0.1);
+  }
+  40%,
+  100% {
+    transform: none;
+  }
+}
+
+.v-ping {
+  animation: ping 4.5s var(--ease-spring) infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes ping {
+  0%,
+  45% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  60%,
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
