@@ -39,6 +39,30 @@ cookie) wins, then the browser's language list, then English — the inline scri
 at the top of `src/index.html`. Adding a language: `src/app/core/i18n/locales.ts`
 has the checklist.
 
+## Accounts (log in, sign up, password reset)
+
+Plan §3/§5/§10. `/login`, `/register`, `/forgot-password` and `/reset-password`
+talk to linker-backend's `/api/v1/auth` through `AuthApi` (`core/api`), with the
+session in an httpOnly cookie on the API origin. `SessionStore` holds who is signed
+in; `/auth/me` is asked once on startup without blocking hydration, so the header
+switches to the account menu when the answer lands. Guards are convenience — the
+API is the boundary. `returnUrl` only accepts same-origin paths (`safeReturnUrl`),
+and `/editor/` is reached by a full page load.
+
+The API URL comes from `APP_IDENTITY.apiUrl`: `http://localhost:3000/api/v1` in dev,
+**none in production until the real domain exists (M8)** — the `linker.com`
+placeholder belongs to someone else, so a production build calls no API at all.
+
+Running against a local backend needs two settings in linker-backend's `.env`:
+
+```ini
+CORS_ORIGINS=http://localhost:4000
+MAIL_RESET_URL_BASE=http://localhost:4000/reset-password
+```
+
+(add `,http://localhost:4200` to `CORS_ORIGINS` to keep the editor working too).
+Reset emails land in Mailpit at http://localhost:8025.
+
 ## Cookies and analytics
 
 Plan §8. A browser-only bottom sheet (`layout/cookie-banner`) asks once: Accept all /

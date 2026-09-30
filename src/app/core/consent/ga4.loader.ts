@@ -89,6 +89,17 @@ export class Ga4Loader implements ConsentLoader {
     this.deleteGaCookies();
   }
 
+  /**
+   * Funnel events (plan §8: sign_up, login, email_verified, open_editor_click).
+   * Sent only while analytics is granted, and never with personal data: callers
+   * pass an event name and, at most, non-identifying parameters.
+   */
+  event(name: 'sign_up' | 'login' | 'email_verified' | 'open_editor_click'): void {
+    const win = this.window;
+    if (!this.id || !win || !this.pageViews) return; // not granted
+    this.gtag(win)('event', name);
+  }
+
   private get window(): GtagWindow | null {
     return this.document.defaultView as GtagWindow | null;
   }

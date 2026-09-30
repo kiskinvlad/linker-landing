@@ -42,28 +42,106 @@
 
       <div class="header__actions">
         <kit-language-switcher />
-        <!-- A different app, so a plain href and a full navigation (plan §3). -->
-        <a class="open-editor" [href]="identity.editorPath">
-          <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
-            <rect
-              x="2.5"
-              y="3.5"
-              width="15"
-              height="13"
-              rx="2.5"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.6"
-            />
-            <path d="M2.5 7.5h15" stroke="currentColor" stroke-width="1.6" />
-            <path d="M8 10.5l3 2-3 2z" fill="currentColor" />
-          </svg>
-          <ng-container i18n="@@nav.openEditor">Open editor</ng-container>
-        </a>
-        <a class="header__login" routerLink="/login" i18n="@@nav.login">Log in</a>
-        <a class="btn btn--ghost header__signup" routerLink="/register" i18n="@@nav.signup"
-          >Sign up</a
-        >
+        <!-- A different app, so a plain href and a full navigation (plan §3). Signed out
+             (or not known yet, as on every prerendered page) it goes through login, and
+             login returns to the editor. -->
+        @if (session.isAuthenticated()) {
+          <a class="open-editor" [href]="identity.editorPath" (click)="openEditorClicked()">
+            <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
+              <rect
+                x="2.5"
+                y="3.5"
+                width="15"
+                height="13"
+                rx="2.5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+              />
+              <path d="M2.5 7.5h15" stroke="currentColor" stroke-width="1.6" />
+              <path d="M8 10.5l3 2-3 2z" fill="currentColor" />
+            </svg>
+            <ng-container i18n="@@nav.openEditor">Open editor</ng-container>
+          </a>
+        } @else {
+          <a
+            class="open-editor"
+            routerLink="/login"
+            [queryParams]="{ returnUrl: identity.editorPath }"
+            (click)="openEditorClicked()"
+          >
+            <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
+              <rect
+                x="2.5"
+                y="3.5"
+                width="15"
+                height="13"
+                rx="2.5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+              />
+              <path d="M2.5 7.5h15" stroke="currentColor" stroke-width="1.6" />
+              <path d="M8 10.5l3 2-3 2z" fill="currentColor" />
+            </svg>
+            <ng-container i18n="@@nav.openEditor">Open editor</ng-container>
+            <span
+              class="open-editor__lock"
+              i18n-title="@@nav.openEditorLocked"
+              title="Log in to open the editor"
+            >
+              <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true">
+                <rect x="3" y="7" width="10" height="7" rx="1.5" fill="currentColor" />
+                <path
+                  d="M5 7V5a3 3 0 0 1 6 0v2"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.6"
+                />
+              </svg>
+              <span class="visually-hidden" i18n="@@nav.openEditorLocked"
+                >Log in to open the editor</span
+              >
+            </span>
+          </a>
+        }
+
+        @if (session.user(); as user) {
+          <div class="account">
+            <button
+              type="button"
+              class="account__toggle"
+              aria-haspopup="true"
+              [attr.aria-expanded]="accountOpen()"
+              aria-controls="account-menu"
+              (click)="accountOpen.set(!accountOpen())"
+            >
+              <span class="account__avatar" aria-hidden="true">{{ initials(user) }}</span>
+              <span class="account__name">{{ user.firstName }}</span>
+            </button>
+            @if (accountOpen()) {
+              <div id="account-menu" class="account__menu">
+                <p class="account__who">
+                  <span i18n="@@account.signedInAs">Signed in as</span>
+                  <strong>{{ user.email }}</strong>
+                </p>
+                <button
+                  type="button"
+                  class="account__item"
+                  (click)="logout()"
+                  i18n="@@account.logout"
+                >
+                  Log out
+                </button>
+              </div>
+            }
+          </div>
+        } @else {
+          <a class="header__login" routerLink="/login" i18n="@@nav.login">Log in</a>
+          <a class="btn btn--ghost header__signup" routerLink="/register" i18n="@@nav.signup"
+            >Sign up</a
+          >
+        }
       </div>
     </nav>
   </div>

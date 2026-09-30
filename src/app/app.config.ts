@@ -1,4 +1,10 @@
-import { ApplicationConfig, inject, provideBrowserGlobalErrorListeners } from '@angular/core';
+import {
+  ApplicationConfig,
+  inject,
+  provideAppInitializer,
+  provideBrowserGlobalErrorListeners,
+} from '@angular/core';
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import {
   provideClientHydration,
   withEventReplay,
@@ -8,6 +14,9 @@ import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { routes } from './app.routes';
 import { CONSENT_LOADERS } from './core/consent/consent.model';
 import { Ga4Loader } from './core/consent/ga4.loader';
+import { AuthFacade } from './core/auth/auth.facade';
+import { credentialsInterceptor } from './core/http/credentials.interceptor';
+import { errorInterceptor } from './core/http/error.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,5 +32,13 @@ export const appConfig: ApplicationConfig = {
     // What each consent category switches on (plan §8). Portal only: GA never runs
     // inside /editor/ (D11).
     { provide: CONSENT_LOADERS, useFactory: () => [inject(Ga4Loader)] },
+    provideHttpClient(withFetch(), withInterceptors([credentialsInterceptor, errorInterceptor])),
+    // Ask the API who is signed in (plan §5), without awaiting it: blocking bootstrap
+    // on a round trip would delay hydration on every prerendered page. The header
+    // updates when the answer lands, and guards await it themselves. Browser-only
+    // inside refresh(): prerendering has no visitor to ask about.
+    provideAppInitializer(() => {
+      void inject(AuthFacade).refresh();
+    }),
   ],
 };
