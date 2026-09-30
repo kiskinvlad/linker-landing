@@ -35,6 +35,24 @@
         } catch (e) {}
       })();
     </script>
+    <!--
+      GA4 strict consent mode, step 1 (plan §8): everything denied before any other
+      script runs. This defines gtag and a local queue only; gtag.js itself is not
+      requested until the visitor grants analytics (core/consent/ga4.loader.ts), so
+      no request reaches Google before that. CI fails if a page references gtag.js.
+    -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('consent', 'default', {
+        analytics_storage: 'denied',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+      });
+    </script>
     <title>Kitlet</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />

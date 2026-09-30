@@ -39,6 +39,21 @@ cookie) wins, then the browser's language list, then English — the inline scri
 at the top of `src/index.html`. Adding a language: `src/app/core/i18n/locales.ts`
 has the checklist.
 
+## Cookies and analytics
+
+Plan §8. A browser-only bottom sheet (`layout/cookie-banner`) asks once: Accept all /
+Reject all / Customize, equal weight, nothing pre-ticked. The choice lives in the
+`linker_consent` cookie (`{ v, analytics, ts }`, 12 months); bumping
+`CONSENT_POLICY_VERSION` asks everyone again. The footer's "Cookie settings" and "Your
+privacy choices" reopen it. Global Privacy Control is honoured as an opt-out.
+
+Google Analytics 4 runs in strict consent mode: `src/index.html` defaults every
+consent type to denied, and `Ga4Loader` injects `gtag.js` only after analytics is
+granted, sends page views without query strings, and deletes `_ga*` cookies on
+withdrawal. **GA4 stays off until a measurement ID is set** in `ANALYTICS_CONFIG`
+(`src/app/core/consent/ga4.loader.ts`). CI fails if any prerendered page references
+Google Tag Manager or has the banner baked in.
+
 CI (`.github/workflows/ci.yml`) runs format check, lint, build and tests on every
 PR to `develop`/`main`, and fails if a marketing page stops being prerendered.
 It then runs `pnpm lighthouse` (Lighthouse CI against the static build) with the

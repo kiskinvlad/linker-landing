@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { APP_IDENTITY } from '../../core/config/app-identity';
+import { ConsentService } from '../../core/consent/consent.service';
 import { Logo } from '../../shared/ui/logo';
 
 @Component({
@@ -45,6 +46,28 @@ import { Logo } from '../../shared/ui/logo';
               <a routerLink="/legal/feedback-program" i18n="@@footer.feedbackProgram"
                 >Feedback program</a
               >
+            </li>
+            <!-- Reopens the consent panel (plan §8). "Your privacy choices" is the CCPA
+                 wording; with no geolocation on a static site it is shown to everyone. -->
+            <li>
+              <button
+                type="button"
+                class="footer__link"
+                (click)="consent.openSettings()"
+                i18n="@@footer.cookieSettings"
+              >
+                Cookie settings
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                class="footer__link"
+                (click)="consent.openSettings()"
+                i18n="@@footer.privacyChoices"
+              >
+                Your privacy choices
+              </button>
             </li>
           </ul>
         </nav>
@@ -98,9 +121,20 @@ import { Logo } from '../../shared/ui/logo';
       color: var(--ink-2);
       text-decoration: none;
     }
-    a:hover {
+    a:hover,
+    .footer__link:hover {
       color: var(--ink);
       text-decoration: underline;
+    }
+    /* Buttons (they open a panel, not a page) styled as the links around them. */
+    .footer__link {
+      padding: 0;
+      border: 0;
+      background: none;
+      color: var(--ink-2);
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
     }
     .footer__base {
       margin-top: 56px;
@@ -121,5 +155,6 @@ import { Logo } from '../../shared/ui/logo';
 })
 export class SiteFooter {
   protected readonly identity = inject(APP_IDENTITY);
+  protected readonly consent = inject(ConsentService);
   protected readonly year = new Date().getFullYear();
 }
