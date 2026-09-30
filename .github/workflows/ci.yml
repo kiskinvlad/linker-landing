@@ -57,3 +57,17 @@ jobs:
             fi
           done
           grep -q '<loc>' "$OUT/sitemap.xml"
+
+      # Plan §7 budgets: SEO and accessibility >= 95, LCP < 2.5 s, CLS < 0.1
+      # (lighthouserc.json). Runs against the static build, no server needed.
+      # Chrome comes preinstalled on ubuntu-latest.
+      - run: pnpm lighthouse
+
+      # Reports stay in the run, not on Google's public temporary storage:
+      # the repo is private.
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci/reports
+          if-no-files-found: ignore

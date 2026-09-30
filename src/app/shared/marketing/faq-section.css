@@ -34,8 +34,8 @@
   height: 32px;
   border-radius: 50%;
   background: var(--bg-soft);
-  color: var(--accent);
-  font: 500 1.25rem var(--font-sans);
+  color: var(--accent-text);
+  font: 400 1.25rem var(--font-sans);
   transition: transform 0.25s var(--ease-out);
 }
 

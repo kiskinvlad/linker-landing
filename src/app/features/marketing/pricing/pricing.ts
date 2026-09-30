@@ -22,8 +22,10 @@ import { INCLUDED, PRICING_FAQ } from './pricing.content';
       </div>
     </header>
 
-    <section class="section plans-section" aria-label="Plans">
+    <section class="section plans-section" aria-labelledby="plans-title">
       <div class="container">
+        <!-- Keeps the outline h1 → h2 → h3; the plan cards' names are h3. -->
+        <h2 id="plans-title" class="visually-hidden">Plans</h2>
         <kit-plan-cards />
       </div>
     </section>

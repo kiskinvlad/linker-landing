@@ -74,7 +74,7 @@ import { Logo } from '../../shared/ui/logo';
       margin-bottom: 14px;
       font-family: var(--font-mono);
       font-size: 0.75rem;
-      font-weight: 500;
+      font-weight: 400;
       letter-spacing: 0.06em;
       text-transform: uppercase;
       color: var(--ink-3);

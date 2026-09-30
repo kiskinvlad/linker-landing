@@ -30,15 +30,15 @@
   padding: 4px 10px;
   border-radius: var(--radius-pill);
   background: var(--accent-soft);
-  color: var(--accent);
-  font: 500 0.75rem var(--font-mono);
+  color: var(--accent-text);
+  font: 400 0.75rem var(--font-mono);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .plan__badge--soon {
   background: var(--spark-soft);
-  color: var(--spark);
+  color: var(--spark-text);
 }
 
 .plan h3 {

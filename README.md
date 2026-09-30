@@ -18,6 +18,16 @@ pnpm format    # prettier --write (CI runs format:check)
 
 CI (`.github/workflows/ci.yml`) runs format check, lint, build and tests on every
 PR to `develop`/`main`, and fails if a marketing page stops being prerendered.
+It then runs `pnpm lighthouse` (Lighthouse CI against the static build) with the
+plan §7 budgets from `lighthouserc.json`; reports are attached to the run as the
+`lighthouse-reports` artifact.
+
+One blind spot: sections below the fold start at `opacity: 0` until scrolled
+into view (`RevealDirective`), and Lighthouse never scrolls, so its colour-contrast
+audit skips them. Check contrast on new below-the-fold content by hand.
+
+`pnpm build` also runs `scripts/optimize-html.mjs` (font preloads, low-priority
+JS). Each change there was measured with Lighthouse; the numbers are in its header.
 
 `pnpm build` also writes `sitemap.xml` and `robots.txt`
 (`scripts/generate-seo-files.mjs`), built from the canonical URL of each

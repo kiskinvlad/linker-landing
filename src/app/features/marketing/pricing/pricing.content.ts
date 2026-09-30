@@ -38,6 +38,7 @@ export const PRICING_FAQ = [
 
 export const PRICING_SEO: RouteSeo = {
   title: 'Pricing',
+  ogImage: 'pricing',
   description:
     'Start free with one live widget and 10,000 views a month — no credit card. Pro with more widgets and views is coming soon.',
   jsonLd: (siteUrl, productName) => [

@@ -43,6 +43,7 @@ export const GUIDE_STEPS = [
 
 export const HOW_IT_WORKS_SEO: RouteSeo = {
   title: 'How it works',
+  ogImage: 'how-it-works',
   description:
     'Six steps from sign-up to a live offer on your store: pick an offer, design it visually, paste one snippet once, publish, and see what sells.',
   jsonLd: (siteUrl, productName) => [

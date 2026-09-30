@@ -4,12 +4,13 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 4000",
-    "build": "ng build && node scripts/generate-seo-files.mjs",
+    "build": "ng build && node scripts/optimize-html.mjs && node scripts/generate-seo-files.mjs",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "format": "prettier --write \"src/**/*.{ts,html,css}\" \"scripts/**/*.mjs\"",
     "lint": "oxlint --type-aware src/ scripts/",
-    "format:check": "prettier --check \"src/**/*.{ts,html,css}\" \"scripts/**/*.mjs\""
+    "format:check": "prettier --check \"src/**/*.{ts,html,css}\" \"scripts/**/*.mjs\"",
+    "lighthouse": "lhci autorun"
   },
   "private": true,
   "packageManager": "pnpm@12.5.1",
@@ -32,6 +33,7 @@
     "@angular/build": "^22.2.0",
     "@angular/cli": "^22.2.0",
     "@angular/compiler-cli": "^22.2.0",
+    "@lhci/cli": "0.15.1",
     "@types/node": "^22.12.0",
     "jsdom": "^30.0.0",
     "oxlint": "^1.85.0",

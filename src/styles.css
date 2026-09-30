@@ -4,13 +4,15 @@
  *
  * Fonts are self-hosted through @fontsource (plan §6: loading Google Fonts from
  * Google's CDN sends visitor IPs to Google without consent).
+ *
+ * Weights are 400 and 600 only. Every face is fetched up front and each one is a
+ * Lighthouse LCP dependency; dropping the two 500 weights bought ~270 ms of LCP.
+ * Don't declare font-weight: 500 — nothing backs it.
  */
 @import '@fontsource-variable/bricolage-grotesque/wght.css';
 @import '@fontsource/ibm-plex-sans/latin-400.css';
-@import '@fontsource/ibm-plex-sans/latin-500.css';
 @import '@fontsource/ibm-plex-sans/latin-600.css';
 @import '@fontsource/ibm-plex-mono/latin-400.css';
-@import '@fontsource/ibm-plex-mono/latin-500.css';
 
 :root {
   /* Brand */
@@ -31,6 +33,10 @@
   --accent: var(--kit-blue);
   --accent-ink: #ffffff;
   --accent-soft: #e8f0fe;
+  /* Brand colours as text on light surfaces need more weight to reach WCAG AA 4.5:1:
+     kit-blue is 4.57 on white but under 4.5 on the tinted panels, spark is 2.8. */
+  --accent-text: #1f5ad4;
+  --spark-text: #b83a0b;
   --spark-soft: #fff0e9;
   --ok: #1a9f5b;
   --grid-dot: rgb(20 27 45 / 0.09);
@@ -72,6 +78,8 @@
     --accent: #5b8ef5;
     --accent-ink: #0d1220;
     --accent-soft: rgb(91 142 245 / 0.14);
+    --accent-text: var(--accent);
+    --spark-text: var(--spark);
     --spark-soft: rgb(255 107 53 / 0.14);
     --ok: #3ccf85;
     --grid-dot: rgb(238 242 250 / 0.07);
@@ -137,7 +145,7 @@ p {
 }
 
 a {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 img,
@@ -221,10 +229,10 @@ svg {
   margin-bottom: 16px;
   font-family: var(--font-mono);
   font-size: 0.8125rem;
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .eyebrow::before {
