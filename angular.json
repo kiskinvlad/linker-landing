@@ -34,7 +34,10 @@
               "@angular/localize/init"
             ],
             "localize": true,
-            "i18nMissingTranslation": "error"
+            "i18nMissingTranslation": "error",
+            "loader": {
+              ".md": "text"
+            }
           },
           "configurations": {
             "production": {

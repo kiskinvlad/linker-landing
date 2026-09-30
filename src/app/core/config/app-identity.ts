@@ -23,7 +23,39 @@ export interface AppIdentity {
   apiUrl: string | null;
   /** Same-origin path the editor SPA is served from (plan D2). */
   editorPath: string;
-  legalEntity: string;
+  /** Who the legal documents name, and where to reach them (plan §9a, §14). */
+  legal: LegalIdentity;
+}
+
+/**
+ * The facts the legal documents are filled in from: `{{legalEntity}}`,
+ * `{{privacyEmail}}` … in the texts under features/legal/docs. Changing a value here
+ * changes every document, so the M8 switch to real contacts is one edit (then flip
+ * `LEGAL_TEXTS_FINAL` in features/legal/legal.content.ts).
+ */
+export interface LegalIdentity {
+  /** Operator and data controller, as it should appear in contracts. */
+  entity: string;
+  /** Postal address for legal notices (GDPR Art. 13 and DMCA need one). */
+  address: string;
+  /** Where Service data is stored, as a reader should see it. */
+  dataRegion: string;
+  contacts: {
+    /** Contract notices, appeals, the DSA point of contact. */
+    legal: string;
+    /** Data-subject requests (plan §14: `privacy@<domain>`). */
+    privacy: string;
+    /** Reports of illegal or abusive widgets. */
+    abuse: string;
+    /** Copyright and trademark notices (the DMCA designated agent's address). */
+    copyright: string;
+    /** Vulnerability reports and account-compromise notices. */
+    security: string;
+  };
+  /** GDPR Art. 27 representative, once appointed (plan M7). */
+  euRepresentative: string | null;
+  /** UK GDPR Art. 27 representative, once appointed. */
+  ukRepresentative: string | null;
 }
 
 export const APP_IDENTITY = new InjectionToken<AppIdentity>('APP_IDENTITY', {
@@ -39,6 +71,24 @@ export const APP_IDENTITY = new InjectionToken<AppIdentity>('APP_IDENTITY', {
     // page load would send them a request.
     apiUrl: typeof ngDevMode !== 'undefined' && ngDevMode ? 'http://localhost:3000/api/v1' : null,
     editorPath: '/editor/',
-    legalEntity: 'Vladyslav Kiskin',
+    legal: {
+      // Plan §15 Q3: name the legal form once decided (e.g. "FOP Vladyslav Kiskin").
+      entity: 'Vladyslav Kiskin',
+      // TODO(M8): a full postal address for legal notices.
+      address: 'Kyiv, Ukraine',
+      // Plan §14 recommends eu-central-1; confirm before publishing (§15 Q4).
+      dataRegion: 'the European Union (Frankfurt, Germany)',
+      // `.example` is reserved (RFC 2606) and can never receive mail: obviously a
+      // placeholder, and nobody else's inbox. Replaced by the real aliases in M8.
+      contacts: {
+        legal: 'legal@kitlet.example',
+        privacy: 'privacy@kitlet.example',
+        abuse: 'abuse@kitlet.example',
+        copyright: 'copyright@kitlet.example',
+        security: 'security@kitlet.example',
+      },
+      euRepresentative: null,
+      ukRepresentative: null,
+    },
   }),
 });

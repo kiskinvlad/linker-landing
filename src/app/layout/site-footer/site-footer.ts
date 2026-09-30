@@ -39,12 +39,18 @@ import { Logo } from '../../shared/ui/logo';
         <nav i18n-aria-label="@@footer.legal" aria-label="Legal">
           <h2 class="footer__title" i18n="@@footer.legal">Legal</h2>
           <ul>
+            <li><a routerLink="/legal" i18n="@@footer.legalCenter">Legal center</a></li>
             <li><a routerLink="/legal/terms" i18n="@@footer.terms">Terms</a></li>
             <li><a routerLink="/legal/privacy" i18n="@@footer.privacy">Privacy</a></li>
             <li><a routerLink="/legal/cookies" i18n="@@footer.cookies">Cookies</a></li>
             <li>
               <a routerLink="/legal/feedback-program" i18n="@@footer.feedbackProgram"
                 >Feedback program</a
+              >
+            </li>
+            <li>
+              <a routerLink="/legal" fragment="contact" i18n="@@footer.reportAbuse"
+                >Report a widget</a
               >
             </li>
             <!-- Reopens the consent panel (plan §8). "Your privacy choices" is the CCPA

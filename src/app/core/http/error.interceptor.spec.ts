@@ -5,6 +5,7 @@ import { firstValueFrom } from 'rxjs';
 import { User } from '../api/auth.api';
 import { SessionStore } from '../auth/session.store';
 import { APP_IDENTITY } from '../config/app-identity';
+import { TEST_LEGAL_IDENTITY } from '../config/app-identity.testing';
 import { errorInterceptor } from './error.interceptor';
 
 const API = 'http://api.test/api/v1';
@@ -21,7 +22,7 @@ function setup() {
           siteUrl: 'https://x',
           apiUrl: API,
           editorPath: '/editor/',
-          legalEntity: '',
+          legal: TEST_LEGAL_IDENTITY,
         },
       },
     ],

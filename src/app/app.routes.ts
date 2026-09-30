@@ -1,7 +1,8 @@
 import { Routes } from '@angular/router';
 import { authGuard, guestGuard } from './core/auth/auth.guards';
 import { RouteSeo } from './core/seo/seo.service';
-import { LEGAL_DOCS, legalSeo } from './features/legal/legal.content';
+import { LEGAL_DOCS, LEGAL_HUB_SEO, legalSeo } from './features/legal/legal.content';
+import { legalDocResolver } from './features/legal/legal-doc.resolver';
 import { HOME_SEO } from './features/marketing/home/home.seo';
 import { HOW_IT_WORKS_SEO } from './features/marketing/how-it-works/how-it-works.content';
 import { PRICING_SEO } from './features/marketing/pricing/pricing.content';
@@ -40,10 +41,16 @@ export const routes: Routes = [
       import('./features/marketing/how-it-works/how-it-works').then((m) => m.HowItWorks),
     data: { seo: HOW_IT_WORKS_SEO },
   },
+  {
+    path: 'legal',
+    loadComponent: () => import('./features/legal/legal-hub-page').then((m) => m.LegalHubPage),
+    data: { seo: LEGAL_HUB_SEO },
+  },
   ...LEGAL_DOCS.map((doc) => ({
     path: `legal/${doc.slug}`,
     loadComponent: legalPage,
     data: { seo: legalSeo(doc), doc },
+    resolve: { rendered: legalDocResolver },
   })),
   {
     path: 'login',
