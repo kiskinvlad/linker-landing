@@ -1,9 +1,9 @@
 <section id="how-it-works" class="section" aria-labelledby="steps-title">
   <div class="container">
     <div class="section-head section-head--center" kitReveal>
-      <p class="eyebrow">How it works</p>
-      <h2 id="steps-title">From idea to live offer in three steps</h2>
-      <p>No tickets to a developer, no theme edits, no waiting.</p>
+      <p class="eyebrow" i18n="@@nav.howItWorks">How it works</p>
+      <h2 id="steps-title" i18n="@@home.steps.title">From idea to live offer in three steps</h2>
+      <p i18n="@@home.steps.lead">No tickets to a developer, no theme edits, no waiting.</p>
     </div>
 
     <ol class="steps">
@@ -34,11 +34,21 @@
                   <text x="36" y="45" class="v-mono">&lt;script src="…/kit.js"</text>
                   <text x="36" y="60" class="v-mono">data-widget="welcome"&gt;</text>
                   <rect x="24" y="86" width="96" height="34" rx="17" class="v-btn" />
-                  <text x="72" y="107" class="v-btn-text" text-anchor="middle">Publish</text>
+                  <text
+                    x="72"
+                    y="107"
+                    class="v-btn-text"
+                    text-anchor="middle"
+                    i18n="@@home.steps.mock.publish"
+                  >
+                    Publish
+                  </text>
                   <g class="v-live">
                     <circle cx="160" cy="103" r="14" class="v-ok" />
                     <path d="M153 103 l5 5 l9 -10" class="v-check" />
-                    <text x="182" y="108" class="v-live-text">Live</text>
+                    <text x="182" y="108" class="v-live-text" i18n="@@home.steps.mock.live">
+                      Live
+                    </text>
                   </g>
                 </svg>
               }
@@ -53,7 +63,15 @@
                   <rect class="v-bar b5 v-bar--hot" x="184" y="32" width="22" height="86" rx="4" />
                   <g class="v-ping">
                     <rect x="120" y="18" width="92" height="22" rx="11" class="v-tag" />
-                    <text x="166" y="33" class="v-tag-text" text-anchor="middle">+1 new lead</text>
+                    <text
+                      x="166"
+                      y="33"
+                      class="v-tag-text"
+                      text-anchor="middle"
+                      i18n="@@home.steps.mock.newLead"
+                    >
+                      +1 new lead
+                    </text>
                   </g>
                 </svg>
               }

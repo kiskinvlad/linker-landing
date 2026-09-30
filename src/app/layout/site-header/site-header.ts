@@ -2,10 +2,11 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { APP_IDENTITY } from '../../core/config/app-identity';
 import { Logo } from '../../shared/ui/logo';
+import { LanguageSwitcher } from '../language-switcher/language-switcher';
 
 @Component({
   selector: 'kit-site-header',
-  imports: [RouterLink, RouterLinkActive, Logo],
+  imports: [RouterLink, RouterLinkActive, Logo, LanguageSwitcher],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './site-header.html',
   styleUrl: './site-header.css',
@@ -18,9 +19,9 @@ export class SiteHeader {
   protected readonly menuOpen = signal(false);
 
   protected readonly nav: { label: string; link: string; fragment?: string }[] = [
-    { label: 'Product', link: '/', fragment: 'product' },
-    { label: 'Pricing', link: '/pricing' },
-    { label: 'How it works', link: '/how-it-works' },
+    { label: $localize`:@@nav.product:Product`, link: '/', fragment: 'product' },
+    { label: $localize`:@@nav.pricing:Pricing`, link: '/pricing' },
+    { label: $localize`:@@nav.howItWorks:How it works`, link: '/how-it-works' },
   ];
 
   protected toggleMenu(): void {

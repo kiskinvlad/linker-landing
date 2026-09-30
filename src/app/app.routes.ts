@@ -6,8 +6,8 @@ import { HOW_IT_WORKS_SEO } from './features/marketing/how-it-works/how-it-works
 import { PRICING_SEO } from './features/marketing/pricing/pricing.content';
 
 const NOT_FOUND_SEO: RouteSeo = {
-  title: 'Page not found',
-  description: 'The page you were looking for does not exist.',
+  title: $localize`:@@notFound.seo.title:Page not found`,
+  description: $localize`:@@notFound.seo.description:The page you were looking for does not exist.`,
   noindex: true,
 };
 

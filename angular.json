@@ -29,7 +29,12 @@
               "src/styles.css"
             ],
             "server": "src/main.server.ts",
-            "outputMode": "static"
+            "outputMode": "static",
+            "polyfills": [
+              "@angular/localize/init"
+            ],
+            "localize": true,
+            "i18nMissingTranslation": "error"
           },
           "configurations": {
             "production": {
@@ -50,7 +55,13 @@
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true
+              "sourceMap": true,
+              "localize": false
+            },
+            "uk": {
+              "localize": [
+                "uk"
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -63,12 +74,36 @@
             },
             "development": {
               "buildTarget": "kitlet-portal:build:development"
+            },
+            "uk": {
+              "buildTarget": "kitlet-portal:build:development,uk"
             }
           },
           "defaultConfiguration": "development"
         },
         "test": {
           "builder": "@angular/build:unit-test"
+        },
+        "extract-i18n": {
+          "builder": "@angular/build:extract-i18n",
+          "options": {
+            "buildTarget": "kitlet-portal:build:development",
+            "format": "json",
+            "outputPath": "src/locale",
+            "outFile": "messages.json"
+          }
+        }
+      },
+      "i18n": {
+        "sourceLocale": {
+          "code": "en",
+          "subPath": ""
+        },
+        "locales": {
+          "uk": {
+            "translation": "src/locale/messages.uk.json",
+            "subPath": "ua"
+          }
         }
       }
     }

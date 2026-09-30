@@ -1,7 +1,10 @@
 <header class="header">
   <div class="container header__bar">
-    <a class="header__brand" routerLink="/" [attr.aria-label]="identity.productName + ' home'">
+    <!-- Link text, not an interpolated i18n aria-label: that attribute never made it
+         into the prerendered HTML, which left the logo link with no accessible name. -->
+    <a class="header__brand" routerLink="/">
       <kit-logo [height]="26" />
+      <span class="visually-hidden" i18n="@@nav.homeLink">{{ identity.productName }} home</span>
     </a>
 
     <button
@@ -11,11 +14,17 @@
       aria-controls="site-nav"
       (click)="toggleMenu()"
     >
-      <span class="visually-hidden">Menu</span>
+      <span class="visually-hidden" i18n="@@nav.menu">Menu</span>
       <span class="header__burger" [class.is-open]="menuOpen()" aria-hidden="true"></span>
     </button>
 
-    <nav id="site-nav" class="header__nav" [class.is-open]="menuOpen()" aria-label="Main">
+    <nav
+      id="site-nav"
+      class="header__nav"
+      [class.is-open]="menuOpen()"
+      i18n-aria-label="@@nav.main"
+      aria-label="Main"
+    >
       <ul class="header__links">
         @for (item of nav; track item.label) {
           <li>
@@ -32,6 +41,7 @@
       </ul>
 
       <div class="header__actions">
+        <kit-language-switcher />
         <!-- A different app, so a plain href and a full navigation (plan §3). -->
         <a class="open-editor" [href]="identity.editorPath">
           <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
@@ -48,10 +58,12 @@
             <path d="M2.5 7.5h15" stroke="currentColor" stroke-width="1.6" />
             <path d="M8 10.5l3 2-3 2z" fill="currentColor" />
           </svg>
-          Open editor
+          <ng-container i18n="@@nav.openEditor">Open editor</ng-container>
         </a>
-        <a class="header__login" href="/login">Log in</a>
-        <a class="btn btn--ghost header__signup" href="/register">Sign up</a>
+        <a class="header__login" routerLink="/login" i18n="@@nav.login">Log in</a>
+        <a class="btn btn--ghost header__signup" routerLink="/register" i18n="@@nav.signup"
+          >Sign up</a
+        >
       </div>
     </nav>
   </div>

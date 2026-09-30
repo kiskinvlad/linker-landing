@@ -9,9 +9,11 @@ import { RouterLink } from '@angular/router';
     <section class="section nf" aria-labelledby="nf-title">
       <div class="container">
         <p class="eyebrow">404</p>
-        <h1 id="nf-title">This page wandered off.</h1>
-        <p class="nf__lead">The link may be broken, or the page may have moved.</p>
-        <a class="btn btn--primary" routerLink="/">Back to home</a>
+        <h1 id="nf-title" i18n="@@notFound.title">This page wandered off.</h1>
+        <p class="nf__lead" i18n="@@notFound.lead">
+          The link may be broken, or the page may have moved.
+        </p>
+        <a class="btn btn--primary" routerLink="/" i18n="@@common.backHome">Back to home</a>
       </div>
     </section>
   `,

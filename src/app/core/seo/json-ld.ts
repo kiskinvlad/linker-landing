@@ -4,12 +4,14 @@ export function breadcrumbs(siteUrl: string, trail: { name: string; path: string
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
-    itemListElement: [{ name: 'Home', path: '/' }, ...trail].map((crumb, i) => ({
-      '@type': 'ListItem',
-      position: i + 1,
-      name: crumb.name,
-      item: siteUrl + crumb.path,
-    })),
+    itemListElement: [{ name: $localize`:@@nav.home:Home`, path: '/' }, ...trail].map(
+      (crumb, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: crumb.name,
+        item: siteUrl + crumb.path,
+      }),
+    ),
   };
 }
 
