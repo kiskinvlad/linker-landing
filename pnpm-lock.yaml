@@ -199,6 +199,9 @@ importers:
       '@fontsource/ibm-plex-sans':
         specifier: ^5.3.0
         version: 5.3.0
+      '@kiskinvlad/linker-tokens':
+        specifier: workspace:*
+        version: link:packages/tokens
       rxjs:
         specifier: ~7.8.0
         version: 7.8.2
@@ -208,13 +211,16 @@ importers:
     devDependencies:
       '@angular/build':
         specifier: ^22.2.0
-        version: 22.2.0(0827f46d41698d01626f55421b3d2617)
+        version: 22.2.0(54b3cc423d27887eb2963b0bef5190ce)
       '@angular/cli':
         specifier: ^22.2.0
         version: 22.2.0(@types/node@22.20.4)(chokidar@5.0.0)
       '@angular/compiler-cli':
         specifier: ^22.2.0
         version: 22.2.0(@angular/compiler@22.2.0)(typescript@6.0.3)
+      '@angular/localize':
+        specifier: ^22.2.0
+        version: 22.2.0(@angular/compiler-cli@22.2.0(@angular/compiler@22.2.0)(typescript@6.0.3))(@angular/compiler@22.2.0)
       '@lhci/cli':
         specifier: 0.15.1
         version: 0.15.1(supports-color@8.1.1)
@@ -239,6 +245,8 @@ importers:
       vitest:
         specifier: ^5.0.0
         version: 5.0.2(@types/node@22.20.4)(jsdom@30.1.1)(vite@8.3.0(@types/node@22.20.4)(esbuild@0.28.2)(sass-embedded@1.104.1)(sass@1.104.1))
+
+  packages/tokens: {}
 
 packages:
 
@@ -364,6 +372,14 @@ packages:
       '@angular/core': 22.2.0
       '@angular/platform-browser': 22.2.0
       rxjs: ^6.5.3 || ^7.4.0
+
+  '@angular/localize@22.2.0':
+    resolution: {integrity: sha512-RfaF5tAKWyQwGzu0P5bJUavB8QWrWdM/xU5gDXydIFopBk4WERaMYh5E5fGm39h09dod2vmFH3JND1Ht0Vgy6w==}
+    engines: {node: ^22.22.3 || ^24.15.0 || >=26.0.0}
+    hasBin: true
+    peerDependencies:
+      '@angular/compiler': 22.2.0
+      '@angular/compiler-cli': 22.2.0
 
   '@angular/platform-browser@22.2.0':
     resolution: {integrity: sha512-XMUOyn8WARk9NdFGO3uRgdC3hPrp+2xsSYNeSkaEZ4jI3Pc23f22e4GI8Vayl/UOmShHVn/i+NWfTWh3SEbbSw==}
@@ -3643,7 +3659,7 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
-  '@angular/build@22.2.0(0827f46d41698d01626f55421b3d2617)':
+  '@angular/build@22.2.0(54b3cc423d27887eb2963b0bef5190ce)':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@angular-devkit/architect': 0.2202.0(chokidar@5.0.0)
@@ -3678,6 +3694,7 @@ snapshots:
       xxhash-wasm: 1.1.0
     optionalDependencies:
       '@angular/core': 22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)
+      '@angular/localize': 22.2.0(@angular/compiler-cli@22.2.0(@angular/compiler@22.2.0)(typescript@6.0.3))(@angular/compiler@22.2.0)
       '@angular/platform-browser': 22.2.0(@angular/common@22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2))
       '@angular/platform-server': 22.2.0(@angular/common@22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/compiler@22.2.0)(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2))(@angular/platform-browser@22.2.0(@angular/common@22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)))(rxjs@7.8.2)
       '@angular/ssr': 22.2.0(@angular/common@22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2))(@angular/platform-server@22.2.0(@angular/common@22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/compiler@22.2.0)(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2))(@angular/platform-browser@22.2.0(@angular/common@22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)))(rxjs@7.8.2))(@angular/router@22.2.0(@angular/common@22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2))(@angular/platform-browser@22.2.0(@angular/common@22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2)))(rxjs@7.8.2))
@@ -3756,6 +3773,14 @@ snapshots:
       rxjs: 7.8.2
       tslib: 2.8.1
       zod: 4.6.5
+
+  '@angular/localize@22.2.0(@angular/compiler-cli@22.2.0(@angular/compiler@22.2.0)(typescript@6.0.3))(@angular/compiler@22.2.0)':
+    dependencies:
+      '@angular/compiler': 22.2.0
+      '@angular/compiler-cli': 22.2.0(@angular/compiler@22.2.0)(typescript@6.0.3)
+      '@babel/core': 8.0.1
+      tinyglobby: 0.2.17
+      yargs: 18.2.0
 
   '@angular/platform-browser@22.2.0(@angular/common@22.2.0(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.2.0(@angular/compiler@22.2.0)(rxjs@7.8.2))':
     dependencies:

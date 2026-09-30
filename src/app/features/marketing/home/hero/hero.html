@@ -5,21 +5,23 @@
     <div class="hero__copy">
       <p class="hero__pill">
         <span class="hero__pill-dot" aria-hidden="true"></span>
-        For online stores, dropshippers &amp; small brands
+        <ng-container i18n="@@home.hero.pill"
+          >For online stores, dropshippers &amp; small brands</ng-container
+        >
       </p>
 
-      <h1 id="hero-title">
+      <h1 id="hero-title" i18n="@@home.hero.title">
         Turn more of your visitors into <span class="hero__accent">buyers.</span>
       </h1>
 
-      <p class="hero__lead">
+      <p class="hero__lead" i18n="@@home.hero.lead">
         Put on-brand offers, signup forms and promo banners on any website in minutes. Design them
         visually, publish with a click, and see what actually sells.
       </p>
 
       <div class="hero__ctas">
-        <a class="btn btn--primary btn--lg" href="/register?plan=free">
-          Start free
+        <a class="btn btn--primary btn--lg" routerLink="/register" [queryParams]="{ plan: 'free' }">
+          <ng-container i18n="@@cta.startFree">Start free</ng-container>
           <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true">
             <path
               d="M4 10h11m-4-4 4 4-4 4"
@@ -31,12 +33,16 @@
             />
           </svg>
         </a>
-        <a class="btn btn--ghost btn--lg" routerLink="/" fragment="how-it-works"
+        <a
+          class="btn btn--ghost btn--lg"
+          routerLink="/"
+          fragment="how-it-works"
+          i18n="@@home.hero.secondaryCta"
           >See how it works</a
         >
       </div>
 
-      <p class="hero__note">Free plan · No credit card needed</p>
+      <p class="hero__note" i18n="@@home.hero.note">Free plan · No credit card needed</p>
     </div>
 
     <div class="hero__visual" aria-hidden="true">
@@ -70,11 +76,11 @@
 
         <div class="offer">
           <button class="offer__close" tabindex="-1">×</button>
-          <p class="offer__eyebrow">Welcome gift</p>
-          <p class="offer__title">15% off your first order</p>
+          <p class="offer__eyebrow" i18n="@@home.hero.mock.offerEyebrow">Welcome gift</p>
+          <p class="offer__title" i18n="@@home.hero.mock.offerTitle">15% off your first order</p>
           <div class="offer__form">
             <span class="offer__input">you&#64;email.com</span>
-            <span class="offer__btn">Get my code</span>
+            <span class="offer__btn" i18n="@@home.hero.mock.offerButton">Get my code</span>
           </div>
         </div>
       </div>
@@ -82,13 +88,13 @@
       <div class="toast toast--lead">
         <span class="toast__icon">✓</span>
         <div>
-          <strong>New subscriber</strong>
-          <span>from the welcome offer</span>
+          <strong i18n="@@home.hero.mock.leadTitle">New subscriber</strong>
+          <span i18n="@@home.hero.mock.leadBody">from the welcome offer</span>
         </div>
       </div>
 
       <div class="toast toast--stat">
-        <span class="toast__label">Offer conversion</span>
+        <span class="toast__label" i18n="@@home.hero.mock.statLabel">Offer conversion</span>
         <strong>+18%</strong>
         <svg viewBox="0 0 80 24" width="80" height="24">
           <path

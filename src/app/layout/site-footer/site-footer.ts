@@ -12,48 +12,56 @@ import { Logo } from '../../shared/ui/logo';
       <div class="container footer__grid">
         <div class="footer__brand">
           <kit-logo [height]="24" />
-          <p>On-brand offers, forms and banners for any store — no developer needed.</p>
+          <p i18n="@@footer.tagline">
+            On-brand offers, forms and banners for any store — no developer needed.
+          </p>
         </div>
 
-        <nav aria-label="Product">
-          <h2 class="footer__title">Product</h2>
+        <nav i18n-aria-label="@@footer.product" aria-label="Product">
+          <h2 class="footer__title" i18n="@@footer.product">Product</h2>
           <ul>
-            <li><a routerLink="/how-it-works">How it works</a></li>
-            <li><a routerLink="/pricing">Pricing</a></li>
-            <li><a routerLink="/" fragment="faq">FAQ</a></li>
-            <li><a [href]="identity.editorPath">Open editor</a></li>
+            <li><a routerLink="/how-it-works" i18n="@@nav.howItWorks">How it works</a></li>
+            <li><a routerLink="/pricing" i18n="@@nav.pricing">Pricing</a></li>
+            <li><a routerLink="/" fragment="faq" i18n="@@footer.faq">FAQ</a></li>
+            <li><a [href]="identity.editorPath" i18n="@@nav.openEditor">Open editor</a></li>
           </ul>
         </nav>
 
-        <nav aria-label="Account">
-          <h2 class="footer__title">Account</h2>
+        <nav i18n-aria-label="@@footer.account" aria-label="Account">
+          <h2 class="footer__title" i18n="@@footer.account">Account</h2>
           <ul>
-            <li><a href="/register">Sign up free</a></li>
-            <li><a href="/login">Log in</a></li>
+            <li><a routerLink="/register" i18n="@@footer.signupFree">Sign up free</a></li>
+            <li><a routerLink="/login" i18n="@@nav.login">Log in</a></li>
           </ul>
         </nav>
 
-        <nav aria-label="Legal">
-          <h2 class="footer__title">Legal</h2>
+        <nav i18n-aria-label="@@footer.legal" aria-label="Legal">
+          <h2 class="footer__title" i18n="@@footer.legal">Legal</h2>
           <ul>
-            <li><a routerLink="/legal/terms">Terms</a></li>
-            <li><a routerLink="/legal/privacy">Privacy</a></li>
-            <li><a routerLink="/legal/cookies">Cookies</a></li>
-            <li><a routerLink="/legal/feedback-program">Feedback program</a></li>
+            <li><a routerLink="/legal/terms" i18n="@@footer.terms">Terms</a></li>
+            <li><a routerLink="/legal/privacy" i18n="@@footer.privacy">Privacy</a></li>
+            <li><a routerLink="/legal/cookies" i18n="@@footer.cookies">Cookies</a></li>
+            <li>
+              <a routerLink="/legal/feedback-program" i18n="@@footer.feedbackProgram"
+                >Feedback program</a
+              >
+            </li>
           </ul>
         </nav>
       </div>
 
       <div class="container footer__base">
-        <p>© {{ year }} {{ identity.productName }}. All rights reserved.</p>
+        <p i18n="@@footer.copyright">
+          © {{ year }} {{ identity.productName }}. All rights reserved.
+        </p>
       </div>
     </footer>
   `,
   styles: `
     .footer {
       padding-top: 64px;
-      background: var(--bg-soft);
-      border-top: 1px solid var(--line);
+      background: var(--bg-2);
+      border-top: 1px solid var(--border);
       color: var(--ink-2);
       font-size: 0.9375rem;
     }
@@ -97,7 +105,7 @@ import { Logo } from '../../shared/ui/logo';
     .footer__base {
       margin-top: 56px;
       padding-block: 24px;
-      border-top: 1px solid var(--line);
+      border-top: 1px solid var(--border);
       font-size: 0.875rem;
       color: var(--ink-3);
     }

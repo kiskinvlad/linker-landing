@@ -11,13 +11,19 @@ import { GUIDE_STEPS } from './how-it-works.content';
   template: `
     <header class="page-hero">
       <div class="container">
-        <p class="eyebrow">How it works</p>
-        <h1>From sign-up to a live offer in six steps</h1>
-        <p>No developer, no theme edits. The only technical step is pasting one snippet, once.</p>
+        <p class="eyebrow" i18n="@@nav.howItWorks">How it works</p>
+        <h1 i18n="@@guide.title">From sign-up to a live offer in six steps</h1>
+        <p i18n="@@guide.lead">
+          No developer, no theme edits. The only technical step is pasting one snippet, once.
+        </p>
       </div>
     </header>
 
-    <section class="section guide-section" aria-label="Step-by-step guide">
+    <section
+      class="section guide-section"
+      i18n-aria-label="@@guide.listLabel"
+      aria-label="Step-by-step guide"
+    >
       <div class="container">
         <ol class="guide">
           @for (step of steps; track step.title; let i = $index) {
@@ -40,7 +46,9 @@ import { GUIDE_STEPS } from './how-it-works.content';
 
     <kit-cocreate-band />
     <kit-cta-band
+      i18n-heading="@@guide.cta.title"
       heading="Ready for step one?"
+      i18n-lead="@@guide.cta.lead"
       lead="Create your free account and publish your first offer today."
     />
   `,
@@ -82,15 +90,15 @@ import { GUIDE_STEPS } from './how-it-works.content';
       height: 48px;
       border-radius: 50%;
       background: var(--accent);
-      color: var(--accent-ink);
+      color: var(--on-accent);
       font: 600 1.125rem var(--font-mono);
       box-shadow: 0 0 0 6px var(--bg);
     }
     .guide__card {
       padding: 24px 28px;
-      border: 1px solid var(--line);
+      border: 1px solid var(--border);
       border-radius: var(--radius-lg);
-      background: var(--panel);
+      background: var(--surface);
     }
     .guide__card h2 {
       font-size: 1.5rem;

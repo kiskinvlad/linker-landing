@@ -14,27 +14,50 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-// Keep `slug` in sync with RouteSeo.ogImage in the route configs.
-const PAGES = [
-  {
-    slug: 'home',
-    eyebrow: 'On-brand offers for any store',
-    title: 'Turn more of your visitors into <em>buyers.</em>',
-    lead: 'Offers, signup forms and promo banners. Design visually, publish with a click.',
-  },
-  {
-    slug: 'pricing',
-    eyebrow: 'Pricing',
-    title: 'Start free. Upgrade when it <em>pays for itself.</em>',
-    lead: '1 live widget and 10,000 views a month on the Free plan. No credit card.',
-  },
-  {
-    slug: 'how-it-works',
-    eyebrow: 'How it works',
-    title: 'From sign-up to a live offer in <em>six steps.</em>',
-    lead: 'No developer, no theme edits. Paste one snippet, once.',
-  },
-];
+// Keep `slug` in sync with RouteSeo.ogImage in the route configs, and the
+// languages with src/app/core/i18n/locales.ts. Files are <slug>.<locale>.png.
+const PAGES = {
+  en: [
+    {
+      slug: 'home',
+      eyebrow: 'On-brand offers for any store',
+      title: 'Turn more of your visitors into <em>buyers.</em>',
+      lead: 'Offers, signup forms and promo banners. Design visually, publish with a click.',
+    },
+    {
+      slug: 'pricing',
+      eyebrow: 'Pricing',
+      title: 'Start free. Upgrade when it <em>pays for itself.</em>',
+      lead: '1 live widget and 10,000 views a month on the Free plan. No credit card.',
+    },
+    {
+      slug: 'how-it-works',
+      eyebrow: 'How it works',
+      title: 'From sign-up to a live offer in <em>six steps.</em>',
+      lead: 'No developer, no theme edits. Paste one snippet, once.',
+    },
+  ],
+  uk: [
+    {
+      slug: 'home',
+      eyebrow: 'Фірмові пропозиції для будь-якого магазину',
+      title: 'Перетворюйте більше відвідувачів на <em>покупців.</em>',
+      lead: 'Пропозиції, форми підписки та промобанери. Візуальний редактор, публікація одним кліком.',
+    },
+    {
+      slug: 'pricing',
+      eyebrow: 'Тарифи',
+      title: 'Почніть безкоштовно. Платіть, <em>коли окупиться.</em>',
+      lead: '1 активний віджет і 10 000 переглядів на місяць безкоштовно. Без картки.',
+    },
+    {
+      slug: 'how-it-works',
+      eyebrow: 'Як це працює',
+      title: 'Від реєстрації до живої пропозиції <em>за шість кроків.</em>',
+      lead: 'Без розробника й без правок теми. Один раз вставте фрагмент коду.',
+    },
+  ],
+};
 
 const CHROME_CANDIDATES = [
   process.env.CHROME_PATH,
@@ -65,6 +88,13 @@ const fonts = {
   ),
   sans: await fontUrl('@fontsource/ibm-plex-sans', /^ibm-plex-sans-latin-400-normal\.woff2$/),
   mono: await fontUrl('@fontsource/ibm-plex-mono', /^ibm-plex-mono-latin-400-normal\.woff2$/),
+  // Bricolage has no Cyrillic: Ukrainian headings fall back to Plex Sans 600, as on the site.
+  sansCyr: await fontUrl('@fontsource/ibm-plex-sans', /^ibm-plex-sans-cyrillic-400-normal\.woff2$/),
+  headingCyr: await fontUrl(
+    '@fontsource/ibm-plex-sans',
+    /^ibm-plex-sans-cyrillic-600-normal\.woff2$/,
+  ),
+  monoCyr: await fontUrl('@fontsource/ibm-plex-mono', /^ibm-plex-mono-cyrillic-400-normal\.woff2$/),
 };
 
 // The inverse logo: white strokes for the navy background.
@@ -73,11 +103,16 @@ const logo = (await readFile('brand/logos/kitlet-logo-inverse.svg', 'utf8')).rep
   'width="190" height="41"',
 );
 
-const page = ({ eyebrow, title, lead }) => `<!doctype html>
-<html><head><meta charset="utf-8"><style>
+const CYRILLIC = 'U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116';
+
+const page = ({ eyebrow, title, lead }, lang) => `<!doctype html>
+<html lang="${lang}"><head><meta charset="utf-8"><style>
   @font-face { font-family: Display; src: url(${fonts.display}) format('woff2'); font-weight: 100 900; }
   @font-face { font-family: Sans; src: url(${fonts.sans}) format('woff2'); }
   @font-face { font-family: Mono; src: url(${fonts.mono}) format('woff2'); }
+  @font-face { font-family: Sans; src: url(${fonts.sansCyr}) format('woff2'); unicode-range: ${CYRILLIC}; }
+  @font-face { font-family: Mono; src: url(${fonts.monoCyr}) format('woff2'); unicode-range: ${CYRILLIC}; }
+  @font-face { font-family: HeadingCyr; src: url(${fonts.headingCyr}) format('woff2'); font-weight: 100 900; }
   * { box-sizing: border-box; margin: 0; }
   html, body { width: 1200px; height: 630px; overflow: hidden; }
   body {
@@ -100,7 +135,7 @@ const page = ({ eyebrow, title, lead }) => `<!doctype html>
   .eyebrow::before { content: ''; width: 12px; height: 12px; background: #ff6b35; transform: rotate(45deg); }
   h1 {
     max-width: 900px; margin-top: 20px;
-    font: 750 72px/1.05 Display, sans-serif; letter-spacing: -0.025em; color: #fff;
+    font: 750 72px/1.05 Display, HeadingCyr, sans-serif; letter-spacing: -0.025em; color: #fff;
   }
   h1 em { font-style: normal; color: #7aa4f7; }
   p { max-width: 820px; margin-top: 24px; font-size: 28px; line-height: 1.4; }
@@ -116,27 +151,29 @@ await mkdir(outDir, { recursive: true });
 const tmp = await mkdtemp(join(tmpdir(), 'kit-og-'));
 
 try {
-  for (const p of PAGES) {
-    const html = join(tmp, `${p.slug}.html`);
-    const png = join(outDir, `${p.slug}.png`);
-    await writeFile(html, page(p));
-    execFileSync(
-      chrome,
-      [
-        '--headless=new',
-        '--disable-gpu',
-        '--hide-scrollbars',
-        '--force-device-scale-factor=1',
-        '--window-size=1200,630',
-        // Fonts load from file URLs; give them time before the capture.
-        '--virtual-time-budget=3000',
-        `--screenshot=${png}`,
-        pathToFileURL(html).href,
-      ],
-      { stdio: 'ignore' },
-    );
-    console.log(`og: public/og/${p.slug}.png`);
-  }
+  for (const [lang, pages] of Object.entries(PAGES))
+    for (const p of pages) {
+      const name = `${p.slug}.${lang}`;
+      const html = join(tmp, `${name}.html`);
+      const png = join(outDir, `${name}.png`);
+      await writeFile(html, page(p, lang));
+      execFileSync(
+        chrome,
+        [
+          '--headless=new',
+          '--disable-gpu',
+          '--hide-scrollbars',
+          '--force-device-scale-factor=1',
+          '--window-size=1200,630',
+          // Fonts load from file URLs; give them time before the capture.
+          '--virtual-time-budget=3000',
+          `--screenshot=${png}`,
+          pathToFileURL(html).href,
+        ],
+        { stdio: 'ignore' },
+      );
+      console.log(`og: public/og/${name}.png`);
+    }
 } finally {
   await rm(tmp, { recursive: true, force: true });
 }

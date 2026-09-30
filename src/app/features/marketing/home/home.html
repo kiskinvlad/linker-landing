@@ -4,8 +4,8 @@
 <section class="section section--soft" aria-labelledby="audience-title">
   <div class="container">
     <div class="section-head" kitReveal>
-      <p class="eyebrow">Built for people who sell</p>
-      <h2 id="audience-title">Made for stores, not for developers</h2>
+      <p class="eyebrow" i18n="@@home.audience.eyebrow">Built for people who sell</p>
+      <h2 id="audience-title" i18n="@@home.audience.title">Made for stores, not for developers</h2>
     </div>
 
     <ul class="cards cards--4">
@@ -48,11 +48,20 @@
 </section>
 
 <!-- 2. Trust strip -->
-<section class="trust" aria-label="At a glance">
+<section class="trust" i18n-aria-label="@@home.trust.label" aria-label="At a glance">
   <ul class="container trust__list">
-    <li><span class="trust__tick" aria-hidden="true">✓</span> Free plan</li>
-    <li><span class="trust__tick" aria-hidden="true">✓</span> No credit card</li>
-    <li><span class="trust__tick" aria-hidden="true">✓</span> Works on any website</li>
+    <li>
+      <span class="trust__tick" aria-hidden="true">✓</span>
+      <ng-container i18n="@@home.trust.free">Free plan</ng-container>
+    </li>
+    <li>
+      <span class="trust__tick" aria-hidden="true">✓</span>
+      <ng-container i18n="@@home.trust.noCard">No credit card</ng-container>
+    </li>
+    <li>
+      <span class="trust__tick" aria-hidden="true">✓</span>
+      <ng-container i18n="@@home.trust.anySite">Works on any website</ng-container>
+    </li>
   </ul>
 </section>
 
@@ -63,9 +72,13 @@
 <section id="product" class="section section--soft" aria-labelledby="benefits-title">
   <div class="container benefits">
     <div class="section-head benefits__head" kitReveal>
-      <p class="eyebrow">Why it works</p>
-      <h2 id="benefits-title">Everything a store needs. Nothing it has to maintain.</h2>
-      <p>Your offers stay fast, safe and on-brand, and you stay in control of every change.</p>
+      <p class="eyebrow" i18n="@@home.benefits.eyebrow">Why it works</p>
+      <h2 id="benefits-title" i18n="@@home.benefits.title">
+        Everything a store needs. Nothing it has to maintain.
+      </h2>
+      <p i18n="@@home.benefits.lead">
+        Your offers stay fast, safe and on-brand, and you stay in control of every change.
+      </p>
     </div>
 
     <ul class="benefits__list">
@@ -86,8 +99,8 @@
 <section class="section" aria-labelledby="usecases-title">
   <div class="container">
     <div class="section-head section-head--center" kitReveal>
-      <p class="eyebrow">Use cases</p>
-      <h2 id="usecases-title">One editor, every kind of offer</h2>
+      <p class="eyebrow" i18n="@@home.useCases.eyebrow">Use cases</p>
+      <h2 id="usecases-title" i18n="@@home.useCases.title">One editor, every kind of offer</h2>
     </div>
 
     <ul class="cards cards--4">
@@ -102,7 +115,9 @@
                 <span class="m-btn"></span>
               }
               @case ('promo') {
-                <span class="m-banner"><b>-20%</b> this weekend only</span>
+                <span class="m-banner" i18n="@@home.useCases.mock.promo"
+                  ><b>-20%</b> this weekend only</span
+                >
               }
               @case ('news') {
                 <span class="m-line m-line--lg"></span>
@@ -128,8 +143,10 @@
 <section id="pricing" class="section section--soft" aria-labelledby="pricing-title">
   <div class="container">
     <div class="section-head section-head--center" kitReveal>
-      <p class="eyebrow">Pricing</p>
-      <h2 id="pricing-title">Start free. Upgrade when it pays for itself.</h2>
+      <p class="eyebrow" i18n="@@nav.pricing">Pricing</p>
+      <h2 id="pricing-title" i18n="@@pricing.title">
+        Start free. Upgrade when it pays for itself.
+      </h2>
     </div>
 
     <kit-plan-cards />
