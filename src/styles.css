@@ -64,6 +64,7 @@ html[lang='uk'] {
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
+  /* Router anchor scrolling uses the same value: ViewportScroller.setOffset in app.config.ts. */
   scroll-padding-top: 88px;
 }
 

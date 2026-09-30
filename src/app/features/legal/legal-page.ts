@@ -208,7 +208,9 @@ import { RenderedLegalDoc } from './legal-markdown';
 
     @media (max-width: 900px) {
       .legal__layout {
-        grid-template-columns: 1fr;
+        /* minmax(0, …), not 1fr: a 1fr track grows to the widest table's min-content
+           and widens the whole page, instead of letting .legal-table scroll. */
+        grid-template-columns: minmax(0, 1fr);
         gap: 32px;
       }
       .legal__toc {

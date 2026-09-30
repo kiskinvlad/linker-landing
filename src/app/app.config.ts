@@ -4,6 +4,7 @@ import {
   provideAppInitializer,
   provideBrowserGlobalErrorListeners,
 } from '@angular/core';
+import { ViewportScroller } from '@angular/common';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import {
   provideClientHydration,
@@ -39,6 +40,12 @@ export const appConfig: ApplicationConfig = {
     // inside refresh(): prerendering has no visitor to ask about.
     provideAppInitializer(() => {
       void inject(AuthFacade).refresh();
+    }),
+    // Router anchor scrolling is window.scrollTo(elementTop - offset), so it ignores
+    // CSS scroll-padding/scroll-margin and would land every #anchor under the sticky
+    // header. Match the `scroll-padding-top` on html in styles.css.
+    provideAppInitializer(() => {
+      inject(ViewportScroller).setOffset([0, 88]);
     }),
   ],
 };

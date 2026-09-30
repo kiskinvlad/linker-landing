@@ -70,7 +70,9 @@ jobs:
           set -eu
           OUT=dist/kitlet-portal/browser
           for page in index.html pricing/index.html how-it-works/index.html \
-            ua/index.html ua/pricing/index.html ua/how-it-works/index.html; do
+            legal/index.html legal/terms/index.html \
+            ua/index.html ua/pricing/index.html ua/how-it-works/index.html \
+            ua/legal/index.html ua/legal/terms/index.html; do
             n=$(grep -o '<h1' "$OUT/$page" | wc -l | tr -d ' ')
             if [ "$n" != "1" ]; then
               echo "::error file=$OUT/$page::expected exactly one prerendered <h1>, found $n"
@@ -102,6 +104,48 @@ jobs:
               exit 1
             fi
           done
+          # Legal pages (docs/legal-plan.md): legalDocResolver renders the Markdown
+          # before activation, so the static HTML must hold the whole document, not
+          # a shell that fills in on the client.
+          for lang in "" ua/; do
+            hub="$OUT/${lang}legal/index.html"
+            terms="$OUT/${lang}legal/terms/index.html"
+            if ! grep -q "href=\"/${lang}legal/terms\"" "$hub"; then
+              echo "::error file=$hub::legal hub does not link the Terms"
+              exit 1
+            fi
+            # The last section: present only if the whole text was rendered.
+            if ! grep -q '<h2 id="contact">' "$terms"; then
+              echo "::error file=$terms::Terms text missing or truncated"
+              exit 1
+            fi
+            # Every table-of-contents entry needs its heading id.
+            for id in $(grep -o "href=\"/${lang}legal/terms#[^\"]*\"" "$terms" | sed 's/.*#//; s/"$//'); do
+              if ! grep -q "id=\"$id\"" "$terms"; then
+                echo "::error file=$terms::table of contents links #$id, which has no heading"
+                exit 1
+              fi
+            done
+            # An unknown placeholder fails the prerender; a template slip must not
+            # publish braces either.
+            if grep -q '{{' "$terms"; then
+              echo "::error file=$terms::unfilled {{placeholder}} in the Terms"
+              exit 1
+            fi
+            # LEGAL_TEXTS_FINAL is false until M8: drafts must stay out of indexes.
+            # Drop this check when it is flipped.
+            for page in "$hub" "$terms"; do
+              if ! grep -q '<meta name="robots" content="[^"]*noindex' "$page"; then
+                echo "::error file=$page::draft legal page is indexable"
+                exit 1
+              fi
+            done
+          done
+          # The Ukrainian build shows the English text with a notice that it binds.
+          if ! grep -q 'Обов’язковою є англійська версія' "$OUT/ua/legal/terms/index.html"; then
+            echo "::error file=$OUT/ua/legal/terms/index.html::missing the English-is-binding notice"
+            exit 1
+          fi
           grep -q '<loc>' "$OUT/sitemap.xml"
 
       # Plan §7 budgets: SEO and accessibility >= 95, LCP < 2.5 s, CLS < 0.1
