@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, LOCALE_ID, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { map } from 'rxjs';
 import { ApiError } from '../../core/api/api-error';
 import { AuthFacade } from '../../core/auth/auth.facade';
-import { ReturnNavigator } from '../../core/auth/auth.guards';
+import { safeReturnUrl } from '../../core/auth/return-url';
 import { Ga4Loader } from '../../core/consent/ga4.loader';
 import { describeError, fieldMessages } from './auth-messages';
 import { PASSWORD_MAX, PASSWORD_MIN, PasswordStrength } from './password-strength';
@@ -229,7 +229,9 @@ type Field = 'firstName' | 'lastName' | 'email' | 'company' | 'password';
 })
 export class RegisterPage {
   private readonly auth = inject(AuthFacade);
-  private readonly nav = inject(ReturnNavigator);
+  private readonly router = inject(Router);
+  /** `en` or `uk`: the account's emails start in the language the visitor signed up in. */
+  private readonly locale = inject(LOCALE_ID);
   private readonly ga = inject(Ga4Loader);
 
   private readonly route = inject(ActivatedRoute);
@@ -291,9 +293,17 @@ export class RegisterPage {
     this.busy.set(true);
     const { company, ...rest } = this.form.getRawValue();
     try {
-      await this.auth.register({ ...rest, ...(company.trim() ? { company: company.trim() } : {}) });
+      await this.auth.register({
+        ...rest,
+        ...(company.trim() ? { company: company.trim() } : {}),
+        preferredLanguage: this.locale,
+      });
       this.ga.event('sign_up');
-      await this.nav.go(this.returnUrl());
+      // Signed in but unverified: "check your inbox" comes next (plan §10), and it
+      // carries the returnUrl on for after the link is clicked.
+      await this.router.navigate(['/verify-email'], {
+        queryParams: { returnUrl: safeReturnUrl(this.returnUrl(), '/account') },
+      });
     } catch (e) {
       const err = ApiError.from(e);
       if (err.status === 409) {

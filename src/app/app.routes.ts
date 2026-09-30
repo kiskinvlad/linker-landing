@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { guestGuard } from './core/auth/auth.guards';
+import { authGuard, guestGuard } from './core/auth/auth.guards';
 import { RouteSeo } from './core/seo/seo.service';
 import { LEGAL_DOCS, legalSeo } from './features/legal/legal.content';
 import { HOME_SEO } from './features/marketing/home/home.seo';
@@ -70,6 +70,25 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/auth/reset-password-page').then((m) => m.ResetPasswordPage),
     data: authSeo($localize`:@@reset.title:Choose a new password`),
+  },
+  {
+    path: 'verify-email',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/auth/verify-email-page').then((m) => m.VerifyEmailPage),
+    data: authSeo($localize`:@@verify.title:Check your inbox`),
+  },
+  {
+    // Public: the emailed link is often opened on a device that is signed in to nothing.
+    path: 'verify-email/confirm',
+    loadComponent: () =>
+      import('./features/auth/verify-email-confirm-page').then((m) => m.VerifyEmailConfirmPage),
+    data: authSeo($localize`:@@verify.confirm.seoTitle:Confirm your email`),
+  },
+  {
+    path: 'account',
+    canActivate: [authGuard],
+    loadComponent: () => import('./features/account/account-page').then((m) => m.AccountPage),
+    data: authSeo($localize`:@@account.title:Your account`),
   },
   {
     // Prerendered to /404/index.html; the edge serves it with a real 404 status (plan §2).

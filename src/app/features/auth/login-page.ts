@@ -145,9 +145,9 @@ export class LoginPage {
     if (this.form.invalid) return;
     this.busy.set(true);
     try {
-      await this.auth.login(this.form.getRawValue());
+      const user = await this.auth.login(this.form.getRawValue());
       this.ga.event('login');
-      await this.nav.go(this.returnUrl());
+      await this.nav.afterSignIn(user, this.returnUrl());
     } catch (e) {
       const err = ApiError.from(e);
       this.error.set(

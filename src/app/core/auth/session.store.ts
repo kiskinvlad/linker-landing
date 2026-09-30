@@ -26,6 +26,16 @@ export class SessionStore {
     this._status.set('authenticated');
   }
 
+  /**
+   * Replaces the user after a profile change. Keeps the `legal` block: the
+   * profile routes answer without it, and dropping it would make the terms status
+   * look unknown until the next `/auth/me`.
+   */
+  updateUser(user: User): void {
+    const legal = user.legal ?? this._user()?.legal;
+    this._user.set(legal ? { ...user, legal } : user);
+  }
+
   clear(): void {
     this._user.set(null);
     this._status.set('anonymous');

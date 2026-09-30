@@ -181,6 +181,7 @@
   color: var(--ink);
   font: 400 0.9375rem var(--font-sans);
   text-align: left;
+  text-decoration: none;
   cursor: pointer;
 }
 
@@ -299,4 +300,19 @@
     justify-content: center;
     min-height: 48px;
   }
+}
+
+.verify-banner {
+  border-top: 1px solid color-mix(in srgb, var(--warning) 35%, transparent);
+  background: color-mix(in srgb, var(--warning) 10%, var(--surface));
+  font-size: 0.875rem;
+}
+
+.verify-banner__inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 12px;
+  padding-block: 8px;
+  color: var(--ink);
 }

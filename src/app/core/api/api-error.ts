@@ -51,12 +51,21 @@ export class ApiError extends Error {
     const detail =
       typeof body.detail === 'string' && body.detail ? body.detail : error.statusText || 'Error';
     const errors = Array.isArray(body.errors) ? body.errors.map(String) : [];
-    const retryAfter = Number(error.headers?.get('Retry-After'));
-    return new ApiError(
-      error.status,
-      detail,
-      errors,
-      Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter : null,
-    );
+    return new ApiError(error.status, detail, errors, retryAfterOf(error));
   }
+}
+
+/**
+ * linker-backend names the header per throttler: `Retry-After` for the per-IP
+ * limit, `Retry-After-auth-email` / `-auth-user` for the per-email and per-user
+ * ones. Whichever blocked the request, the visitor has to wait for the longest.
+ * All three are exposed to the portal's origin by the API's CORS config.
+ */
+const RETRY_AFTER_HEADERS = ['Retry-After', 'Retry-After-auth-email', 'Retry-After-auth-user'];
+
+function retryAfterOf(error: HttpErrorResponse): number | null {
+  const seconds = RETRY_AFTER_HEADERS.map((name) => Number(error.headers?.get(name))).filter(
+    (value) => Number.isFinite(value) && value > 0,
+  );
+  return seconds.length ? Math.max(...seconds) : null;
 }

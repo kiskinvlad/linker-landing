@@ -13,7 +13,22 @@ export interface User {
   company: string | null;
   phone: string | null;
   preferredLanguage: string;
+  /** Required before the editor opens (plan D9); the account area works without it. */
+  emailVerified: boolean;
   createdAt: string;
+  /**
+   * Terms status (plan §9). Only `/auth/me` and `/users/me` send it; register,
+   * login and a profile update return the user without it.
+   */
+  legal?: LegalStatus;
+}
+
+/** The `legal` block of `/auth/me` (linker-backend `LegalStatusDto`). */
+export interface LegalStatus {
+  termsVersionCurrent: string;
+  termsVersionAccepted: string | null;
+  termsAcceptedAt: string | null;
+  requiresTermsAcceptance: boolean;
 }
 
 export interface RegisterRequest {
@@ -22,6 +37,8 @@ export interface RegisterRequest {
   firstName: string;
   lastName: string;
   company?: string;
+  /** The UI language, so the account's emails start out in it. */
+  preferredLanguage?: string;
 }
 
 export interface LoginRequest {
@@ -47,6 +64,14 @@ export interface AuthApi {
   forgotPassword(email: string): Observable<void>;
   /** 204. Does NOT sign in. One generic 400 for unknown/used/expired tokens. */
   resetPassword(token: string, password: string): Observable<void>;
+  /** 204. Public; one generic 400 for unknown/used/expired tokens. */
+  verifyEmail(token: string): Observable<void>;
+  /** 204. Needs a session; retires earlier links; 429 after 5 in 15 minutes. */
+  resendVerification(): Observable<void>;
+  /** 204 with a NEW session cookie; every other session ends. 401 on a wrong current password. */
+  changePassword(currentPassword: string, newPassword: string): Observable<void>;
+  /** 204; every session of the user ends, this one included. */
+  logoutAll(): Observable<void>;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -76,6 +101,22 @@ export class HttpAuthApi implements AuthApi {
 
   resetPassword(token: string, password: string): Observable<void> {
     return this.post<void>('/password/reset', { token, password });
+  }
+
+  verifyEmail(token: string): Observable<void> {
+    return this.post<void>('/email/verify', { token });
+  }
+
+  resendVerification(): Observable<void> {
+    return this.post<void>('/email/resend', null);
+  }
+
+  changePassword(currentPassword: string, newPassword: string): Observable<void> {
+    return this.post<void>('/password/change', { currentPassword, newPassword });
+  }
+
+  logoutAll(): Observable<void> {
+    return this.post<void>('/logout-all', null);
   }
 
   private post<T>(path: string, body: unknown): Observable<T> {

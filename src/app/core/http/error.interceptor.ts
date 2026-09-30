@@ -11,8 +11,11 @@ import { APP_IDENTITY } from '../config/app-identity';
  *
  * A 401 from an authenticated call means the session is gone (expired, revoked by
  * "log out everywhere" or a password change), so the store is cleared and guarded
- * pages bounce on their next check. Login's own 401 is a wrong password, not a
- * lost session, so it is left to the form.
+ * pages bounce on their next check.
+ *
+ * Except on the routes that check a password: there a 401 means the password was
+ * wrong, and signing the visitor out for a typo would be absurd. Should the
+ * session really be gone too, the next API call answers 401 and clears it then.
  */
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const apiUrl = inject(APP_IDENTITY).apiUrl;
@@ -24,7 +27,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         apiError.status === 401 &&
         !!apiUrl &&
         req.url.startsWith(`${apiUrl}/`) &&
-        !req.url.endsWith('/auth/login')
+        !checksPassword(req.method, req.url.slice(apiUrl.length))
       ) {
         session.clear();
       }
@@ -32,3 +35,12 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
     }),
   );
 };
+
+/** Routes whose 401 is a wrong password rather than a lost session. */
+function checksPassword(method: string, path: string): boolean {
+  return (
+    path === '/auth/login' ||
+    path === '/auth/password/change' ||
+    (method === 'DELETE' && path === '/users/me')
+  );
+}

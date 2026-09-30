@@ -45,7 +45,32 @@
         <!-- A different app, so a plain href and a full navigation (plan §3). Signed out
              (or not known yet, as on every prerendered page) it goes through login, and
              login returns to the editor. -->
-        @if (session.isAuthenticated()) {
+        @if (session.user()?.emailVerified === false) {
+          <!-- Signed in, not verified: the editor would send them back to confirm
+               first (plan D9), so go there directly and carry the editor on. -->
+          <a
+            class="open-editor"
+            routerLink="/verify-email"
+            [queryParams]="{ returnUrl: identity.editorPath }"
+            (click)="openEditorClicked()"
+          >
+            <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
+              <rect
+                x="2.5"
+                y="3.5"
+                width="15"
+                height="13"
+                rx="2.5"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+              />
+              <path d="M2.5 7.5h15" stroke="currentColor" stroke-width="1.6" />
+              <path d="M8 10.5l3 2-3 2z" fill="currentColor" />
+            </svg>
+            <ng-container i18n="@@nav.openEditor">Open editor</ng-container>
+          </a>
+        } @else if (session.isAuthenticated()) {
           <a class="open-editor" [href]="identity.editorPath" (click)="openEditorClicked()">
             <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
               <rect
@@ -125,6 +150,13 @@
                   <span i18n="@@account.signedInAs">Signed in as</span>
                   <strong>{{ user.email }}</strong>
                 </p>
+                <a
+                  class="account__item"
+                  routerLink="/account"
+                  (click)="accountOpen.set(false); menuOpen.set(false)"
+                  i18n="@@account.menuLink"
+                  >Account</a
+                >
                 <button
                   type="button"
                   class="account__item"
@@ -145,4 +177,14 @@
       </div>
     </nav>
   </div>
+  <!-- Plan §10: a subtle reminder until the address is confirmed. Not on the pages
+       that are about exactly that. -->
+  @if (showVerifyBanner()) {
+    <div class="verify-banner" role="status">
+      <div class="container verify-banner__inner">
+        <span i18n="@@verifyBanner.text">Confirm your email address to open the editor.</span>
+        <a routerLink="/verify-email" i18n="@@verifyBanner.link">Resend the link</a>
+      </div>
+    </div>
+  }
 </header>
