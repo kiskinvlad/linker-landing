@@ -5,7 +5,7 @@
   background: color-mix(in srgb, var(--bg) 82%, transparent);
   backdrop-filter: saturate(1.6) blur(14px);
   -webkit-backdrop-filter: saturate(1.6) blur(14px);
-  border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
 }
 
 .header__bar {
@@ -53,13 +53,13 @@
 
 .header__links a.is-active {
   color: var(--ink);
-  background: var(--bg-soft);
+  background: var(--bg-2);
 }
 
 .header__links a:hover,
 .header__login:hover {
   color: var(--ink);
-  background: var(--bg-soft);
+  background: var(--bg-2);
 }
 
 .header__actions {
@@ -85,7 +85,7 @@
   margin-right: 4px;
   border-radius: var(--radius-pill);
   background: var(--accent);
-  color: var(--accent-ink);
+  color: var(--on-accent);
   font-weight: 600;
   font-size: 0.9375rem;
   text-decoration: none;
@@ -107,9 +107,9 @@
   margin-left: auto;
   width: 44px;
   height: 44px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--border);
   border-radius: 12px;
-  background: var(--panel);
+  background: var(--surface);
   cursor: pointer;
 }
 
@@ -175,8 +175,8 @@
     gap: 16px;
     padding: 16px var(--gutter) 24px;
     background: var(--bg);
-    border-bottom: 1px solid var(--line);
-    box-shadow: var(--shadow);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
     display: none;
   }
 

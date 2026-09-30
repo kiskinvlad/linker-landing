@@ -67,10 +67,10 @@ import { INCLUDED, PRICING_FAQ } from './pricing.content';
     }
     .included li {
       padding: 24px;
-      border: 1px solid var(--line);
+      border: 1px solid var(--border);
       border-top: 3px solid var(--accent);
       border-radius: var(--radius);
-      background: var(--panel);
+      background: var(--surface);
     }
     .included p {
       margin-top: 8px;

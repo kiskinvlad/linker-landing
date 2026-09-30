@@ -44,7 +44,7 @@ import { LegalDoc } from './legal.content';
     }
     .legal__notice {
       padding: 16px 20px;
-      border: 1px solid var(--line);
+      border: 1px solid var(--border);
       border-left: 4px solid var(--spark);
       border-radius: var(--radius-sm);
       background: var(--spark-soft);

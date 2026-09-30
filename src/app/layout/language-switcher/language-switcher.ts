@@ -42,9 +42,9 @@ import { LANG_COOKIE, LOCALES, localeById } from '../../core/i18n/locales';
       margin: 0;
       padding: 3px;
       list-style: none;
-      border: 1px solid var(--line);
+      border: 1px solid var(--border);
       border-radius: var(--radius-pill);
-      background: var(--panel);
+      background: var(--surface);
     }
     .langs__item {
       display: block;
@@ -58,7 +58,7 @@ import { LANG_COOKIE, LOCALES, localeById } from '../../core/i18n/locales';
     }
     a.langs__item:hover {
       color: var(--ink);
-      background: var(--bg-soft);
+      background: var(--bg-2);
     }
     .is-current {
       background: var(--ink);

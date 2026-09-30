@@ -1,0 +1,31 @@
+{
+  "name": "@kiskinvlad/linker-tokens",
+  "version": "0.1.0",
+  "description": "Kitlet design tokens: brand colours, semantic light/dark palette and font stacks, shared by the Linker portal and editor.",
+  "type": "module",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kiskinvlad/linker-landing.git",
+    "directory": "packages/tokens"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    "./tokens.css": "./dist/tokens.css",
+    "./tokens.json": "./dist/tokens.json",
+    "./_tokens.scss": "./dist/_tokens.scss",
+    "./package.json": "./package.json"
+  },
+  "sass": "./dist/_tokens.scss",
+  "style": "./dist/tokens.css",
+  "scripts": {
+    "build": "node build.mjs",
+    "prepare": "node build.mjs"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
+}
