@@ -1,4 +1,4 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { ApplicationConfig, inject, provideBrowserGlobalErrorListeners } from '@angular/core';
 import {
   provideClientHydration,
   withEventReplay,
@@ -6,6 +6,8 @@ import {
 } from '@angular/platform-browser';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { routes } from './app.routes';
+import { CONSENT_LOADERS } from './core/consent/consent.model';
+import { Ga4Loader } from './core/consent/ga4.loader';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,5 +20,8 @@ export const appConfig: ApplicationConfig = {
     // an i18n block ngSkipHydration, throws the prerendered DOM away and re-renders
     // it — measured as a 0.82 CLS footer jump and a slower LCP.
     provideClientHydration(withEventReplay(), withI18nSupport()),
+    // What each consent category switches on (plan §8). Portal only: GA never runs
+    // inside /editor/ (D11).
+    { provide: CONSENT_LOADERS, useFactory: () => [inject(Ga4Loader)] },
   ],
 };

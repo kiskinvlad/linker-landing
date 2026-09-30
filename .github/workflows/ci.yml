@@ -89,6 +89,18 @@ jobs:
               echo "::error file=$OUT/$page::dark palette missing from the critical CSS"
               exit 1
             fi
+            # Plan §8: no request reaches Google before analytics consent. gtag.js is
+            # injected by Ga4Loader on grant only, so the static HTML must not name it.
+            if grep -q 'googletagmanager.com' "$OUT/$page"; then
+              echo "::error file=$OUT/$page::static HTML references Google Tag Manager"
+              exit 1
+            fi
+            # The banner is browser-only; prerendered, it would flash for everyone
+            # who already chose.
+            if grep -q 'class="consent"' "$OUT/$page"; then
+              echo "::error file=$OUT/$page::cookie banner baked into the prerendered HTML"
+              exit 1
+            fi
           done
           grep -q '<loc>' "$OUT/sitemap.xml"
 
