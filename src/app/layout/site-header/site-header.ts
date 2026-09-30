@@ -1,5 +1,14 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, signal } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { filter, map } from 'rxjs';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { User } from '../../core/api/auth.api';
 import { AuthFacade } from '../../core/auth/auth.facade';
 import { SessionStore } from '../../core/auth/session.store';
@@ -26,6 +35,23 @@ export class SiteHeader {
   private readonly router = inject(Router);
   private readonly ga = inject(Ga4Loader);
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+
+  private readonly url = toSignal(
+    this.router.events.pipe(
+      filter((e): e is NavigationEnd => e instanceof NavigationEnd),
+      map((e) => e.urlAfterRedirects),
+    ),
+    { initialValue: this.router.url },
+  );
+
+  /** Signed in, unverified, and not already on a page about verifying (or the account, which says it itself). */
+  protected readonly showVerifyBanner = computed(() => {
+    const user = this.session.user();
+    const path = this.url().split(/[?#]/)[0];
+    return (
+      !!user && !user.emailVerified && !path.startsWith('/verify-email') && path !== '/account'
+    );
+  });
 
   protected readonly menuOpen = signal(false);
   protected readonly accountOpen = signal(false);

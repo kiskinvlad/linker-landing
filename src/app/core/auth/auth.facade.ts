@@ -77,4 +77,31 @@ export class AuthFacade {
   resetPassword(token: string, password: string): Promise<void> {
     return firstValueFrom(this.api.resetPassword(token, password));
   }
+
+  /**
+   * Redeems a verification link. The link may belong to another account than the
+   * one signed in on this browser, so the session is asked again rather than
+   * assumed verified.
+   */
+  async verifyEmail(token: string): Promise<void> {
+    await firstValueFrom(this.api.verifyEmail(token));
+    if (this.store.isAuthenticated()) await this.refresh();
+  }
+
+  resendVerification(): Promise<void> {
+    return firstValueFrom(this.api.resendVerification());
+  }
+
+  /** This browser stays signed in (the API issues a new cookie); every other session ends. */
+  changePassword(currentPassword: string, newPassword: string): Promise<void> {
+    return firstValueFrom(this.api.changePassword(currentPassword, newPassword));
+  }
+
+  async logoutAll(): Promise<void> {
+    try {
+      await firstValueFrom(this.api.logoutAll());
+    } finally {
+      this.store.clear();
+    }
+  }
 }

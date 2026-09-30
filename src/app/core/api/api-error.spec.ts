@@ -38,6 +38,17 @@ describe('ApiError.from', () => {
     expect(e.retryAfterSeconds).toBe(240);
   });
 
+  it('takes the longest wait across the per-IP, per-email and per-user headers', () => {
+    const e = ApiError.from(
+      problem(
+        429,
+        { detail: 'Too Many Requests' },
+        { 'Retry-After': '30', 'Retry-After-auth-email': '900' },
+      ),
+    );
+    expect(e.retryAfterSeconds).toBe(900);
+  });
+
   it('treats a request that never got an answer as a network error', () => {
     const e = ApiError.from(new HttpErrorResponse({ status: 0, statusText: 'Unknown Error' }));
     expect(e.isNetwork).toBe(true);

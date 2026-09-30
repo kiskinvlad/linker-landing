@@ -22,8 +22,11 @@ const ADA: User = {
   company: null,
   phone: null,
   preferredLanguage: 'en',
+  emailVerified: true,
   createdAt: '2026-09-30T00:00:00.000Z',
 };
+
+const UNVERIFIED: User = { ...ADA, emailVerified: false };
 
 function fakeApi(me: () => Observable<User>): AuthApi & { meCalls: number } {
   const api = {
@@ -37,6 +40,10 @@ function fakeApi(me: () => Observable<User>): AuthApi & { meCalls: number } {
     logout: () => of(undefined),
     forgotPassword: () => of(undefined),
     resetPassword: () => of(undefined),
+    verifyEmail: () => of(undefined),
+    resendVerification: () => of(undefined),
+    changePassword: () => of(undefined),
+    logoutAll: () => of(undefined),
   };
   return api;
 }
@@ -151,5 +158,63 @@ describe('guestGuard', () => {
     const navigate = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
     await runGuard(guestGuard, '/login', { returnUrl: '//evil.example' });
     expect(navigate).toHaveBeenCalledWith('/');
+  });
+});
+
+describe('verification routing', () => {
+  it('stops an unverified visitor headed for the editor at /verify-email', async () => {
+    setup(() => of(UNVERIFIED));
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    expect(await runGuard(guestGuard, '/login', { returnUrl: '/editor/' })).toBe(false);
+    expect(navigate).toHaveBeenCalledWith(['/verify-email'], {
+      queryParams: { returnUrl: '/editor/' },
+    });
+  });
+
+  it('lets an unverified visitor go anywhere else in the portal', async () => {
+    setup(() => of(UNVERIFIED));
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigateByUrl').mockResolvedValue(true);
+    await runGuard(guestGuard, '/login', { returnUrl: '/account' });
+    expect(navigate).toHaveBeenCalledWith('/account');
+  });
+
+  it('re-asks the session after verifying, since the link may be another account’s', async () => {
+    const { api, auth } = setup(() => of(UNVERIFIED));
+    await auth.refresh();
+    const before = api.meCalls;
+    await auth.verifyEmail('t');
+    expect(api.meCalls).toBe(before + 1);
+  });
+
+  it('does not ask for a session after verifying when nobody is signed in', async () => {
+    const { api, auth } = setup(() => throwError(() => new ApiError(401, 'Unauthorized')));
+    await auth.refresh();
+    const before = api.meCalls;
+    await auth.verifyEmail('t');
+    expect(api.meCalls).toBe(before);
+  });
+
+  it('signs out locally after "log out of all devices", even if the call fails', async () => {
+    const { api, auth, store } = setup(() => of(ADA));
+    await auth.refresh();
+    api.logoutAll = () => throwError(() => new ApiError(0, 'offline'));
+    await expect(auth.logoutAll()).rejects.toBeInstanceOf(ApiError);
+    expect(store.status()).toBe('anonymous');
+  });
+});
+
+describe('SessionStore.updateUser', () => {
+  it('keeps the terms status the profile routes do not send', () => {
+    const store = new SessionStore();
+    const legal = {
+      termsVersionCurrent: 'v2',
+      termsVersionAccepted: 'v2',
+      termsAcceptedAt: '2026-10-01T00:00:00.000Z',
+      requiresTermsAcceptance: false,
+    };
+    store.setUser({ ...ADA, legal });
+    store.updateUser({ ...ADA, firstName: 'Augusta' });
+    expect(store.user()?.firstName).toBe('Augusta');
+    expect(store.user()?.legal).toEqual(legal);
   });
 });

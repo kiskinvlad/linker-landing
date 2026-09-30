@@ -4,11 +4,12 @@ import { APP_IDENTITY } from '../config/app-identity';
 import { AuthFacade } from './auth.facade';
 import { isEditorUrl, safeReturnUrl } from './return-url';
 import { SessionStore } from './session.store';
+import { User } from '../api/auth.api';
 
 /**
  * Pages for signed-in visitors only: anyone else goes to /login with a returnUrl
  * back here. Convenience, not security (plan §5): the API enforces the session.
- * Used by the account pages (M5).
+ * Used by the account pages and /verify-email.
  */
 export const authGuard: CanActivateFn = async (_route, state): Promise<boolean | UrlTree> => {
   const auth = inject(AuthFacade);
@@ -29,8 +30,9 @@ export const guestGuard: CanActivateFn = async (route): Promise<boolean> => {
   const store = inject(SessionStore);
   const nav = inject(ReturnNavigator);
   await auth.ensureKnown();
-  if (!store.isAuthenticated()) return true;
-  await nav.go(route.queryParamMap.get('returnUrl'));
+  const user = store.user();
+  if (!user) return true;
+  await nav.afterSignIn(user, route.queryParamMap.get('returnUrl'));
   return false;
 };
 
@@ -48,5 +50,19 @@ export class ReturnNavigator {
       return;
     }
     await this.router.navigateByUrl(url);
+  }
+
+  /**
+   * After signing in or up. The editor needs a verified address (plan D9), so an
+   * unverified visitor headed there stops at /verify-email first, which carries
+   * the returnUrl on. Everywhere else in the portal works unverified.
+   */
+  async afterSignIn(user: User, returnUrl: string | null | undefined): Promise<void> {
+    const url = safeReturnUrl(returnUrl, '/');
+    if (!user.emailVerified && isEditorUrl(url, this.editorPath)) {
+      await this.router.navigate(['/verify-email'], { queryParams: { returnUrl: url } });
+      return;
+    }
+    await this.go(url);
   }
 }

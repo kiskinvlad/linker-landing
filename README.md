@@ -39,7 +39,7 @@ cookie) wins, then the browser's language list, then English — the inline scri
 at the top of `src/index.html`. Adding a language: `src/app/core/i18n/locales.ts`
 has the checklist.
 
-## Accounts (log in, sign up, password reset)
+## Accounts (log in, sign up, password reset, verification, account area)
 
 Plan §3/§5/§10. `/login`, `/register`, `/forgot-password` and `/reset-password`
 talk to linker-backend's `/api/v1/auth` through `AuthApi` (`core/api`), with the
@@ -53,12 +53,28 @@ The API URL comes from `APP_IDENTITY.apiUrl`: `http://localhost:3000/api/v1` in 
 **none in production until the real domain exists (M8)** — the `linker.com`
 placeholder belongs to someone else, so a production build calls no API at all.
 
-Running against a local backend needs two settings in linker-backend's `.env`:
+Sign-up lands on `/verify-email` ("check your inbox"); the email's link opens
+`/verify-email/confirm`, which works signed out too. An unverified visitor can use
+the whole portal, but "Open editor" and a returnUrl to `/editor/` stop at
+`/verify-email` first (plan D9), and the header shows a reminder until confirmed.
+`/account` holds profile, password and devices, plan, cookie choices, terms status
+and account deletion (email typed out + password), through `AccountApi`.
+
+The error interceptor signs the visitor out on any API 401 except on the three
+routes that check a password (login, password change, account deletion), where a
+401 means a wrong password.
+
+Running against a local backend needs these settings in linker-backend's `.env`
+(its `.env.example` has them since M4):
 
 ```ini
 CORS_ORIGINS=http://localhost:4000
 MAIL_RESET_URL_BASE=http://localhost:4000/reset-password
+MAIL_VERIFY_URL_BASE=http://localhost:4000/verify-email/confirm
 ```
+
+`pnpm cli users:verify <email>` in linker-backend confirms an address without the
+email.
 
 (add `,http://localhost:4200` to `CORS_ORIGINS` to keep the editor working too).
 Reset emails land in Mailpit at http://localhost:8025.

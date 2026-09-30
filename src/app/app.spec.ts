@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { App } from './app';
+import { User } from './core/api/auth.api';
 import { SessionStore } from './core/auth/session.store';
 
 describe('App', () => {
@@ -29,16 +30,7 @@ describe('App', () => {
   });
 
   it('links a signed-in visitor straight to the same-origin editor app', async () => {
-    TestBed.inject(SessionStore).setUser({
-      id: '1',
-      email: 'ada@example.com',
-      firstName: 'Ada',
-      lastName: 'Lovelace',
-      company: null,
-      phone: null,
-      preferredLanguage: 'en',
-      createdAt: '2026-09-30T00:00:00.000Z',
-    });
+    TestBed.inject(SessionStore).setUser(ADA);
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
     const el = fixture.nativeElement as HTMLElement;
@@ -46,4 +38,27 @@ describe('App', () => {
     expect(el.querySelector('.account__name')?.textContent?.trim()).toBe('Ada');
     expect(el.querySelector('.header__login')).toBeNull();
   });
+
+  it('sends an unverified visitor to confirm their email first, with a reminder', async () => {
+    TestBed.inject(SessionStore).setUser({ ...ADA, emailVerified: false });
+    const fixture = TestBed.createComponent(App);
+    await fixture.whenStable();
+    const el = fixture.nativeElement as HTMLElement;
+    expect(el.querySelector('a.open-editor')?.getAttribute('href')).toBe(
+      '/verify-email?returnUrl=%2Feditor%2F',
+    );
+    expect(el.querySelector('.verify-banner')).not.toBeNull();
+  });
 });
+
+const ADA: User = {
+  id: '1',
+  email: 'ada@example.com',
+  firstName: 'Ada',
+  lastName: 'Lovelace',
+  company: null,
+  phone: null,
+  preferredLanguage: 'en',
+  emailVerified: true,
+  createdAt: '2026-09-30T00:00:00.000Z',
+};
