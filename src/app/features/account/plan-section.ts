@@ -1,5 +1,4 @@
-import { DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, LOCALE_ID, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Subscription } from '../../core/api/account.api';
 import { AccountFacade } from '../../core/auth/account.facade';
@@ -11,7 +10,7 @@ import { describeError } from '../auth/auth-messages';
  */
 @Component({
   selector: 'kit-plan-section',
-  imports: [DecimalPipe, RouterLink],
+  imports: [RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="panel" aria-labelledby="plan-title">
@@ -41,15 +40,15 @@ import { describeError } from '../auth/auth-messages';
           <dl class="plan-card__limits">
             <div>
               <dt i18n="@@account.plan.widgets">Live widgets</dt>
-              <dd>{{ sub.entitlements.maxWidgets | number }}</dd>
+              <dd>{{ count(sub.entitlements.maxWidgets) }}</dd>
             </div>
             <div>
               <dt i18n="@@account.plan.views">Views a month</dt>
-              <dd>{{ sub.entitlements.monthlyViews | number }}</dd>
+              <dd>{{ count(sub.entitlements.monthlyViews) }}</dd>
             </div>
             <div>
               <dt i18n="@@account.plan.versions">Saved versions per widget</dt>
-              <dd>{{ sub.entitlements.maxVersionsPerWidget | number }}</dd>
+              <dd>{{ count(sub.entitlements.maxVersionsPerWidget) }}</dd>
             </div>
           </dl>
         </div>
@@ -108,11 +107,22 @@ import { describeError } from '../auth/auth-messages';
 export class PlanSection {
   private readonly account = inject(AccountFacade);
 
+  /**
+   * Intl rather than DecimalPipe: esbuild splits by module file, and any pipe from
+   * @angular/common drags its formatting code into the shared chunk every
+   * prerendered page loads. That cost the home page its LCP budget in CI.
+   */
+  private readonly numbers = new Intl.NumberFormat(inject(LOCALE_ID));
+
   protected readonly subscription = signal<Subscription | null>(null);
   protected readonly error = signal<string | null>(null);
 
   constructor() {
     void this.load();
+  }
+
+  protected count(value: number): string {
+    return this.numbers.format(value);
   }
 
   protected async load(): Promise<void> {

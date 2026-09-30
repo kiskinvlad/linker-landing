@@ -1,5 +1,12 @@
-import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  LOCALE_ID,
+  computed,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ApiError } from '../../core/api/api-error';
@@ -16,7 +23,7 @@ import { describeError } from '../auth/auth-messages';
  */
 @Component({
   selector: 'kit-privacy-section',
-  imports: [ReactiveFormsModule, RouterLink, DatePipe],
+  imports: [ReactiveFormsModule, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="panel" aria-labelledby="privacy-title">
@@ -37,7 +44,7 @@ import { describeError } from '../auth/auth-messages';
         @if (legal.termsVersionAccepted && legal.termsAcceptedAt) {
           <p class="panel__lead" i18n="@@account.privacy.termsAccepted">
             You accepted version {{ legal.termsVersionAccepted }} on
-            {{ legal.termsAcceptedAt | date: 'longDate' }}.
+            {{ longDate(legal.termsAcceptedAt) }}.
           </p>
         } @else {
           <p class="panel__lead" i18n="@@account.privacy.termsPending">
@@ -131,6 +138,9 @@ export class PrivacySection {
 
   readonly user = input.required<User>();
 
+  /** Intl, not DatePipe: see PlanSection for why no @angular/common pipe is used here. */
+  private readonly dates = new Intl.DateTimeFormat(inject(LOCALE_ID), { dateStyle: 'long' });
+
   protected readonly confirming = signal(false);
   protected readonly busy = signal(false);
   protected readonly wrongPassword = signal(false);
@@ -154,6 +164,10 @@ export class PrivacySection {
       this.value.set(this.form.getRawValue());
       this.wrongPassword.set(false);
     });
+  }
+
+  protected longDate(iso: string): string {
+    return this.dates.format(new Date(iso));
   }
 
   protected cancel(): void {
