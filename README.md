@@ -9,7 +9,7 @@ Node server in production; a CDN serves `dist/kitlet-portal/browser/`.
 
 ```bash
 pnpm install
-pnpm start     # dev server on http://localhost:4000
+pnpm start     # dev server on http://localhost:4000 (proxies /editor to the editor on :4200)
 pnpm build     # static output in dist/kitlet-portal/browser
 pnpm test      # Vitest unit tests
 pnpm lint      # oxlint --type-aware
@@ -17,6 +17,15 @@ pnpm format    # prettier --write (CI runs format:check)
 pnpm start:ua  # dev server in Ukrainian (ng serve runs one language at a time)
 pnpm i18n:extract  # regenerate the English vocabulary and check every translation
 ```
+
+## The editor at `/editor/`
+
+The editor (linker-editor) is a separate app on the same origin: production's edge
+routes `/editor/*` to it, and "Open editor" is a full-page load to `/editor/`. The
+dev server does the same with `proxy.conf.mjs`, so run the editor too (`npm start`
+in linker-editor, which serves at `:4200/editor/`) and open
+http://localhost:4000/editor/. Point it elsewhere with `EDITOR_DEV_URL`. Without the
+editor running, `/editor/` answers with a proxy error.
 
 ## Languages
 
