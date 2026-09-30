@@ -15,6 +15,7 @@ Terms such as **controller**, **processor**, **personal data**, **processing**, 
 You are responsible for:
 
 - having a lawful basis for all processing you instruct, including any consent required for widget forms, local storage and marketing;
+- having the consent the law requires for every email or SMS a widget sends to an End User, and a lawful reason for every destination you configure a widget to send End User data to;
 - giving End Users a privacy notice that describes your use of widgets and names us as your service provider where required;
 - deciding which data your widget forms collect, and not collecting data prohibited by section 11 of the Terms or the [Acceptable Use Policy](/legal/acceptable-use);
 - responding to End Users' requests about their data;
@@ -84,12 +85,12 @@ Each party's liability under this DPA is subject to the limitations in the Terms
 | | |
 |---|---|
 | **Data subjects** | Visitors to the Customer's websites who see or interact with widgets ("End Users"); people whose data the Customer uploads into widget content |
-| **Categories of personal data** | Data End Users enter in widget forms, as configured by the Customer (typically name, email, phone, message); technical data for delivery — IP address (used transiently, not stored with statistics), user-agent, page URL, referrer, coarse country; widget interaction events (views, clicks, submissions) without a visitor identifier; personal data contained in Customer Content |
+| **Categories of personal data** | Data End Users enter in widget forms, as configured by the Customer (typically name, email, phone, message); technical data for delivery — IP address (used transiently, not stored with statistics), user-agent, page URL, referrer, coarse country; widget interaction events (views, clicks, closes, submissions) without a visitor identifier; content, recipient and delivery status of email and SMS messages sent through widget actions; personal data contained in Customer Content |
 | **Special categories** | None intended. The Customer must not configure forms to collect special-category data or data about criminal convictions |
 | **Frequency** | Continuous, for as long as the Customer's widgets are live |
-| **Nature of processing** | Hosting, storage, delivery, display, collection through forms, aggregation into statistics, forwarding to integrations the Customer configures, deletion |
+| **Nature of processing** | Hosting, storage, delivery, display, collection through forms, aggregation into statistics, forwarding to destinations the Customer configures (email, webhooks, connected tools), sending email and SMS messages the Customer configures, deletion |
 | **Purpose** | To provide the Service to the Customer under the Terms |
-| **Retention** | Form submissions: until the Customer deletes them or the account is closed, then as set out in section 9. Delivery logs: up to 90 days. Aggregated statistics: for the life of the account |
+| **Retention** | Form submissions: until the Customer deletes them or the account is closed, then as set out in section 9. Delivery logs and message delivery logs: up to 90 days. Aggregated statistics: for the life of the account |
 | **Subprocessors** | As listed on the [Subprocessors](/legal/subprocessors) page, for the purposes stated there |
 
 ## Annex II — Technical and organisational measures

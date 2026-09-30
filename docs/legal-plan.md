@@ -73,7 +73,7 @@ The documents make promises the platform must keep. In priority order:
 `legal` block in `/auth/me`, `POST /users/me/consents`. Nothing to add, except: keep
 `LEGAL_TERMS_VERSION` in the Zod env schema and fail startup if it is missing.
 
-### 2.2 Widget kill switch (Terms §8, AUP §4): **required before launch**
+### 2.2 Widget kill switch (Terms §8, AUP §4): **required before launch** (decided)
 
 Keep moderation separate from the customer's own publish state, so neither can
 overwrite the other:
@@ -107,7 +107,7 @@ report_ref text null, actor text, created_at
   the audit write and the email happen in one place.
 - The editor shows a disabled widget with its reason and "Contact us to appeal".
 
-### 2.3 Publish attestations (Terms §6): **required before launch**
+### 2.3 Publish attestations (Terms §6): **required before launch** (decided: first publish only)
 
 ```ts
 // new table: publish_attestations
@@ -122,7 +122,45 @@ id, user_id fk, widget_id fk, attestation_version text, accepted_at, ip_hash, us
   nothing, the service checks for an existing row). Friction where it carries weight,
   none on every tweak.
 
-### 2.4 Data rights and retention (Privacy §6, §8; DPA §9)
+### 2.4 Widget actions and messaging (Terms §6, AUP §1, DPA Annex I)
+
+What widgets do beyond rendering: report events (view, click, close, submit),
+forward what visitors type to destinations the customer configures (their own
+email or phone, a webhook, a connected tool), and later send email or SMS to the
+visitor. Everything below keeps the documents true and the service out of abuse
+lists.
+
+- **Execute actions on the server, never from the visitor's browser.** The widget
+  posts to our API; a worker performs the action. This keeps customers' webhook
+  URLs and API keys out of public page source, lets the kill switch and rate
+  limits apply, and gives one audit point. Model each destination as a
+  **Strategy** (`EmailAction`, `WebhookAction`, `SmsAction`, …) behind one
+  `WidgetActionPort`, dispatched from a queue (Redis/BullMQ) with retries.
+- **Analytics events carry no visitor identifier** (the Cookie Policy promises
+  this). Keep the payload to `widgetId`, event type, timestamp, page URL and a
+  coarse country derived from the IP, then drop the IP. Unique-visitor counts
+  would need an ID in localStorage, which likely needs consent on EU sites: a
+  policy change, not just a code change.
+- **Webhooks: block SSRF.** Resolve the host and refuse private, loopback,
+  link-local and cloud-metadata addresses (`169.254.169.254`) at send time, not
+  only at save time (DNS can change). HTTPS only, short timeout, no redirects to
+  other hosts, response body discarded. Sign each request (HMAC header) so
+  customers can verify it came from us.
+- **Messages to visitors:**
+  - a **consent checkbox field** the customer must add to any form that triggers
+    a marketing message, with the consent text stored next to the submission;
+  - every email carries the customer's name as sender and an unsubscribe link;
+    every SMS says who it is from and honours `STOP`; keep a per-customer
+    suppression list and check it before each send;
+  - US SMS requires sender registration (A2P 10DLC or toll-free verification)
+    through the SMS provider; plan for it before offering SMS to US customers;
+  - SMS pumping defence: per-widget and per-IP rate limits, a country allowlist
+    the customer sets, block premium-rate prefixes, and a daily spend cap;
+  - message logs (recipient, template, status) kept 90 days, as the DPA says.
+- **New providers** (SMS, or a separate email provider for visitor messages) go
+  on `/legal/subprocessors` 30 days before they get data.
+
+### 2.5 Data rights and retention (Privacy §6, §8; DPA §9)
 
 - `DELETE /users/me` (planned, §10): soft delete now; a **scheduled purge** job
   hard-deletes accounts, widgets, uploads and form submissions 30 days after
@@ -135,7 +173,7 @@ id, user_id fk, widget_id fk, attestation_version text, accepted_at, ip_hash, us
 - `ip_hash` everywhere: HMAC-SHA256 with a server-side secret, not a plain hash
   (IPv4 space is small enough to brute-force an unsalted hash).
 
-### 2.5 Abuse and copyright intake
+### 2.6 Abuse and copyright intake
 
 Email only at launch (`abuse@`, `copyright@`): it meets the DSA notice-and-action
 requirement for a service our size and has no attack surface. Log each report and
@@ -148,7 +186,7 @@ its outcome in `moderation_actions.report_ref`. A public `POST /abuse-reports` f
 
 - **TermsGate** (§9): unchanged; link the dialog's text to `/legal/terms` and show
   the version from `/auth/me`.
-- **Publish dialog** (§2.3): three unticked checkboxes with the texts below, Publish
+- **Publish dialog** (§2.3, first publish of each widget): three unticked checkboxes with the texts below, Publish
   disabled until all are ticked, links to Terms and AUP.
   1. I have the rights to all content used in this widget.
   2. The claims, offers and promotions in this widget are accurate and lawful.

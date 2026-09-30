@@ -19,6 +19,14 @@ You must not use the Service, or any widget built with it, to create, host, deli
 - "guaranteed" investment returns or other misleading financial promises;
 - unsolicited bulk messages (spam), or collecting email addresses or phone numbers for marketing without the consent the law requires.
 
+**Messaging and widget actions**
+
+- sending email or SMS to people who have not given the consent the law requires, or without a working way to opt out;
+- messages that hide or misrepresent who the sender is;
+- triggering messages to phone numbers or addresses that the recipient did not enter themselves;
+- using widget forms or actions to generate artificial traffic, such as mass or premium-rate SMS ("SMS pumping");
+- sending End User data to destinations used to harvest credentials or payment details, or to anyone without a lawful reason to receive it.
+
 **Illegal goods, services and content**
 
 - illegal drugs and drug paraphernalia, and unlawful products or services of any kind;

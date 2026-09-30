@@ -46,9 +46,15 @@ Customer is solely responsible for determining whether any Customer Content, adv
 
 **Testimonials and reviews.** We do not verify testimonials, reviews, ratings or endorsements. If you display them, you are responsible for ensuring they are genuine, that you have permission to use them, that any material connection is disclosed, and that results claimed are typical or clearly qualified.
 
-## 6. Publishing Widgets
+## 6. Publishing Widgets and widget actions
 
-Before a Widget goes live, you will be asked to confirm that you have the rights to its content, that its claims and offers are accurate and lawful, and that you are responsible for legal compliance. These confirmations supplement, and do not replace, these Terms. We keep a record of them.
+**Publishing.** Before a Widget goes live, you will be asked to confirm that you have the rights to its content, that its claims and offers are accurate and lawful, and that you are responsible for legal compliance. These confirmations supplement, and do not replace, these Terms. We keep a record of them.
+
+**Widget actions.** You can configure a Widget to send the data End Users enter, and events such as views, clicks and closes, to the Service and onward to destinations you choose: for example your email address or phone number, a webhook, or a connected third-party tool. Where the Service offers it, you can also configure a Widget to send email or SMS messages to End Users. By configuring an action, you instruct us to process and transmit that data on your behalf. You are the sender of every message and responsible for every destination.
+
+**Messages to End Users.** Before a Widget causes a message to be sent to an End User, you must have every consent the law requires. Each message must identify you as the sender, and you must honour opt-outs promptly. You must comply with anti-spam and telemarketing laws, such as the US CAN-SPAM Act and Telephone Consumer Protection Act, Canada's CASL, and EU and UK e-privacy rules, as well as the rules of carriers and messaging providers. Messaging may have its own limits and fees. We may throttle, delay or block messages to protect deliverability, prevent fraud or comply with those rules.
+
+**Destinations you configure.** We deliver data to the destinations you configure as you instruct. We are not responsible for what those destinations do with the data, or for their availability or security.
 
 ## 7. Acceptable use and restricted categories
 

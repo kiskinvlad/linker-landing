@@ -30,8 +30,8 @@ When a website owner embeds a {{productName}} widget, our script runs on **their
 - **No cross-site tracking.** Widgets do not use advertising identifiers, tracking pixels or device fingerprinting, and do not follow visitors across websites.
 - **Local storage for display rules.** A widget may store small values in the visitor's browser (keys starting with `kit_`) to respect the rules the website owner set, such as "show this popup once per visitor" or "don't show again after the form was sent". These values never leave the browser. Website owners can turn this off for any widget.
 - **Delivery data.** Like any web request, loading a widget sends the visitor's IP address and browser details to our delivery servers. We use them only to deliver the widget, protect the Service from abuse and derive a coarse country for statistics; we do not store IP addresses alongside widget statistics.
-- **Widget statistics.** We count views, clicks and form submissions per widget so the website owner can see what works. These counts are not tied to a visitor identifier.
-- **Forms.** Anything a visitor types into a widget form is sent to us and stored for the website owner, who decides what the form asks for and why.
+- **Widget statistics.** The widget reports events such as views, clicks, closes and form submissions to our servers, so the website owner can see what works. These events are not tied to a visitor identifier.
+- **Forms and actions.** Anything a visitor types into a widget form is sent to our servers and stored for the website owner. The owner decides what the form asks for and why. The owner may also have the widget forward that information to destinations they choose (such as their own email, a webhook or a connected tool), or send the visitor a message they set up (such as a confirmation email or SMS).
 
 The **website owner** decides whether their use of widgets requires consent in their visitors' country and is responsible for their own cookie banner and privacy notice. For widget data, we act as the website owner's processor under our [Data Processing Agreement](/legal/dpa).
 

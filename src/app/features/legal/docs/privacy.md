@@ -7,7 +7,7 @@ We handle personal data in two different roles, and it matters which one applies
 | Whose data | Examples | Our role | What governs it |
 |---|---|---|---|
 | **Our customers and their team members** | Your name, email, company, login sessions, support messages, feedback, billing | **Controller** — we decide why and how it is used | This Privacy Policy |
-| **Visitors to our customers' websites** ("End Users") | Form submissions, widget views and clicks | **Processor** (GDPR) / **service provider** (CCPA) — we act only on the customer's instructions | The customer's own privacy notice and our [Data Processing Agreement](/legal/dpa) |
+| **Visitors to our customers' websites** ("End Users") | Form submissions, widget views and clicks, messages sent to them through widgets | **Processor** (GDPR) / **service provider** (CCPA) — we act only on the customer's instructions | The customer's own privacy notice and our [Data Processing Agreement](/legal/dpa) |
 
 If you visited a website that uses a {{productName}} widget and want to know what happened to your data, contact **that website's owner** first: they decide what their widget collects and why. We will help them respond, and if you contact us we will forward your request to them where we can identify them.
 
