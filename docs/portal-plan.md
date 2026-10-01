@@ -227,6 +227,8 @@ Gates run in a fixed order, as a small **chain of responsibility** (`AuthGate â†
 
 ## 9a. Legal & compliance footing
 
+> The documents are drafted and live under `/legal` (M7 texts). How they are maintained, the backend and editor controls they rely on, and the operator's pre-launch checklist: [`legal-plan.md`](legal-plan.md).
+
 **Facts:** operator is a Ukrainian business; users mostly US and EU, also Latin America and Asia; **no lawyer review planned**.
 
 | Regime | Applies because | What we do |

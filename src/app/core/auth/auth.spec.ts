@@ -10,6 +10,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { ApiError } from '../api/api-error';
 import { AUTH_API, AuthApi, User } from '../api/auth.api';
 import { APP_IDENTITY } from '../config/app-identity';
+import { TEST_LEGAL_IDENTITY } from '../config/app-identity.testing';
 import { AuthFacade } from './auth.facade';
 import { authGuard, guestGuard } from './auth.guards';
 import { SessionStore } from './session.store';
@@ -61,7 +62,7 @@ function setup(me: () => Observable<User>, apiUrl: string | null = 'http://api.t
           siteUrl: 'https://x',
           apiUrl,
           editorPath: '/editor/',
-          legalEntity: '',
+          legal: TEST_LEGAL_IDENTITY,
         },
       },
     ],
