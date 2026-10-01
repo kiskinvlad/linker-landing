@@ -19,10 +19,23 @@
           if (document.documentElement.lang !== 'en') return;
           var ua = navigator.userAgent;
           if (navigator.webdriver || /bot|crawl|spider|slurp|lighthouse|headless/i.test(ua)) return;
+          if (sessionStorage.getItem('kit_lang_unserved')) return;
           var prefix = { uk: '/ua' };
           var go = function (lang) {
             if (!prefix[lang]) return false;
-            location.replace(prefix[lang] + location.pathname + location.search + location.hash);
+            var path = location.pathname;
+            // The English page at a /ua path means nothing serves that language here
+            // (ng serve builds one locale; a host without the /ua rewrite). Redirecting
+            // again would loop to /ua/ua/ua/…: remember it for this tab and go back
+            // to the English URL instead.
+            if (path === prefix[lang] || path.indexOf(prefix[lang] + '/') === 0) {
+              sessionStorage.setItem('kit_lang_unserved', '1');
+              location.replace(
+                (path.slice(prefix[lang].length) || '/') + location.search + location.hash,
+              );
+              return true;
+            }
+            location.replace(prefix[lang] + path + location.search + location.hash);
             return true;
           };
           var chosen = document.cookie.match(/(?:^|;\s*)kit_lang=([\w-]+)/);
