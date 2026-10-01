@@ -64,7 +64,8 @@
             "uk": {
               "localize": [
                 "uk"
-              ]
+              ],
+              "baseHref": "/ua/"
             }
           },
           "defaultConfiguration": "production"
@@ -82,7 +83,11 @@
               "buildTarget": "kitlet-portal:build:development"
             },
             "uk": {
-              "buildTarget": "kitlet-portal:build:development,uk"
+              "buildTarget": "kitlet-portal:build:development,uk",
+              "port": 4001,
+              "servePath": "/ua/",
+              "proxyConfig": "proxy.uk.conf.mjs",
+              "prebundle": false
             }
           },
           "defaultConfiguration": "development"
