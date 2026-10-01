@@ -14,7 +14,7 @@ pnpm build     # static output in dist/kitlet-portal/browser
 pnpm test      # Vitest unit tests
 pnpm lint      # oxlint --type-aware
 pnpm format    # prettier --write (CI runs format:check)
-pnpm start:ua  # dev server in Ukrainian (ng serve runs one language at a time)
+pnpm start:ua  # Ukrainian dev server on :4001/ua/; run it beside `pnpm start` for the UA switcher
 pnpm i18n:extract  # regenerate the English vocabulary and check every translation
 ```
 
@@ -47,6 +47,13 @@ The visitor's language: an explicit choice from the header switcher (`kit_lang`
 cookie) wins, then the browser's language list, then English — the inline script
 at the top of `src/index.html`. Adding a language: `src/app/core/i18n/locales.ts`
 has the checklist.
+
+In development `ng serve` builds one language, so the two run side by side like
+production: `pnpm start` (English, :4000) proxies `/ua` to `pnpm start:ua`
+(Ukrainian, served at :4001/ua/), so http://localhost:4000/ua/ and the switcher work.
+Without `start:ua` running, `/ua/` answers with a proxy error. The Ukrainian server
+runs without Vite pre-bundling: the two would otherwise invalidate each other's
+cache in `.angular/` and answer 500.
 
 ## Accounts (log in, sign up, password reset, verification, account area)
 
