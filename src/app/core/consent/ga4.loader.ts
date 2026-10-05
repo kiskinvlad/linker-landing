@@ -90,14 +90,20 @@ export class Ga4Loader implements ConsentLoader {
   }
 
   /**
-   * Funnel events (plan §8: sign_up, login, email_verified, open_editor_click).
-   * Sent only while analytics is granted, and never with personal data: callers
-   * pass an event name and, at most, non-identifying parameters.
+   * Funnel events (plan §8: sign_up, login, email_verified, open_editor_click;
+   * §10a: feedback_submit). Sent only while analytics is granted, and never with
+   * personal data: callers pass an event name and, at most, non-identifying
+   * parameters. The typed signature is what keeps it that way, so a new event
+   * declares its parameters here.
    */
-  event(name: 'sign_up' | 'login' | 'email_verified' | 'open_editor_click'): void {
+  event(name: 'sign_up' | 'login' | 'email_verified' | 'open_editor_click'): void;
+  /** `kind` only: the idea's title and text never leave for Google. */
+  event(name: 'feedback_submit', params: { kind: 'feature' | 'improvement' | 'bug' }): void;
+  event(name: string, params?: Record<string, string>): void {
     const win = this.window;
     if (!this.id || !win || !this.pageViews) return; // not granted
-    this.gtag(win)('event', name);
+    if (params) this.gtag(win)('event', name, params);
+    else this.gtag(win)('event', name);
   }
 
   private get window(): GtagWindow | null {

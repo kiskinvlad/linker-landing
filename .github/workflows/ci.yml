@@ -70,9 +70,9 @@ jobs:
           set -eu
           OUT=dist/kitlet-portal/browser
           for page in index.html pricing/index.html how-it-works/index.html \
-            legal/index.html legal/terms/index.html \
+            feedback/index.html legal/index.html legal/terms/index.html \
             ua/index.html ua/pricing/index.html ua/how-it-works/index.html \
-            ua/legal/index.html ua/legal/terms/index.html; do
+            ua/feedback/index.html ua/legal/index.html ua/legal/terms/index.html; do
             n=$(grep -o '<h1' "$OUT/$page" | wc -l | tr -d ' ')
             if [ "$n" != "1" ]; then
               echo "::error file=$OUT/$page::expected exactly one prerendered <h1>, found $n"

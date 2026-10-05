@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, LOCALE_ID, inject, signal } from '@
 import { RouterLink } from '@angular/router';
 import { Subscription } from '../../core/api/account.api';
 import { AccountFacade } from '../../core/auth/account.facade';
+import { featureName } from '../../core/billing/feature-names';
 import { describeError } from '../auth/auth-messages';
 
 /**
@@ -52,6 +53,31 @@ import { describeError } from '../auth/auth-messages';
             </div>
           </dl>
         </div>
+        <h3 class="panel__sub" i18n="@@account.plan.unlockedTitle">
+          Paid features unlocked by your ideas
+        </h3>
+        @if (sub.grantedFeatures?.length) {
+          <ul class="unlocked">
+            @for (key of sub.grantedFeatures; track key) {
+              <li>
+                <span>{{ feature(key) }}</span>
+                <span class="badge badge--ok" i18n="@@account.plan.unlockedBadge"
+                  >Free for you</span
+                >
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="panel__lead" i18n="@@account.plan.unlockedNone">
+            None yet. <a routerLink="/feedback">Suggest an idea</a>: if it ships as a paid-plan
+            feature, it’s unlocked here for free.
+          </p>
+        }
+        <p class="field__hint" i18n="@@account.plan.limitsFollowPlan">
+          Limits such as widgets, views and versions always follow your plan; ideas unlock features,
+          never limits.
+        </p>
+
         <div class="panel__actions">
           <button class="btn btn--ghost" type="button" disabled>
             <ng-container i18n="@@account.plan.upgrade">Upgrade · coming soon</ng-container>
@@ -97,6 +123,25 @@ import { describeError } from '../auth/auth-messages';
       color: var(--ink-3);
       font-size: 0.8125rem;
     }
+    .unlocked {
+      display: grid;
+      gap: 8px;
+      margin: 0 0 12px;
+      padding: 0;
+      list-style: none;
+    }
+    .unlocked li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--bg);
+      color: var(--ink);
+      font-weight: 600;
+    }
     .plan-card__limits dd {
       margin: 2px 0 0;
       color: var(--ink);
@@ -120,6 +165,8 @@ export class PlanSection {
   constructor() {
     void this.load();
   }
+
+  protected readonly feature = featureName;
 
   protected count(value: number): string {
     return this.numbers.format(value);

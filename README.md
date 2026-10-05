@@ -95,6 +95,20 @@ email.
 (add `,http://localhost:4200` to `CORS_ORIGINS` to keep the editor working too).
 Reset emails land in Mailpit at http://localhost:8025.
 
+## Feedback Program (`/feedback`)
+
+Plan §10a. `/feedback` is prerendered (hero and rules are real HTML); the form and
+"Your ideas" fill in once `/auth/me` answers. Visitors get log in / sign up links
+that come back here, unverified accounts a "confirm your email" prompt, verified
+ones the form (`POST /feedback`, five a day: a 429 with `code: FEEDBACK_LIMIT` gets
+its own message). Statuses are worded in `features/feedback/feedback.content.ts`,
+matching `/legal/feedback-program`. Account › Plan & billing lists
+`grantedFeatures` from `GET /billing/subscription` as "unlocked by your ideas";
+feature names live in `core/billing/feature-names.ts` (an unknown key falls back to
+a readable form of itself). GA4 gets `feedback_submit` with `kind` only. Reviewing,
+merging and shipping ideas are linker-backend CLI commands (`feedback:*`,
+`features:ship`); there is no admin UI.
+
 ## Cookies and analytics
 
 Plan §8. A browser-only bottom sheet (`layout/cookie-banner`) asks once: Accept all /
