@@ -14,6 +14,8 @@ export class ApiError extends Error {
     readonly errors: readonly string[] = [],
     /** Seconds to wait before retrying, from a 429's Retry-After. */
     readonly retryAfterSeconds: number | null = null,
+    /** The problem body's machine-readable `code` (e.g. `FEEDBACK_LIMIT`), when it has one. */
+    readonly code: string | null = null,
   ) {
     super(detail);
     this.name = 'ApiError';
@@ -47,11 +49,12 @@ export class ApiError extends Error {
     if (!(error instanceof HttpErrorResponse)) {
       return new ApiError(0, error instanceof Error ? error.message : 'Unknown error');
     }
-    const body = (error.error ?? {}) as { detail?: unknown; errors?: unknown };
+    const body = (error.error ?? {}) as { detail?: unknown; errors?: unknown; code?: unknown };
     const detail =
       typeof body.detail === 'string' && body.detail ? body.detail : error.statusText || 'Error';
     const errors = Array.isArray(body.errors) ? body.errors.map(String) : [];
-    return new ApiError(error.status, detail, errors, retryAfterOf(error));
+    const code = typeof body.code === 'string' && body.code ? body.code : null;
+    return new ApiError(error.status, detail, errors, retryAfterOf(error), code);
   }
 }
 

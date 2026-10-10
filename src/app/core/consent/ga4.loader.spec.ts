@@ -73,4 +73,14 @@ describe('Ga4Loader', () => {
     expect(gtagScripts()).toBe(0);
     expect(gw().dataLayer).toEqual([]);
   });
+
+  it('sends feedback_submit with the kind only, and only once granted', () => {
+    const loader = create('G-TEST123');
+    loader.event('feedback_submit', { kind: 'bug' });
+    expect(gw().dataLayer).toEqual([]);
+    loader.grant();
+    loader.event('feedback_submit', { kind: 'bug' });
+    const calls = gw().dataLayer!.map((a) => Array.from(a as ArrayLike<unknown>));
+    expect(calls).toContainEqual(['event', 'feedback_submit', { kind: 'bug' }]);
+  });
 });

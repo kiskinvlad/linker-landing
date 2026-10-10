@@ -38,8 +38,14 @@ export interface Subscription {
   currentPeriodStart: string;
   currentPeriodEnd: string | null;
   cancelAtPeriodEnd: boolean;
-  /** What the account may do: the plan's limits today, plus unlocked features later (§10a). */
+  /** What the account may do: the plan's quotas, and its features plus personal grants (§10a). */
   entitlements: PlanLimits;
+  /**
+   * Features on for this account only, not through its plan: today, ideas that
+   * shipped as paid-plan features. Quotas are never granted. Optional only so an
+   * API from before the Feedback Program still renders.
+   */
+  grantedFeatures?: string[];
 }
 
 /**

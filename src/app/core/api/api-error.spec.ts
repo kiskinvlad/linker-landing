@@ -49,6 +49,12 @@ describe('ApiError.from', () => {
     expect(e.retryAfterSeconds).toBe(900);
   });
 
+  it('reads the machine-readable code a client branches on', () => {
+    const e = ApiError.from(problem(429, { detail: 'Too Many Requests', code: 'FEEDBACK_LIMIT' }));
+    expect(e.code).toBe('FEEDBACK_LIMIT');
+    expect(ApiError.from(problem(400, { detail: 'Bad Request' })).code).toBeNull();
+  });
+
   it('treats a request that never got an answer as a network error', () => {
     const e = ApiError.from(new HttpErrorResponse({ status: 0, statusText: 'Unknown Error' }));
     expect(e.isNetwork).toBe(true);

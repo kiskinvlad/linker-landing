@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard, guestGuard } from './core/auth/auth.guards';
 import { RouteSeo } from './core/seo/seo.service';
+import { FEEDBACK_SEO } from './features/feedback/feedback.seo';
 import { LEGAL_DOCS, LEGAL_HUB_SEO, legalSeo } from './features/legal/legal.content';
 import { legalDocResolver } from './features/legal/legal-doc.resolver';
 import { HOME_SEO } from './features/marketing/home/home.seo';
@@ -40,6 +41,13 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/marketing/how-it-works/how-it-works').then((m) => m.HowItWorks),
     data: { seo: HOW_IT_WORKS_SEO },
+  },
+  {
+    // Public and prerendered; sending an idea needs a verified account, which the
+    // page itself explains (plan §3, §10a).
+    path: 'feedback',
+    loadComponent: () => import('./features/feedback/feedback-page').then((m) => m.FeedbackPage),
+    data: { seo: FEEDBACK_SEO },
   },
   {
     path: 'legal',

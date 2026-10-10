@@ -419,6 +419,28 @@ svg {
   position: relative;
 }
 
+.field textarea {
+  width: 100%;
+  min-height: 140px;
+  padding: 10px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 1rem/1.5 var(--font-sans);
+  resize: vertical;
+}
+
+.field textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.field textarea[aria-invalid='true'] {
+  border-color: var(--danger);
+}
+
 .field input {
   width: 100%;
   min-height: 46px;

@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { APP_IDENTITY } from '../../core/config/app-identity';
 import { RevealDirective } from '../ui/reveal.directive';
 
@@ -8,7 +9,7 @@ import { RevealDirective } from '../ui/reveal.directive';
  */
 @Component({
   selector: 'kit-cocreate-band',
-  imports: [RevealDirective],
+  imports: [RouterLink, RevealDirective],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <section class="section cocreate" aria-labelledby="cocreate-title">
@@ -26,6 +27,9 @@ import { RevealDirective } from '../ui/reveal.directive';
               unlock it on your account at no cost, on any plan, for as long as your account is
               active. Everything else we ship reaches everyone anyway.
             </p>
+            <a class="btn btn--primary cocreate__cta" routerLink="/feedback" i18n="@@cocreate.cta"
+              >Suggest an idea</a
+            >
           </div>
           <ol
             class="cocreate__flow"
