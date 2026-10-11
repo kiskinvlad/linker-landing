@@ -14,6 +14,7 @@
     "account.loading": "Завантаження…",
     "account.logout": "Вийти",
     "account.menuLink": "Акаунт",
+    "account.analyticsLink": "Аналітика",
     "account.plan.compare": "Порівняти тарифи",
     "account.plan.status.active": "Активний",
     "account.plan.status.canceled": "Скасований",
@@ -444,6 +445,8 @@
     "feedback.seo.description": "Запропонуйте функцію, покращення чи виправлення помилки. Якщо вашу ідею випустять як функцію платного тарифу, її відкриють для вашого акаунта безкоштовно, на будь-якому тарифі.",
     "feedback.ideas.feature": "Функція:",
     "feedback.ideas.empty": "Ви ще не надіслали жодної ідеї. Тут вони з’являться разом зі статусом.",
-    "cocreate.cta": "Запропонувати ідею"
+    "cocreate.cta": "Запропонувати ідею",
+    "footer.analytics": "Аналітика",
+    "feature.analytics": "Аналітика"
   }
 }

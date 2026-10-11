@@ -16,10 +16,10 @@ export function safeReturnUrl(raw: string | null | undefined, fallback = '/'): s
 }
 
 /**
- * Where a validated returnUrl points. The editor is a separate app served
- * same-origin at /editor/ (plan D2), so reaching it is a full page load, not a
- * router navigation.
+ * Whether a validated returnUrl points into another app on this origin: the editor
+ * at /editor/ (plan D2) or analytics at /analytics/. Reaching one is a full page
+ * load, not a router navigation, and both need a verified address (plan D9).
  */
-export function isEditorUrl(url: string, editorPath: string): boolean {
-  return url === editorPath.replace(/\/$/, '') || url.startsWith(editorPath);
+export function isAppUrl(url: string, appPaths: readonly string[]): boolean {
+  return appPaths.some((path) => url === path.replace(/\/$/, '') || url.startsWith(path));
 }

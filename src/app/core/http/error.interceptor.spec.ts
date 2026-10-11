@@ -22,6 +22,7 @@ function setup() {
           siteUrl: 'https://x',
           apiUrl: API,
           editorPath: '/editor/',
+          analyticsPath: '/analytics/',
           legal: TEST_LEGAL_IDENTITY,
         },
       },

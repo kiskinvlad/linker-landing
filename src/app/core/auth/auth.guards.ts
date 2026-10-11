@@ -2,7 +2,7 @@ import { DOCUMENT, Injectable, inject } from '@angular/core';
 import { CanActivateFn, Router, UrlTree } from '@angular/router';
 import { APP_IDENTITY } from '../config/app-identity';
 import { AuthFacade } from './auth.facade';
-import { isEditorUrl, safeReturnUrl } from './return-url';
+import { isAppUrl, safeReturnUrl } from './return-url';
 import { SessionStore } from './session.store';
 import { User } from '../api/auth.api';
 
@@ -36,16 +36,17 @@ export const guestGuard: CanActivateFn = async (route): Promise<boolean> => {
   return false;
 };
 
-/** Sends the visitor to a validated returnUrl: the router for portal pages, a full load for the editor. */
+/** Sends the visitor to a validated returnUrl: the router for portal pages, a full load for the other apps. */
 @Injectable({ providedIn: 'root' })
 export class ReturnNavigator {
   private readonly router = inject(Router);
   private readonly document = inject(DOCUMENT);
-  private readonly editorPath = inject(APP_IDENTITY).editorPath;
+  private readonly identity = inject(APP_IDENTITY);
+  private readonly appPaths = [this.identity.editorPath, this.identity.analyticsPath];
 
   async go(returnUrl: string | null | undefined, fallback = '/'): Promise<void> {
     const url = safeReturnUrl(returnUrl, fallback);
-    if (isEditorUrl(url, this.editorPath)) {
+    if (isAppUrl(url, this.appPaths)) {
       this.document.location.assign(url);
       return;
     }
@@ -53,13 +54,13 @@ export class ReturnNavigator {
   }
 
   /**
-   * After signing in or up. The editor needs a verified address (plan D9), so an
-   * unverified visitor headed there stops at /verify-email first, which carries
-   * the returnUrl on. Everywhere else in the portal works unverified.
+   * After signing in or up. The editor and analytics need a verified address (plan
+   * D9), so an unverified visitor headed there stops at /verify-email first, which
+   * carries the returnUrl on. Everywhere else in the portal works unverified.
    */
   async afterSignIn(user: User, returnUrl: string | null | undefined): Promise<void> {
     const url = safeReturnUrl(returnUrl, '/');
-    if (!user.emailVerified && isEditorUrl(url, this.editorPath)) {
+    if (!user.emailVerified && isAppUrl(url, this.appPaths)) {
       await this.router.navigate(['/verify-email'], { queryParams: { returnUrl: url } });
       return;
     }

@@ -1,4 +1,4 @@
-import { isEditorUrl, safeReturnUrl } from './return-url';
+import { isAppUrl, safeReturnUrl } from './return-url';
 
 describe('safeReturnUrl', () => {
   it.each([
@@ -27,12 +27,21 @@ describe('safeReturnUrl', () => {
   });
 });
 
-describe('isEditorUrl', () => {
-  it('recognises the editor app, with or without the trailing slash', () => {
-    expect(isEditorUrl('/editor/', '/editor/')).toBe(true);
-    expect(isEditorUrl('/editor', '/editor/')).toBe(true);
-    expect(isEditorUrl('/editor/widgets/1', '/editor/')).toBe(true);
-    expect(isEditorUrl('/editorial', '/editor/')).toBe(false);
-    expect(isEditorUrl('/pricing', '/editor/')).toBe(false);
+describe('isAppUrl', () => {
+  const apps = ['/editor/', '/analytics/'];
+
+  it('recognises the other apps, with or without the trailing slash', () => {
+    expect(isAppUrl('/editor/', apps)).toBe(true);
+    expect(isAppUrl('/editor', apps)).toBe(true);
+    expect(isAppUrl('/editor/widgets/1', apps)).toBe(true);
+    expect(isAppUrl('/analytics/', apps)).toBe(true);
+    expect(isAppUrl('/analytics', apps)).toBe(true);
+    expect(isAppUrl('/analytics/widgets/w1?range=30d', apps)).toBe(true);
+  });
+
+  it('leaves portal pages to the router', () => {
+    expect(isAppUrl('/editorial', apps)).toBe(false);
+    expect(isAppUrl('/analytics-guide', apps)).toBe(false);
+    expect(isAppUrl('/pricing', apps)).toBe(false);
   });
 });

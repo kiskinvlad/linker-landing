@@ -26,6 +26,7 @@ import { Logo } from '../../shared/ui/logo';
             <li><a routerLink="/" fragment="faq" i18n="@@footer.faq">FAQ</a></li>
             <li><a routerLink="/feedback" i18n="@@cocreate.cta">Suggest an idea</a></li>
             <li><a [href]="identity.editorPath" i18n="@@nav.openEditor">Open editor</a></li>
+            <li><a [href]="identity.analyticsPath" i18n="@@footer.analytics">Analytics</a></li>
           </ul>
         </nav>
 
