@@ -21,19 +21,43 @@ per-weight files (`@fontsource/ibm-plex-sans/400.css`), which carry `unicode-ran
 
 ## Installing (GitHub Packages)
 
-Published to GitHub Packages, so installs need a token with `read:packages`.
+Published to GitHub Packages, so installs need a token with `read:packages`. The
+consuming repo's `.npmrc` names the registry only:
 
 ```ini
 # .npmrc in the consuming repo
 @kiskinvlad:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
 ```
 
-- Locally: a personal access token (classic) with `read:packages`, exported as
-  `NODE_AUTH_TOKEN`.
-- In another repo's GitHub Actions: `GITHUB_TOKEN` works once that repo is granted
-  access under the package's _Manage Actions access_ settings; give the job
-  `permissions: packages: read`.
+**Never put the token line in the repo's `.npmrc`.** pnpm (≥ 11.5.3) ignores `${VAR}`
+placeholders there, so `//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}` silently
+sends no credentials and installs fail with 401. Supply the token from a trusted place:
+
+- Locally, for the one command (the GitHub CLI needs `gh auth refresh -s read:packages`
+  once; a classic personal access token with `read:packages` works the same):
+
+  ```bash
+  env "pnpm_config_//npm.pkg.github.com/:_authToken=$(gh auth token)" pnpm install
+  ```
+
+  Or put `//npm.pkg.github.com/:_authToken=<token>` in your user-level `~/.npmrc`.
+
+- In another repo's GitHub Actions: grant that repo access under the package's _Manage
+  Actions access_ settings, give the job `permissions: packages: read`, and let
+  `actions/setup-node` write the auth (it reads `NODE_AUTH_TOKEN`):
+
+  ```yaml
+  - uses: actions/setup-node@v5
+    with:
+      node-version: 24
+      registry-url: https://npm.pkg.github.com
+      scope: '@kiskinvlad'
+  - run: pnpm install --frozen-lockfile
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  ```
+
+linker-analytics consumes it this way (`.npmrc`, `.github/workflows/ci.yml`).
 
 ```css
 @import '@kiskinvlad/linker-tokens/tokens.css';
