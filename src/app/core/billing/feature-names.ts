@@ -6,6 +6,7 @@
  * first still shows up rather than vanishing.
  */
 const FEATURE_NAMES: Record<string, string> = {
+  analytics: $localize`:@@feature.analytics:Analytics`,
   custom_branding: $localize`:@@feature.customBranding:Custom branding`,
   priority_support: $localize`:@@feature.prioritySupport:Priority support`,
 };

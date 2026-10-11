@@ -23,6 +23,8 @@ export interface AppIdentity {
   apiUrl: string | null;
   /** Same-origin path the editor SPA is served from (plan D2). */
   editorPath: string;
+  /** Same-origin path the analytics SPA (linker-analytics) is served from. */
+  analyticsPath: string;
   /** Who the legal documents name, and where to reach them (plan §9a, §14). */
   legal: LegalIdentity;
 }
@@ -71,6 +73,7 @@ export const APP_IDENTITY = new InjectionToken<AppIdentity>('APP_IDENTITY', {
     // page load would send them a request.
     apiUrl: typeof ngDevMode !== 'undefined' && ngDevMode ? 'http://localhost:3000/api/v1' : null,
     editorPath: '/editor/',
+    analyticsPath: '/analytics/',
     legal: {
       // Plan §15 Q3: name the legal form once decided (e.g. "FOP Vladyslav Kiskin").
       entity: 'Vladyslav Kiskin',

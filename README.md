@@ -9,7 +9,7 @@ Node server in production; a CDN serves `dist/kitlet-portal/browser/`.
 
 ```bash
 pnpm install
-pnpm start     # dev server on http://localhost:4000 (proxies /editor to the editor on :4200)
+pnpm start     # dev server on http://localhost:4000 (proxies /editor to :4200, /analytics to :4400)
 pnpm build     # static output in dist/kitlet-portal/browser
 pnpm test      # Vitest unit tests
 pnpm lint      # oxlint --type-aware
@@ -26,6 +26,17 @@ dev server does the same with `proxy.conf.mjs`, so run the editor too (`npm star
 in linker-editor, which serves at `:4200/editor/`) and open
 http://localhost:4000/editor/. Point it elsewhere with `EDITOR_DEV_URL`. Without the
 editor running, `/editor/` answers with a proxy error.
+
+## Analytics at `/analytics/`
+
+The analytics dashboard
+([linker-analytics](https://github.com/kiskinvlad/linker-analytics)) is mounted the
+same way: the edge routes `/analytics/*` to its build, the account menu and footer
+link to it with plain hrefs, and a `returnUrl` under `/analytics/` is a full-page
+load (`isAppUrl` in `core/auth/return-url.ts`; unverified visitors stop at
+`/verify-email` first, as for the editor). In dev, run `pnpm start` in
+linker-analytics (it serves at `:4400/analytics/`) and open
+http://localhost:4000/analytics/. Point it elsewhere with `ANALYTICS_DEV_URL`.
 
 ## Languages
 

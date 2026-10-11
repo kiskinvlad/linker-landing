@@ -62,6 +62,7 @@ function setup(me: () => Observable<User>, apiUrl: string | null = 'http://api.t
           siteUrl: 'https://x',
           apiUrl,
           editorPath: '/editor/',
+          analyticsPath: '/analytics/',
           legal: TEST_LEGAL_IDENTITY,
         },
       },
@@ -163,14 +164,15 @@ describe('guestGuard', () => {
 });
 
 describe('verification routing', () => {
-  it('stops an unverified visitor headed for the editor at /verify-email', async () => {
-    setup(() => of(UNVERIFIED));
-    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
-    expect(await runGuard(guestGuard, '/login', { returnUrl: '/editor/' })).toBe(false);
-    expect(navigate).toHaveBeenCalledWith(['/verify-email'], {
-      queryParams: { returnUrl: '/editor/' },
-    });
-  });
+  it.each(['/editor/', '/analytics/widgets/w1'])(
+    'stops an unverified visitor headed for another app (%s) at /verify-email',
+    async (returnUrl) => {
+      setup(() => of(UNVERIFIED));
+      const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+      expect(await runGuard(guestGuard, '/login', { returnUrl })).toBe(false);
+      expect(navigate).toHaveBeenCalledWith(['/verify-email'], { queryParams: { returnUrl } });
+    },
+  );
 
   it('lets an unverified visitor go anywhere else in the portal', async () => {
     setup(() => of(UNVERIFIED));
