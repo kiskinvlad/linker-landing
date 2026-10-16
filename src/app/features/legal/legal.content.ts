@@ -67,7 +67,7 @@ export const LEGAL_DOCS: readonly LegalDoc[] = [
     title: $localize`:@@legal.dpa.title:Data Processing Agreement`,
     summary: $localize`:@@legal.dpa.summary:How we process your website visitors’ data on your behalf, with the Standard Contractual Clauses for international transfers.`,
     group: 'agreements',
-    version: '2026-10-01',
+    version: '2026-10-11',
     load: () => import('./docs/dpa.md').then((m) => m.default),
   },
   {
@@ -83,7 +83,7 @@ export const LEGAL_DOCS: readonly LegalDoc[] = [
     title: $localize`:@@legal.cookies.title:Cookie Policy`,
     summary: $localize`:@@legal.cookies.summary:The few cookies on our website, the opt-in analytics, and what widgets store on your visitors’ devices.`,
     group: 'policies',
-    version: '2026-10-01',
+    version: '2026-10-11',
     load: () => import('./docs/cookies.md').then((m) => m.default),
   },
   {

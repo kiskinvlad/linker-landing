@@ -137,8 +137,12 @@ lists.
   **Strategy** (`EmailAction`, `WebhookAction`, `SmsAction`, …) behind one
   `WidgetActionPort`, dispatched from a queue (Redis/BullMQ) with retries.
 - **Analytics events carry no visitor identifier** (the Cookie Policy promises
-  this). Keep the payload to `widgetId`, event type, timestamp, page URL and a
-  coarse country derived from the IP, then drop the IP. Unique-visitor counts
+  this). Keep the payload to `widgetId`, event type, timestamp, page address
+  (host and path, no query string) and a coarse country and device type
+  (mobile, tablet or desktop) derived from the IP and user-agent, then drop
+  both. Retention (analytics plan A5): raw events 7 days; aggregated statistics
+  13 months on paid plans, 30 days on free, 13 months for 30 days after a
+  downgrade. Unique-visitor counts
   would need an ID in localStorage, which likely needs consent on EU sites: a
   policy change, not just a code change.
 - **Webhooks: block SSRF.** Resolve the host and refuse private, loopback,
