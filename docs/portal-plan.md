@@ -36,6 +36,12 @@ Sources this plan builds on (not restated here — follow the links):
 
 ## 2. Topology
 
+> **Current topology** (three apps on one origin, `/ua/` builds, the dev proxy) is in linker-root
+> [architecture.md](https://github.com/kiskinvlad/linker-root/blob/main/docs/architecture.md); the
+> diagram below is the original M0 plan. §11 and §12 are the backend and editor work this plan
+> asked for, kept as the record; the contracts that came out of them are in linker-root
+> [docs/contracts/](https://github.com/kiskinvlad/linker-root/tree/main/docs/contracts).
+
 ```mermaid
 flowchart LR
   B[Browser] -->|"/  /pricing  /how-it-works  /legal/*"| P["Portal (static prerender + client routes)"]

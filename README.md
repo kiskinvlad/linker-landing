@@ -1,8 +1,11 @@
 # linker-landing
 
 The public portal of the Linker platform, shipped under the product name **Kitlet**:
-marketing landing, and later auth, the account cabinet and legal pages. The plan is
-[`docs/portal-plan.md`](docs/portal-plan.md); the brand logos are in `brand/logos/`.
+marketing pages, sign-up and sign-in, the account area, pricing, the Feedback Program and the
+legal center. Start with [`AGENTS.md`](AGENTS.md); the plan is
+[`docs/portal-plan.md`](docs/portal-plan.md); the brand logos are in `brand/logos/`. How the
+portal fits with the editor, analytics app and API is in
+[linker-root](https://github.com/kiskinvlad/linker-root), whose `scripts/dev.sh` runs them all.
 
 Angular 22, marketing routes prerendered at build time, `outputMode: "static"` — no
 Node server in production; a CDN serves `dist/kitlet-portal/browser/`.
@@ -19,6 +22,10 @@ pnpm i18n:extract  # regenerate the English vocabulary and check every translati
 ```
 
 ## The editor at `/editor/`
+
+How the three apps share one origin is in linker-root's
+[architecture.md](https://github.com/kiskinvlad/linker-root/blob/main/docs/architecture.md#one-origin-three-apps);
+this section and the next cover the portal's side of it.
 
 The editor (linker-editor) is a separate app on the same origin: production's edge
 routes `/editor/*` to it, and "Open editor" is a full-page load to `/editor/`. The
@@ -97,20 +104,11 @@ The error interceptor signs the visitor out on any API 401 except on the three
 routes that check a password (login, password change, account deletion), where a
 401 means a wrong password.
 
-Running against a local backend needs these settings in linker-backend's `.env`
-(its `.env.example` has them since M4):
-
-```ini
-CORS_ORIGINS=http://localhost:4000
-MAIL_RESET_URL_BASE=http://localhost:4000/reset-password
-MAIL_VERIFY_URL_BASE=http://localhost:4000/verify-email/confirm
-```
-
-`pnpm cli users:verify <email>` in linker-backend confirms an address without the
-email.
-
-(add `,http://localhost:4200` to `CORS_ORIGINS` to keep the editor working too).
-Reset emails land in Mailpit at http://localhost:8025.
+Running against a local backend needs `http://localhost:4000` in its `CORS_ORIGINS` and the
+`MAIL_*_URL_BASE` links pointed at :4000. linker-backend's `.env.example` has both, and
+linker-root's `scripts/env.sh` writes them. `pnpm cli users:verify <email>` in linker-backend
+confirms an address without the email; reset and verification emails land in Mailpit at
+http://localhost:8025.
 
 ## Feedback Program (`/feedback`)
 

@@ -11,7 +11,7 @@
     "lint": "oxlint --type-aware src/ scripts/ packages/tokens/",
     "format:check": "prettier --check \"src/**/*.{ts,html,css}\" \"scripts/**/*.mjs\" \"packages/tokens/{*.mjs,src/**,README.md}\"",
     "lighthouse": "lhci autorun",
-    "start:ua": "pnpm tokens && ng serve --port 4000 --configuration uk",
+    "start:ua": "pnpm tokens && ng serve --configuration uk",
     "i18n:extract": "pnpm tokens && ng extract-i18n && node scripts/check-vocabulary.mjs",
     "tokens": "pnpm --filter @kiskinvlad/linker-tokens build"
   },
