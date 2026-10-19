@@ -4,13 +4,13 @@ This Cookie Policy explains which cookies and similar technologies {{productName
 
 We keep cookies to a minimum. Strictly necessary cookies are always on because the site cannot work without them. Analytics cookies are **off until you opt in**, and nothing is sent to Google before you do.
 
-| Cookie               | Set by           | Purpose                                                                                             | Category               | Lasts                                      |
-| -------------------- | ---------------- | --------------------------------------------------------------------------------------------------- | ---------------------- | ------------------------------------------ |
-| Session cookie       | Our API          | Keeps you signed in. `HttpOnly`, `Secure`, `SameSite=Lax`                                           | Strictly necessary     | Until you sign out, or the session expires |
-| `linker_consent`     | Us               | Remembers your cookie choice (a version number, one yes/no flag and a timestamp — nothing personal) | Strictly necessary     | 12 months                                  |
-| `kit_lang`           | Us               | Remembers the language you picked                                                                   | Strictly necessary     | 12 months                                  |
-| `_ga`                | Google Analytics | Distinguishes visitors with a random identifier                                                     | Analytics — **opt-in** | Up to 2 years                              |
-| `_ga_<container-id>` | Google Analytics | Keeps session state for analytics                                                                   | Analytics — **opt-in** | Up to 2 years                              |
+| Cookie | Set by | Purpose | Category | Lasts |
+|---|---|---|---|---|
+| Session cookie | Our API | Keeps you signed in. `HttpOnly`, `Secure`, `SameSite=Lax` | Strictly necessary | Until you sign out, or the session expires |
+| `linker_consent` | Us | Remembers your cookie choice (a version number, one yes/no flag and a timestamp — nothing personal) | Strictly necessary | 12 months |
+| `kit_lang` | Us | Remembers the language you picked | Strictly necessary | 12 months |
+| `_ga` | Google Analytics | Distinguishes visitors with a random identifier | Analytics — **opt-in** | Up to 2 years |
+| `_ga_<container-id>` | Google Analytics | Keeps session state for analytics | Analytics — **opt-in** | Up to 2 years |
 
 **Google Analytics** runs only on our marketing pages, never inside the editor. Google signals and advertising features are turned off, and we never send names or email addresses to it.
 
