@@ -19,6 +19,13 @@ const target = process.env.EDITOR_DEV_URL ?? 'http://localhost:4200';
  */
 const analyticsTarget = process.env.ANALYTICS_DEV_URL ?? 'http://localhost:4400';
 
+/**
+ * Its Ukrainian build (`pnpm start:ua` there) serves `/ua/analytics/` on :4401, the
+ * path the Ukrainian portal links to. Without it running, `/ua/analytics/` answers
+ * with a proxy error, like `/ua/` without `pnpm start:ua` here.
+ */
+const analyticsUkTarget = process.env.ANALYTICS_UA_DEV_URL ?? 'http://localhost:4401';
+
 /** What every dev server proxies, including the Ukrainian one (proxy.uk.conf.mjs). */
 export const appProxies = {
   '/editor': { target, secure: false, changeOrigin: true },
@@ -26,6 +33,8 @@ export const appProxies = {
   // against the origin it was loaded from — the portal's, through this proxy.
   '/ng-cli-ws': { target, secure: false, ws: true, changeOrigin: true },
   '/analytics': { target: analyticsTarget, secure: false, ws: true, changeOrigin: true },
+  // Before `/ua` below: the first matching prefix wins.
+  '/ua/analytics': { target: analyticsUkTarget, secure: false, ws: true, changeOrigin: true },
 };
 
 /**

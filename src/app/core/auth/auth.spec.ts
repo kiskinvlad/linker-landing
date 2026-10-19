@@ -164,7 +164,7 @@ describe('guestGuard', () => {
 });
 
 describe('verification routing', () => {
-  it.each(['/editor/', '/analytics/widgets/w1'])(
+  it.each(['/editor/', '/analytics/widgets/w1', '/ua/analytics/widgets/w1'])(
     'stops an unverified visitor headed for another app (%s) at /verify-email',
     async (returnUrl) => {
       setup(() => of(UNVERIFIED));
