@@ -59,17 +59,17 @@ You must not use the Service, or any widget built with it, to create, host, deli
 
 The following are allowed only if you comply with all laws and industry rules that apply to them in every country where your widget is shown, and only with the limits below. We may ask you to show that you are licensed, and we may disable widgets in these categories at our discretion.
 
-| Category | Allowed | Not allowed |
-|---|---|---|
-| **Alcohol** | Promotions by licensed sellers, shown with an age notice where the law requires | Content targeting minors; promotions where the sale is illegal |
-| **Tobacco, vaping and nicotine** | Promotions by licensed sellers where the law permits advertising | Content targeting minors |
-| **Supplements, cosmetics, health and wellness** | Factual product information and offers | Claims to diagnose, treat, cure or prevent disease; "doctor approved" claims you cannot substantiate |
-| **Prescription drugs and pharmacies** | Licensed pharmacies, only where the law allows online advertising | Prescription drugs without a prescription requirement |
-| **Financial services** | Offers by licensed or registered providers, with the disclosures the law requires | Guaranteed returns; unlicensed lending, investment or payment services |
-| **Cryptocurrency** | Information and offers by providers licensed or registered where required | ICO or token presales, "get rich" promises, unlicensed exchanges |
-| **Gambling and sweepstakes** | Licensed operators where online gambling is legal, with age notices; lawful giveaways with published rules | Unlicensed gambling; giveaways without rules or that require purchase where the law forbids it |
-| **Dating** | Legitimate dating services, adults only | Sexually explicit content |
-| **Services for children** | Content aimed at parents | Collecting children's personal data |
+| Category                                        | Allowed                                                                                                    | Not allowed                                                                                          |
+| ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| **Alcohol**                                     | Promotions by licensed sellers, shown with an age notice where the law requires                            | Content targeting minors; promotions where the sale is illegal                                       |
+| **Tobacco, vaping and nicotine**                | Promotions by licensed sellers where the law permits advertising                                           | Content targeting minors                                                                             |
+| **Supplements, cosmetics, health and wellness** | Factual product information and offers                                                                     | Claims to diagnose, treat, cure or prevent disease; "doctor approved" claims you cannot substantiate |
+| **Prescription drugs and pharmacies**           | Licensed pharmacies, only where the law allows online advertising                                          | Prescription drugs without a prescription requirement                                                |
+| **Financial services**                          | Offers by licensed or registered providers, with the disclosures the law requires                          | Guaranteed returns; unlicensed lending, investment or payment services                               |
+| **Cryptocurrency**                              | Information and offers by providers licensed or registered where required                                  | ICO or token presales, "get rich" promises, unlicensed exchanges                                     |
+| **Gambling and sweepstakes**                    | Licensed operators where online gambling is legal, with age notices; lawful giveaways with published rules | Unlicensed gambling; giveaways without rules or that require purchase where the law forbids it       |
+| **Dating**                                      | Legitimate dating services, adults only                                                                    | Sexually explicit content                                                                            |
+| **Services for children**                       | Content aimed at parents                                                                                   | Collecting children's personal data                                                                  |
 
 ## 3. Your responsibility
 

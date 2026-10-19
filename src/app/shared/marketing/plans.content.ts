@@ -13,6 +13,7 @@ export const FREE_PLAN = {
     $localize`:@@plans.free.views:10,000 widget views a month`,
     $localize`:@@plans.free.versions:10 saved versions with one-click rollback`,
     $localize`:@@plans.free.anySite:Works on any website`,
+    $localize`:@@plans.free.analytics:Analytics preview with sample data`,
     $localize`:@@plans.free.ideaReward:Paid features you suggest, unlocked for free if we ship them`,
   ],
 } as const;
@@ -24,5 +25,7 @@ export const PRO_PLAN = {
     $localize`:@@plans.pro.widgets:More live widgets`,
     $localize`:@@plans.pro.views:Higher monthly view limits`,
     $localize`:@@plans.pro.versions:Longer version history`,
+    $localize`:@@plans.pro.analytics:Analytics: views, clicks and conversions by widget, page, country and device`,
+    $localize`:@@plans.pro.analyticsHistory:13 months of statistics, export to Excel`,
   ],
 } as const;

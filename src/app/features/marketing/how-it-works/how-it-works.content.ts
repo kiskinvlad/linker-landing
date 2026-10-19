@@ -50,7 +50,7 @@ export const GUIDE_STEPS = [
     title: $localize`:@@guide.measure.title:See what sells`,
     body: $localize`:@@guide.measure.body:Track views, clicks and submissions per widget, and get notified when a new lead arrives. Keep what works, change what doesn’t.`,
     points: [
-      $localize`:@@guide.measure.point1:Per-widget analytics`,
+      $localize`:@@guide.measure.point1:Analytics by widget, page, country and device`,
       $localize`:@@guide.measure.point2:New-submission notifications`,
     ],
   },

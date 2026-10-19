@@ -67,6 +67,29 @@ export const BENEFITS = [
   },
 ] as const;
 
+/**
+ * The Analytics band (linker-analytics, served at /analytics/). Only what ships:
+ * analytics plan §5–§7. It is a paid-plan feature; Free shows sample data.
+ */
+export const ANALYTICS_POINTS = [
+  {
+    title: $localize`:@@home.analytics.kpis.title:Views, clicks and submissions`,
+    body: $localize`:@@home.analytics.kpis.body:Click-through and conversion rates for every widget, with the trend over time and a comparison with the period before.`,
+  },
+  {
+    title: $localize`:@@home.analytics.where.title:Where it works`,
+    body: $localize`:@@home.analytics.where.body:The pages, countries and devices each widget is seen on.`,
+  },
+  {
+    title: $localize`:@@home.analytics.compare.title:Fair comparisons`,
+    body: $localize`:@@home.analytics.compare.body:Line widgets up from their own launch day, and filter everything by campaign.`,
+  },
+  {
+    title: $localize`:@@home.analytics.export.title:Export to Excel`,
+    body: $localize`:@@home.analytics.export.body:Download what you see as an XLSX workbook to share or dig into.`,
+  },
+] as const;
+
 export const USE_CASES = [
   {
     kind: 'lead',
@@ -105,7 +128,7 @@ export const FAQ = [
   },
   {
     q: $localize`:@@home.faq.free.q:What does the Free plan include?`,
-    a: $localize`:@@home.faq.free.a:One live widget, 10,000 widget views a month and 10 saved versions per widget. No credit card is needed to sign up.`,
+    a: $localize`:@@home.faq.free.a:One live widget, 10,000 widget views a month and 10 saved versions per widget, plus an Analytics preview with sample data. No credit card is needed to sign up.`,
   },
   {
     q: $localize`:@@home.faq.mistake.q:What if I publish a mistake?`,

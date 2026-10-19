@@ -31,6 +31,10 @@ export const PRICING_FAQ = [
     a: $localize`:@@pricing.faq.pro.a:Pro is in the works. We’ll publish its price and limits on this page before it launches.`,
   },
   {
+    q: $localize`:@@pricing.faq.analytics.q:Is Analytics included on the Free plan?`,
+    a: $localize`:@@pricing.faq.analytics.a:Analytics is part of every paid plan. On Free you can open it and explore it with sample data. Your widgets’ own statistics are collected from the first view and kept for 30 days, so they’re there when you upgrade; paid plans keep 13 months.`,
+  },
+  {
     q: $localize`:@@pricing.faq.reward.q:Can I get paid features without paying?`,
     a: $localize`:@@pricing.faq.reward.a:Yes, through the idea reward. Suggest a feature; if we ship it as part of a paid plan, it’s unlocked on your account for free for as long as your account is active. Plan limits such as widget counts are never unlocked this way.`,
   },
@@ -39,7 +43,7 @@ export const PRICING_FAQ = [
 export const PRICING_SEO: RouteSeo = {
   title: $localize`:@@nav.pricing:Pricing`,
   ogImage: 'pricing',
-  description: $localize`:@@pricing.seo.description:Start free with one live widget and 10,000 views a month — no credit card. Pro with more widgets and views is coming soon.`,
+  description: $localize`:@@pricing.seo.description:Start free with one live widget and 10,000 views a month — no credit card. Pro with more widgets, more views and full analytics is coming soon.`,
   jsonLd: (siteUrl, productName) => [
     softwareApplication(siteUrl, productName),
     faqPage(PRICING_FAQ),

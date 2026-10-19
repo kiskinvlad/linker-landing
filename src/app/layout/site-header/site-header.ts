@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { filter, map } from 'rxjs';
+import { NgTemplateOutlet } from '@angular/common';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { User } from '../../core/api/auth.api';
 import { AuthFacade } from '../../core/auth/auth.facade';
@@ -19,7 +20,7 @@ import { LanguageSwitcher } from '../language-switcher/language-switcher';
 
 @Component({
   selector: 'kit-site-header',
-  imports: [RouterLink, RouterLinkActive, Logo, LanguageSwitcher],
+  imports: [NgTemplateOutlet, RouterLink, RouterLinkActive, Logo, LanguageSwitcher],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './site-header.html',
   styleUrl: './site-header.css',
@@ -70,8 +71,20 @@ export class SiteHeader {
     return `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase();
   }
 
-  protected openEditorClicked(): void {
-    this.ga.event('open_editor_click');
+  /** Where each of the other apps is served on this origin. */
+  protected appPath(app: 'editor' | 'analytics'): string {
+    return app === 'editor' ? this.identity.editorPath : this.identity.analyticsPath;
+  }
+
+  /** What the signed-out lock says: the app needs an account first. */
+  protected lockedLabel(app: 'editor' | 'analytics'): string {
+    return app === 'editor'
+      ? $localize`:@@nav.openEditorLocked:Log in to open the editor`
+      : $localize`:@@nav.analyticsLocked:Log in to see your analytics`;
+  }
+
+  protected appClicked(app: 'editor' | 'analytics'): void {
+    this.ga.event(app === 'editor' ? 'open_editor_click' : 'open_analytics_click');
   }
 
   protected async logout(): Promise<void> {
