@@ -27,7 +27,7 @@ import { SecuritySection } from './security-section';
         @if (!user.emailVerified) {
           <p class="notice notice--warning cabinet__verify" role="status">
             <ng-container i18n="@@account.verifyNotice"
-              >Confirm your email address to open the editor.</ng-container
+              >Confirm your email address to open the editor and analytics.</ng-container
             >
             <a routerLink="/verify-email" i18n="@@account.verifyLink">Resend the link</a>
           </p>

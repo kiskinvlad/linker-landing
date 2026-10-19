@@ -32,7 +32,7 @@ export const PRICING_FAQ = [
   },
   {
     q: $localize`:@@pricing.faq.analytics.q:Is Analytics included on the Free plan?`,
-    a: $localize`:@@pricing.faq.analytics.a:Analytics is part of every paid plan. On Free you can open it and explore it with sample data. Your widgets’ own statistics are collected from the first view and kept for 30 days, so they’re there when you upgrade; paid plans keep 13 months.`,
+    a: $localize`:@@pricing.faq.analytics.a:Analytics is part of every paid plan. On Free you can open it and explore it with sample data. Your widgets’ own statistics are collected from the first view and Free keeps the last 30 days, so those are there when you upgrade; paid plans keep 13 months.`,
   },
   {
     q: $localize`:@@pricing.faq.reward.q:Can I get paid features without paying?`,

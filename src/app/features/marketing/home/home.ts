@@ -32,11 +32,17 @@ export class Home {
   protected readonly faq = FAQ;
 }
 
-function mockNumbers(locale: string): { views: string; ctr: string; conversion: string } {
+type MockKey = 'views' | 'ctr' | 'conversion' | 'viewsUp' | 'ctrUp' | 'conversionUp';
+
+function mockNumbers(locale: string): Record<MockKey, string> {
   const percent = new Intl.NumberFormat(locale, { style: 'percent', maximumFractionDigits: 1 });
   return {
     views: new Intl.NumberFormat(locale).format(12480),
     ctr: percent.format(0.062),
     conversion: percent.format(0.021),
+    // Changes against the previous period, relative, as the dashboard shows them.
+    viewsUp: percent.format(0.18),
+    ctrUp: percent.format(0.17),
+    conversionUp: percent.format(0.24),
   };
 }

@@ -35,7 +35,7 @@ type State = 'working' | 'done' | 'invalid' | 'error';
           @case ('done') {
             <h1 id="confirm-title" i18n="@@verify.done.title">Email confirmed</h1>
             <p class="auth__lead" i18n="@@verify.done.lead">
-              You’re all set. The editor is open to you.
+              You’re all set. The editor and analytics are open to you.
             </p>
             <div class="confirm__actions">
               @if (session.isAuthenticated()) {
