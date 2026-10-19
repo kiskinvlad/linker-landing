@@ -38,6 +38,12 @@ load (`isAppUrl` in `core/auth/return-url.ts`; unverified visitors stop at
 linker-analytics (it serves at `:4400/analytics/`) and open
 http://localhost:4000/analytics/. Point it elsewhere with `ANALYTICS_DEV_URL`.
 
+It is built per language like the portal: the Ukrainian pages link to
+`/ua/analytics/` (`APP_IDENTITY.analyticsPath` follows `LOCALE_ID`), and a
+`returnUrl` into analytics in any language is a full-page load (`ANALYTICS_PATHS`).
+In dev, `pnpm start:ua` in linker-analytics serves `:4401/ua/analytics/`, which the
+proxy forwards `/ua/analytics` to (`ANALYTICS_UA_DEV_URL` to point elsewhere).
+
 ## Languages
 
 English at `/`, Ukrainian at `/ua/` (plan D4), built with Angular i18n: each

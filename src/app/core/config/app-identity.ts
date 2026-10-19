@@ -1,4 +1,5 @@
-import { InjectionToken } from '@angular/core';
+import { InjectionToken, LOCALE_ID, inject } from '@angular/core';
+import { LOCALES, localeById } from '../i18n/locales';
 
 // Angular's build replaces this with `false` in production, so the dev-only branch
 // below is removed from the bundle entirely (isDevMode() is a runtime call and
@@ -23,7 +24,10 @@ export interface AppIdentity {
   apiUrl: string | null;
   /** Same-origin path the editor SPA is served from (plan D2). */
   editorPath: string;
-  /** Same-origin path the analytics SPA (linker-analytics) is served from. */
+  /**
+   * Same-origin path the analytics SPA (linker-analytics) is served from, in this
+   * build's language: `/analytics/`, or `/ua/analytics/` from the Ukrainian pages.
+   */
   analyticsPath: string;
   /** Who the legal documents name, and where to reach them (plan §9a, §14). */
   legal: LegalIdentity;
@@ -60,6 +64,18 @@ export interface LegalIdentity {
   ukRepresentative: string | null;
 }
 
+/**
+ * linker-analytics is built per language like the portal, under the portal's prefix
+ * for it (its src/app/core/i18n/locales.ts), so a link from a Ukrainian page stays in
+ * Ukrainian.
+ */
+export function analyticsPathFor(prefix: string): string {
+  return `${prefix}/analytics/`;
+}
+
+/** Every language's analytics path: a `returnUrl` into any of them is a full page load. */
+export const ANALYTICS_PATHS: readonly string[] = LOCALES.map((l) => analyticsPathFor(l.prefix));
+
 export const APP_IDENTITY = new InjectionToken<AppIdentity>('APP_IDENTITY', {
   providedIn: 'root',
   factory: () => ({
@@ -73,7 +89,7 @@ export const APP_IDENTITY = new InjectionToken<AppIdentity>('APP_IDENTITY', {
     // page load would send them a request.
     apiUrl: typeof ngDevMode !== 'undefined' && ngDevMode ? 'http://localhost:3000/api/v1' : null,
     editorPath: '/editor/',
-    analyticsPath: '/analytics/',
+    analyticsPath: analyticsPathFor(localeById(inject(LOCALE_ID)).prefix),
     legal: {
       // Plan §15 Q3: name the legal form once decided (e.g. "FOP Vladyslav Kiskin").
       entity: 'Vladyslav Kiskin',

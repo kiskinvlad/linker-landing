@@ -1,6 +1,6 @@
 import { DOCUMENT, Injectable, inject } from '@angular/core';
 import { CanActivateFn, Router, UrlTree } from '@angular/router';
-import { APP_IDENTITY } from '../config/app-identity';
+import { ANALYTICS_PATHS, APP_IDENTITY } from '../config/app-identity';
 import { AuthFacade } from './auth.facade';
 import { isAppUrl, safeReturnUrl } from './return-url';
 import { SessionStore } from './session.store';
@@ -42,7 +42,8 @@ export class ReturnNavigator {
   private readonly router = inject(Router);
   private readonly document = inject(DOCUMENT);
   private readonly identity = inject(APP_IDENTITY);
-  private readonly appPaths = [this.identity.editorPath, this.identity.analyticsPath];
+  // Analytics in any language: its pages send this one's own path as the returnUrl.
+  private readonly appPaths = [this.identity.editorPath, ...ANALYTICS_PATHS];
 
   async go(returnUrl: string | null | undefined, fallback = '/'): Promise<void> {
     const url = safeReturnUrl(returnUrl, fallback);
