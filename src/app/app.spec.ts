@@ -22,11 +22,13 @@ describe('App', () => {
     expect(el.querySelector('footer')).toBeTruthy();
   });
 
-  it('sends a signed-out visitor to the editor through login', async () => {
+  it('sends a signed-out visitor to the editor and analytics through login', async () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
-    const link = (fixture.nativeElement as HTMLElement).querySelector('a.open-editor');
-    expect(link?.getAttribute('href')).toBe('/login?returnUrl=%2Feditor%2F');
+    expect(appLinks(fixture.nativeElement)).toEqual([
+      '/login?returnUrl=%2Feditor%2F',
+      '/login?returnUrl=%2Fanalytics%2F',
+    ]);
   });
 
   it('links a signed-in visitor straight to the same-origin editor app', async () => {
@@ -34,7 +36,7 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
     const el = fixture.nativeElement as HTMLElement;
-    expect(el.querySelector('a.open-editor')?.getAttribute('href')).toBe('/editor/');
+    expect(appLinks(el)).toEqual(['/editor/', '/analytics/']);
     expect(el.querySelector('.account__name')?.textContent?.trim()).toBe('Ada');
     expect(el.querySelector('.header__login')).toBeNull();
   });
@@ -44,12 +46,18 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
     const el = fixture.nativeElement as HTMLElement;
-    expect(el.querySelector('a.open-editor')?.getAttribute('href')).toBe(
+    expect(appLinks(el)).toEqual([
       '/verify-email?returnUrl=%2Feditor%2F',
-    );
+      '/verify-email?returnUrl=%2Fanalytics%2F',
+    ]);
     expect(el.querySelector('.verify-banner')).not.toBeNull();
   });
 });
+
+/** The header's "Open editor" and "Analytics" pills, in order. */
+function appLinks(el: HTMLElement): (string | null)[] {
+  return Array.from(el.querySelectorAll('header a.open-app')).map((a) => a.getAttribute('href'));
+}
 
 const ADA: User = {
   id: '1',

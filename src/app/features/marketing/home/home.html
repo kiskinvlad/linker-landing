@@ -95,6 +95,85 @@
   </div>
 </section>
 
+<!-- 4a. Analytics (linker-analytics at /analytics/) -->
+<section id="analytics" class="section" aria-labelledby="analytics-title">
+  <div class="container insight">
+    <div class="insight__copy">
+      <div class="section-head" kitReveal>
+        <p class="eyebrow" i18n="@@home.analytics.eyebrow">Analytics</p>
+        <h2 id="analytics-title" i18n="@@home.analytics.title">See which offer actually sells</h2>
+        <p i18n="@@home.analytics.lead">
+          Every widget reports how it performs, so you keep what converts and fix what doesn’t.
+        </p>
+      </div>
+
+      <ul class="insight__points">
+        @for (p of analyticsPoints; track p.title; let i = $index) {
+          <li [kitReveal]="i * 60">
+            <h3>{{ p.title }}</h3>
+            <p>{{ p.body }}</p>
+          </li>
+        }
+      </ul>
+
+      <p class="insight__note" i18n="@@home.analytics.note">
+        Included in every paid plan, with 13 months of history. On Free, explore it with sample
+        data: your own numbers are collected from the first view and kept for 30 days.
+      </p>
+
+      <div class="insight__actions">
+        @if (session.isAuthenticated()) {
+          <a class="btn btn--primary" [href]="identity.analyticsPath" i18n="@@home.analytics.open"
+            >Open analytics</a
+          >
+        } @else {
+          <a
+            class="btn btn--primary"
+            routerLink="/login"
+            [queryParams]="{ returnUrl: identity.analyticsPath }"
+            i18n="@@home.analytics.explore"
+            >Explore analytics</a
+          >
+        }
+        <a class="btn btn--ghost" routerLink="/pricing" i18n="@@home.analytics.plans">See plans</a>
+      </div>
+    </div>
+
+    <!-- Decorative: the real dashboard in miniature. -->
+    <div class="insight__art" aria-hidden="true" [kitReveal]="120">
+      <div class="dash">
+        <div class="dash__tiles">
+          <div class="dash__tile">
+            <span i18n="@@home.analytics.mock.views">Views</span>
+            <b>{{ mock.views }}</b>
+            <i class="is-up">↑ {{ mock.viewsUp }}</i>
+          </div>
+          <div class="dash__tile">
+            <span i18n="@@home.analytics.mock.ctr">CTR</span>
+            <b>{{ mock.ctr }}</b>
+            <i class="is-up">↑ {{ mock.ctrUp }}</i>
+          </div>
+          <div class="dash__tile">
+            <span i18n="@@home.analytics.mock.conversion">Conversion</span>
+            <b>{{ mock.conversion }}</b>
+            <i class="is-up">↑ {{ mock.conversionUp }}</i>
+          </div>
+        </div>
+        <div class="dash__chart">
+          @for (h of chartBars; track $index) {
+            <span [style.height.%]="h"></span>
+          }
+        </div>
+        <div class="dash__rows">
+          <span><em></em><b></b></span>
+          <span><em></em><b></b></span>
+          <span><em></em><b></b></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- 5. Use cases -->
 <section class="section" aria-labelledby="usecases-title">
   <div class="container">

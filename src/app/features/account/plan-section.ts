@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { Subscription } from '../../core/api/account.api';
 import { AccountFacade } from '../../core/auth/account.facade';
 import { featureName } from '../../core/billing/feature-names';
+import { APP_IDENTITY } from '../../core/config/app-identity';
 import { describeError } from '../auth/auth-messages';
 
 /**
@@ -51,7 +52,24 @@ import { describeError } from '../auth/auth-messages';
               <dt i18n="@@account.plan.versions">Saved versions per widget</dt>
               <dd>{{ count(sub.entitlements.maxVersionsPerWidget) }}</dd>
             </div>
+            <div>
+              <dt i18n="@@account.plan.analytics">Analytics</dt>
+              <dd>
+                @if (sub.entitlements.features.includes('analytics')) {
+                  <ng-container i18n="@@account.plan.analyticsIncluded">Included</ng-container>
+                } @else {
+                  <ng-container i18n="@@account.plan.analyticsSample">Sample data</ng-container>
+                }
+              </dd>
+            </div>
           </dl>
+          <!-- Another app on this origin: a plain href, a full page load. -->
+          <a
+            class="plan-card__link"
+            [href]="identity.analyticsPath"
+            i18n="@@account.plan.openAnalytics"
+            >Open analytics</a
+          >
         </div>
         <h3 class="panel__sub" i18n="@@account.plan.unlockedTitle">
           Paid features unlocked by your ideas
@@ -113,6 +131,11 @@ import { describeError } from '../auth/auth-messages';
       font: 600 1.25rem var(--font-display);
       color: var(--ink);
     }
+    .plan-card__link {
+      display: inline-block;
+      margin-top: 16px;
+      font-weight: 600;
+    }
     .plan-card__limits {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -151,6 +174,7 @@ import { describeError } from '../auth/auth-messages';
 })
 export class PlanSection {
   private readonly account = inject(AccountFacade);
+  protected readonly identity = inject(APP_IDENTITY);
 
   /**
    * Intl rather than DecimalPipe: esbuild splits by module file, and any pipe from
