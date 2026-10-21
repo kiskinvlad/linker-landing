@@ -11,6 +11,9 @@ import { SecuritySection } from './security-section';
  * on one page, with a section index. One page rather than four routes because
  * each section is short, and a visitor looking for "delete my account" should be
  * able to find it by scrolling. Guarded by `authGuard`; the API is the boundary.
+ *
+ * The index links carry the path as well as the fragment: a bare `href="#plan"`
+ * resolves against `<base href>` and leaves for the home page.
  */
 @Component({
   selector: 'kit-account-page',
@@ -39,10 +42,14 @@ import { SecuritySection } from './security-section';
             i18n-aria-label="@@account.sections"
             aria-label="Account sections"
           >
-            <a href="#profile" i18n="@@account.profile.title">Profile</a>
-            <a href="#security" i18n="@@account.security.title">Security</a>
-            <a href="#plan" i18n="@@account.plan.title">Plan &amp; billing</a>
-            <a href="#privacy" i18n="@@account.privacy.title">Privacy</a>
+            <a routerLink="/account" fragment="profile" i18n="@@account.profile.title">Profile</a>
+            <a routerLink="/account" fragment="security" i18n="@@account.security.title"
+              >Security</a
+            >
+            <a routerLink="/account" fragment="plan" i18n="@@account.plan.title"
+              >Plan &amp; billing</a
+            >
+            <a routerLink="/account" fragment="privacy" i18n="@@account.privacy.title">Privacy</a>
           </nav>
 
           <div class="cabinet__sections">
