@@ -44,7 +44,7 @@ export interface LegalDoc {
  * `LEGAL_TERMS_VERSION` must equal it: bump both together, and everyone is asked to
  * accept again on their next editor visit.
  */
-export const LEGAL_TERMS_VERSION = '2026-10-01';
+export const LEGAL_TERMS_VERSION = '2026-10-25';
 
 /**
  * `false` while the texts still carry placeholder contacts (until M8): every legal
@@ -57,7 +57,7 @@ export const LEGAL_DOCS: readonly LegalDoc[] = [
   {
     slug: 'terms',
     title: $localize`:@@legal.terms.title:Terms of Service`,
-    summary: $localize`:@@legal.terms.summary:The agreement for using the service: business use only, who is responsible for widget content, billing, liability and how changes work.`,
+    summary: $localize`:@@legal.terms.summary:The agreement for using the service: business use only, who is responsible for widget content, AI features, billing, liability and how changes work.`,
     group: 'agreements',
     version: LEGAL_TERMS_VERSION,
     load: () => import('./docs/terms.md').then((m) => m.default),
@@ -75,7 +75,7 @@ export const LEGAL_DOCS: readonly LegalDoc[] = [
     title: $localize`:@@legal.privacy.title:Privacy Policy`,
     summary: $localize`:@@legal.privacy.summary:What we collect about you and your team, why, where it is stored, how long we keep it and your rights.`,
     group: 'policies',
-    version: '2026-10-01',
+    version: '2026-10-25',
     load: () => import('./docs/privacy.md').then((m) => m.default),
   },
   {
@@ -91,7 +91,7 @@ export const LEGAL_DOCS: readonly LegalDoc[] = [
     title: $localize`:@@legal.aup.title:Acceptable Use Policy`,
     summary: $localize`:@@legal.aup.summary:What widgets must never be used for, restricted industries, and how to report an abusive widget.`,
     group: 'policies',
-    version: '2026-10-01',
+    version: '2026-10-25',
     load: () => import('./docs/acceptable-use.md').then((m) => m.default),
   },
   {
@@ -115,7 +115,7 @@ export const LEGAL_DOCS: readonly LegalDoc[] = [
     title: $localize`:@@legal.subprocessors.title:Subprocessors`,
     summary: $localize`:@@legal.subprocessors.summary:Every company that processes personal data for us, what for, and where.`,
     group: 'transparency',
-    version: '2026-10-01',
+    version: '2026-10-25',
     load: () => import('./docs/subprocessors.md').then((m) => m.default),
   },
 ];
