@@ -53,7 +53,8 @@ You must not use the Service, or any widget built with it, to create, host, deli
 - circumventing plan limits, rate limits, usage quotas or access controls, including by creating multiple free accounts;
 - overloading the Service, interfering with other customers, or reverse-engineering it except where the law expressly allows;
 - reselling or sublicensing the Service without our written agreement;
-- using the Service to build a competing product.
+- using the Service to build a competing product;
+- using AI features to create content this policy prohibits, or trying to bypass their safeguards or limits, for example by rewording a refused request to get around it, or by sharing credits across accounts.
 
 ## 2. Restricted categories
 

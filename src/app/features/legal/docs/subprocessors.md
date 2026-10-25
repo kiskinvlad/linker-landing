@@ -20,6 +20,7 @@ We use these providers as a controller for data about **our customers and websit
 |---|---|---|
 | **Google Analytics** (Google Ireland Ltd / Google LLC) | Statistics about visits to our marketing website | Only after the visitor opts in to analytics cookies; never inside the editor or in widgets |
 | **Amazon Web Services** | Hosting account data and sending account emails (sign-up verification, password resets) | Always |
+| **Amazon Web Services** | AI features (Amazon Bedrock): producing widget drafts from the description you type. Requests may be processed in AWS regions outside the EU; nothing is stored there, and requests are not used to train models | Only when you use AI features |
 
 **SMS.** Sending SMS through widgets is not available yet. Before it launches, we will add our SMS provider here at least 30 days in advance.
 
