@@ -24,6 +24,7 @@ describe('PlanCards: the AI assistant', () => {
   it('explains credits in the pricing FAQ', () => {
     const answer = PRICING_FAQ.find((item) => item.q === 'What are AI credits?')?.a;
     expect(answer).toContain('5 credits');
+    expect(answer).toContain('an edit uses 1');
     expect(answer).toContain('1,000 a month');
     expect(answer).toContain('don’t roll over');
   });

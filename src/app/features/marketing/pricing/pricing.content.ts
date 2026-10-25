@@ -36,7 +36,7 @@ export const PRICING_FAQ = [
   },
   {
     q: $localize`:@@pricing.faq.ai.q:What are AI credits?`,
-    a: $localize`:@@pricing.faq.ai.a:Paid plans include an AI assistant that drafts widgets from a sentence you type. Each request for drafts uses 5 credits, and a plan includes 1,000 a month. A request the assistant declines, or one that fails, uses none. Credits reset at the start of each month and don’t roll over.`,
+    a: $localize`:@@pricing.faq.ai.a:Paid plans include an AI assistant that drafts widgets from a sentence you type and changes them on request. Each request for drafts uses 5 credits, an edit uses 1, and a plan includes 1,000 a month. A request the assistant declines, or one that fails, uses none. Credits reset at the start of each month and don’t roll over.`,
   },
   {
     q: $localize`:@@pricing.faq.reward.q:Can I get paid features without paying?`,
