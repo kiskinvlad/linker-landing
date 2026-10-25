@@ -35,6 +35,10 @@ export const PRICING_FAQ = [
     a: $localize`:@@pricing.faq.analytics.a:Analytics is part of every paid plan. On Free you can open it and explore it with sample data. Your widgets’ own statistics are collected from the first view and Free keeps the last 30 days, so those are there when you upgrade; paid plans keep 13 months.`,
   },
   {
+    q: $localize`:@@pricing.faq.ai.q:What are AI credits?`,
+    a: $localize`:@@pricing.faq.ai.a:Paid plans include an AI assistant that drafts widgets from a sentence you type. Each request for drafts uses 5 credits, and a plan includes 1,000 a month. A request the assistant declines, or one that fails, uses none. Credits reset at the start of each month and don’t roll over.`,
+  },
+  {
     q: $localize`:@@pricing.faq.reward.q:Can I get paid features without paying?`,
     a: $localize`:@@pricing.faq.reward.a:Yes, through the idea reward. Suggest a feature; if we ship it as part of a paid plan, it’s unlocked on your account for free for as long as your account is active. Plan limits such as widget counts are never unlocked this way.`,
   },

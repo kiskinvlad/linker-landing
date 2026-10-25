@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
-import { ACCOUNT_API, Plan, ProfileUpdate, Subscription } from '../api/account.api';
+import { ACCOUNT_API, AiUsage, Plan, ProfileUpdate, Subscription } from '../api/account.api';
 import { User } from '../api/auth.api';
 import { AuthFacade } from './auth.facade';
 import { SessionStore } from './session.store';
@@ -39,5 +39,9 @@ export class AccountFacade {
 
   subscription(): Promise<Subscription> {
     return firstValueFrom(this.api.subscription());
+  }
+
+  aiUsage(): Promise<AiUsage> {
+    return firstValueFrom(this.api.aiUsage());
   }
 }

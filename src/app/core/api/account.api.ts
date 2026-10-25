@@ -20,7 +20,18 @@ export interface PlanLimits {
   maxWidgets: number;
   maxVersionsPerWidget: number;
   monthlyViews: number;
+  /** AI assistant credits a month; absent from an API before the assistant. */
+  aiCreditsPerMonth?: number;
   features: string[];
+}
+
+/** linker-backend `AiUsageDto`: this month's AI credits. `limit` is 0 without the assistant. */
+export interface AiUsage {
+  used: number;
+  limit: number;
+  /** Start of the next UTC month. */
+  resetsAt: string;
+  costs: { create: number; regenerate: number };
 }
 
 export interface Plan {
@@ -62,6 +73,7 @@ export interface AccountApi {
   acceptTerms(version: string): Observable<void>;
   plans(): Observable<Plan[]>;
   subscription(): Observable<Subscription>;
+  aiUsage(): Observable<AiUsage>;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -93,6 +105,10 @@ export class HttpAccountApi implements AccountApi {
     return this.apiUrl
       ? this.http.get<Subscription>(`${this.apiUrl}/billing/subscription`)
       : this.noApi();
+  }
+
+  aiUsage(): Observable<AiUsage> {
+    return this.apiUrl ? this.http.get<AiUsage>(`${this.apiUrl}/ai/usage`) : this.noApi();
   }
 
   private noApi(): Observable<never> {
