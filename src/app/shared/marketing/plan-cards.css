@@ -5,6 +5,21 @@
   gap: 24px;
 }
 
+.plans--three {
+  grid-template-columns: repeat(3, minmax(0, 360px));
+}
+
+.plans__error {
+  max-inline-size: 640px;
+  margin: 24px auto 0;
+}
+
+.plan__tax {
+  margin-block-start: 4px;
+  color: var(--ink-3);
+  font-size: 0.875rem;
+}
+
 .plan {
   display: flex;
   flex-direction: column;
@@ -109,8 +124,15 @@
   color: var(--ink-3);
 }
 
+@media (max-width: 1080px) {
+  .plans--three {
+    grid-template-columns: repeat(2, minmax(0, 400px));
+  }
+}
+
 @media (max-width: 760px) {
-  .plans {
+  .plans,
+  .plans--three {
     grid-template-columns: 1fr;
   }
 }

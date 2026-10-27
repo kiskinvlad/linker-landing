@@ -1,14 +1,22 @@
 import { ChangeDetectionStrategy, Component, LOCALE_ID, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AiUsage, Subscription } from '../../core/api/account.api';
 import { AccountFacade } from '../../core/auth/account.facade';
+import { BillingFacade } from '../../core/billing/billing.facade';
 import { featureName } from '../../core/billing/feature-names';
 import { APP_IDENTITY } from '../../core/config/app-identity';
 import { describeError } from '../auth/auth-messages';
 
+/** How long the page waits for Stripe's confirmation after checkout (D11). */
+export const CHECKOUT_POLL_MS = 2_000;
+export const CHECKOUT_POLL_TRIES = 10;
+
 /**
  * Plan §10 "Plan & billing": the current plan and what it allows, read from
- * `GET /billing/subscription`. Read-only until paid plans exist.
+ * `GET /billing/subscription`, and the way to Stripe (stripe-payments D11):
+ * Upgrade while a plan is for sale, Manage billing once Stripe bills the
+ * account. Back from checkout (`?checkout=done`), it waits for the webhook to
+ * land, since the plan changes then and not on the redirect.
  */
 @Component({
   selector: 'kit-plan-section',
@@ -18,7 +26,43 @@ import { describeError } from '../auth/auth-messages';
     <section class="panel" aria-labelledby="plan-title">
       <h2 id="plan-title" i18n="@@account.plan.title">Plan &amp; billing</h2>
 
+      @switch (checkout()) {
+        @case ('confirming') {
+          <p class="notice" role="status" aria-busy="true" i18n="@@account.billing.confirming">
+            Confirming your payment…
+          </p>
+        }
+        @case ('done') {
+          <p class="notice notice--success" role="status" i18n="@@account.billing.confirmed">
+            You’re on {{ subscription()?.plan?.name }}. Thank you!
+          </p>
+        }
+        @case ('slow') {
+          <p class="notice" role="status" i18n="@@account.billing.slow">
+            Payment received. Your plan updates in a moment; refresh this page if it hasn’t.
+          </p>
+        }
+      }
+
       @if (subscription(); as sub) {
+        @if (sub.status === 'past_due') {
+          <div class="notice notice--warning billing-alert" role="alert">
+            <p i18n="@@account.billing.pastDue">
+              Your last payment didn’t go through. Update your card to keep {{ sub.plan.name }}.
+            </p>
+            @if (sub.manageable) {
+              <button
+                class="btn btn--primary"
+                type="button"
+                [disabled]="managing()"
+                (click)="manage()"
+                i18n="@@account.billing.updateCard"
+              >
+                Update card
+              </button>
+            }
+          </div>
+        }
         <div class="plan-card">
           <div class="plan-card__head">
             <p class="plan-card__name">{{ sub.plan.name }}</p>
@@ -63,6 +107,12 @@ import { describeError } from '../auth/auth-messages';
               </dd>
             </div>
           </dl>
+          @if (sub.cancelAtPeriodEnd && sub.currentPeriodEnd) {
+            <p class="plan-card__ends" i18n="@@account.billing.endsOn">
+              Your plan ends on {{ longDate(sub.currentPeriodEnd) }}. You can keep it under Manage
+              billing.
+            </p>
+          }
           @if (aiUsage(); as ai) {
             <div class="ai-credits">
               <p id="ai-credits-label" class="ai-credits__label" i18n="@@account.plan.aiCredits">
@@ -120,10 +170,33 @@ import { describeError } from '../auth/auth-messages';
           never limits.
         </p>
 
+        @if (billingError(); as message) {
+          <p class="notice notice--error" role="alert">{{ message }}</p>
+        }
         <div class="panel__actions">
-          <button class="btn btn--ghost" type="button" disabled>
-            <ng-container i18n="@@account.plan.upgrade">Upgrade · coming soon</ng-container>
-          </button>
+          @if (sub.manageable) {
+            <button
+              class="btn btn--primary"
+              type="button"
+              [disabled]="managing()"
+              [attr.aria-busy]="managing()"
+              (click)="manage()"
+            >
+              @if (managing()) {
+                <ng-container i18n="@@account.billing.opening">Opening billing…</ng-container>
+              } @else {
+                <ng-container i18n="@@account.billing.manage">Manage billing</ng-container>
+              }
+            </button>
+          } @else if (forSale()) {
+            <a class="btn btn--primary" routerLink="/pricing" i18n="@@account.billing.upgrade"
+              >Upgrade</a
+            >
+          } @else {
+            <button class="btn btn--ghost" type="button" disabled>
+              <ng-container i18n="@@account.plan.upgrade">Upgrade · coming soon</ng-container>
+            </button>
+          }
           <a routerLink="/pricing" i18n="@@account.plan.compare">Compare plans</a>
         </div>
       } @else if (error()) {
@@ -154,6 +227,18 @@ import { describeError } from '../auth/auth-messages';
     .plan-card__name {
       font: 600 1.25rem var(--font-display);
       color: var(--ink);
+    }
+    .plan-card__ends {
+      margin-block-start: 16px;
+      color: var(--ink-2);
+    }
+    .billing-alert {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-block-end: 16px;
     }
     .plan-card__link {
       display: inline-block;
@@ -225,6 +310,9 @@ import { describeError } from '../auth/auth-messages';
 })
 export class PlanSection {
   private readonly account = inject(AccountFacade);
+  private readonly billing = inject(BillingFacade);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   protected readonly identity = inject(APP_IDENTITY);
 
   /**
@@ -239,14 +327,27 @@ export class PlanSection {
     month: 'short',
     timeZone: 'UTC',
   });
+  private readonly longDates = new Intl.DateTimeFormat(this.locale, {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
 
   protected readonly subscription = signal<Subscription | null>(null);
   protected readonly error = signal<string | null>(null);
   /** This month's AI credits, on an account with the AI assistant; null otherwise or while unknown. */
   protected readonly aiUsage = signal<AiUsage | null>(null);
+  /** Whether this server sells any plan (`purchasable`): Upgrade instead of "coming soon". */
+  protected readonly forSale = signal(false);
+  /** Back from Stripe Checkout: waiting for the webhook, then confirmed or still pending. */
+  protected readonly checkout = signal<'confirming' | 'done' | 'slow' | null>(null);
+  protected readonly managing = signal(false);
+  protected readonly billingError = signal<string | null>(null);
 
   constructor() {
     void this.load();
+    void this.loadForSale();
+    if (this.route.snapshot.queryParamMap.get('checkout') === 'done') void this.confirmCheckout();
   }
 
   protected readonly feature = featureName;
@@ -258,6 +359,22 @@ export class PlanSection {
   /** The reset is the first of a month in UTC: "1 Nov". */
   protected resetDate(usage: AiUsage): string {
     return this.dates.format(new Date(usage.resetsAt));
+  }
+
+  protected longDate(iso: string): string {
+    return this.longDates.format(new Date(iso));
+  }
+
+  /** Off to the Stripe Customer Portal: card, invoices, plan changes, cancelling. */
+  protected async manage(): Promise<void> {
+    this.billingError.set(null);
+    this.managing.set(true);
+    try {
+      await this.billing.manage();
+    } catch (e) {
+      this.managing.set(false);
+      this.billingError.set(describeError(e));
+    }
   }
 
   protected share(usage: AiUsage): number {
@@ -273,6 +390,47 @@ export class PlanSection {
     } catch (e) {
       this.error.set(describeError(e));
     }
+  }
+
+  /** Extra too: without it the button just says "coming soon". */
+  private async loadForSale(): Promise<void> {
+    try {
+      this.forSale.set((await this.account.plans()).some((plan) => plan.purchasable));
+    } catch {
+      this.forSale.set(false);
+    }
+  }
+
+  /**
+   * Polls until Stripe's webhook has moved the account to a paid plan, for at
+   * most `CHECKOUT_POLL_TRIES` × `CHECKOUT_POLL_MS`, then drops the query so
+   * a reload doesn't wait again.
+   */
+  private async confirmCheckout(): Promise<void> {
+    this.checkout.set('confirming');
+    for (let attempt = 0; attempt < CHECKOUT_POLL_TRIES; attempt++) {
+      await new Promise((resolve) => setTimeout(resolve, CHECKOUT_POLL_MS));
+      try {
+        const subscription = await this.account.subscription();
+        if (subscription.provider === 'stripe') {
+          this.subscription.set(subscription);
+          this.checkout.set('done');
+          if (subscription.entitlements.features.includes('ai_assistant')) {
+            void this.loadAiUsage();
+          }
+          break;
+        }
+      } catch {
+        // A blip while waiting: try again on the next tick.
+      }
+    }
+    if (this.checkout() === 'confirming') this.checkout.set('slow');
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { checkout: null },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
   }
 
   /** The meter is extra: if it can't be read, the plan still shows without it. */

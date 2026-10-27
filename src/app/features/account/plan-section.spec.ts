@@ -1,8 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { ActivatedRoute, Router, convertToParamMap, provideRouter } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { ACCOUNT_API, AiUsage, Subscription } from '../../core/api/account.api';
-import { PlanSection } from './plan-section';
+import { BillingFacade } from '../../core/billing/billing.facade';
+import { CHECKOUT_POLL_MS, CHECKOUT_POLL_TRIES, PlanSection } from './plan-section';
 
 const subscription = (features: string[], granted: string[] = []): Subscription => ({
   plan: {
@@ -86,5 +87,131 @@ describe('PlanSection: AI credits', () => {
 
     expect(el.textContent).toContain('Pro');
     expect(el.textContent).not.toContain('AI credits');
+  });
+});
+
+describe('PlanSection: billing', () => {
+  const paid = (over: Partial<Subscription> = {}): Subscription => ({
+    ...subscription(['analytics']),
+    provider: 'stripe',
+    manageable: true,
+    ...over,
+  });
+
+  async function billingRender(
+    sub: Subscription,
+    options: { forSale?: boolean; query?: string; next?: Subscription[] } = {},
+  ) {
+    const queue = [...(options.next ?? [])];
+    const api = {
+      subscription: vi.fn(() => of(queue.length > 1 ? queue.shift()! : (queue[0] ?? sub))),
+      aiUsage: vi.fn(() => of(usage(0))),
+      plans: vi.fn(() => of([{ ...sub.plan, code: 'pro', purchasable: options.forSale ?? false }])),
+    };
+    const billing = { manage: vi.fn(() => Promise.resolve()) };
+    TestBed.configureTestingModule({
+      providers: [
+        provideRouter([]),
+        { provide: ACCOUNT_API, useValue: api },
+        { provide: BillingFacade, useValue: billing },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {
+              queryParamMap: convertToParamMap(options.query ? { checkout: options.query } : {}),
+            },
+          },
+        },
+      ],
+    });
+    // The first read is the page's own; queued answers are for the poll.
+    if (options.next) api.subscription.mockReturnValueOnce(of(sub));
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    const fixture = TestBed.createComponent(PlanSection);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    return { fixture, el: fixture.nativeElement as HTMLElement, api, billing, navigate };
+  }
+
+  const buttons = (el: HTMLElement) => [...el.querySelectorAll('button')];
+
+  it('offers Manage billing on a Stripe-billed account', async () => {
+    const { el, billing } = await billingRender(paid());
+
+    const manage = buttons(el).find((b) => b.textContent?.includes('Manage billing'))!;
+    manage.click();
+
+    expect(billing.manage).toHaveBeenCalled();
+  });
+
+  it('links Upgrade to pricing while a plan is for sale', async () => {
+    const free = { ...subscription([]), provider: 'internal' as const, manageable: false };
+    const { el } = await billingRender(free, { forSale: true });
+
+    const upgrade = el.querySelector('a.btn[href="/pricing"]');
+    expect(upgrade?.textContent).toContain('Upgrade');
+    expect(el.textContent).not.toContain('coming soon');
+  });
+
+  it('keeps Upgrade disabled as coming soon while nothing is for sale', async () => {
+    const free = { ...subscription([]), provider: 'internal' as const, manageable: false };
+    const { el } = await billingRender(free);
+
+    const soon = buttons(el).find((b) => b.textContent?.includes('coming soon'))!;
+    expect(soon.disabled).toBe(true);
+  });
+
+  it('warns when a renewal payment failed, with a way to update the card', async () => {
+    const { el } = await billingRender(paid({ status: 'past_due' }));
+
+    const alert = el.querySelector('.billing-alert')!;
+    expect(alert.textContent).toContain('didn’t go through');
+    expect(alert.querySelector('button')?.textContent).toContain('Update card');
+  });
+
+  it('says when a cancelled plan ends', async () => {
+    const { el } = await billingRender(
+      paid({ cancelAtPeriodEnd: true, currentPeriodEnd: '2026-11-27T00:00:00.000Z' }),
+    );
+
+    expect(el.querySelector('.plan-card__ends')?.textContent).toMatch(
+      /ends on (November 27, 2026|27 листопада 2026)/,
+    );
+  });
+
+  describe('back from checkout', () => {
+    beforeEach(() => vi.useFakeTimers());
+    afterEach(() => vi.useRealTimers());
+
+    async function tick(fixture: { detectChanges(): void }, times: number) {
+      for (let i = 0; i < times; i++) {
+        await vi.advanceTimersByTimeAsync(CHECKOUT_POLL_MS);
+      }
+      fixture.detectChanges();
+    }
+
+    it('waits for Stripe to confirm, then names the new plan', async () => {
+      const free = { ...subscription([]), provider: 'internal' as const };
+      const { fixture, el, navigate } = await billingRender(free, {
+        query: 'done',
+        next: [free, paid()],
+      });
+
+      expect(el.textContent).toContain('Confirming your payment');
+      await tick(fixture, 2);
+
+      expect(el.textContent).toContain('You’re on Pro');
+      expect(navigate).toHaveBeenCalledWith([], expect.objectContaining({ replaceUrl: true }));
+    });
+
+    it('says the plan updates in a moment when the webhook is slow', async () => {
+      const free = { ...subscription([]), provider: 'internal' as const };
+      const { fixture, el } = await billingRender(free, { query: 'done', next: [free] });
+
+      await tick(fixture, CHECKOUT_POLL_TRIES);
+
+      expect(el.textContent).toContain('Payment received');
+    });
   });
 });

@@ -41,7 +41,23 @@ export interface Plan {
   priceCents: number;
   currency: string;
   limits: PlanLimits;
+  /**
+   * True when this server takes payment for the plan (`POST /billing/checkout`).
+   * Absent from an API before payments, which reads as not for sale.
+   */
+  purchasable?: boolean;
 }
+
+/** Who bills a subscription: `internal` for Free and plans set by an operator. */
+export type BillingProvider = 'internal' | 'stripe';
+
+/** `POST /billing/checkout` and `/billing/portal`: a page on the payment provider. */
+export interface BillingRedirect {
+  url: string;
+}
+
+/** The portal language the provider returns to. */
+export type BillingLocale = 'en' | 'uk';
 
 export interface Subscription {
   plan: Plan;
@@ -57,6 +73,10 @@ export interface Subscription {
    * API from before the Feedback Program still renders.
    */
   grantedFeatures?: string[];
+  /** Optional only so an API from before payments still renders. */
+  provider?: BillingProvider;
+  /** The account can open self-service billing (`POST /billing/portal`). */
+  manageable?: boolean;
 }
 
 /**
@@ -74,6 +94,14 @@ export interface AccountApi {
   plans(): Observable<Plan[]>;
   subscription(): Observable<Subscription>;
   aiUsage(): Observable<AiUsage>;
+  /**
+   * 200 with a Stripe Checkout URL. 400 `PLAN_NOT_PURCHASABLE`; 403
+   * `EMAIL_NOT_VERIFIED` / `TERMS_NOT_ACCEPTED` / `ACCOUNT_RESTRICTED`; 409
+   * `ALREADY_SUBSCRIBED`.
+   */
+  checkout(planCode: string, locale: BillingLocale): Observable<BillingRedirect>;
+  /** 200 with the Stripe Customer Portal URL. 409 `NO_BILLING_ACCOUNT`. */
+  portal(locale: BillingLocale): Observable<BillingRedirect>;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -109,6 +137,18 @@ export class HttpAccountApi implements AccountApi {
 
   aiUsage(): Observable<AiUsage> {
     return this.apiUrl ? this.http.get<AiUsage>(`${this.apiUrl}/ai/usage`) : this.noApi();
+  }
+
+  checkout(planCode: string, locale: BillingLocale): Observable<BillingRedirect> {
+    return this.apiUrl
+      ? this.http.post<BillingRedirect>(`${this.apiUrl}/billing/checkout`, { planCode, locale })
+      : this.noApi();
+  }
+
+  portal(locale: BillingLocale): Observable<BillingRedirect> {
+    return this.apiUrl
+      ? this.http.post<BillingRedirect>(`${this.apiUrl}/billing/portal`, { locale })
+      : this.noApi();
   }
 
   private noApi(): Observable<never> {
