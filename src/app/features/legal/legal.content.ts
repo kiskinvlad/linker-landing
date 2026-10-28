@@ -1,4 +1,5 @@
 import { RouteSeo } from '../../core/seo/seo.service';
+import { withPaymentProcessor } from './payment-processor';
 
 /**
  * The legal center (plan §3, §9, §9a, §10a): one registry that routes, the hub
@@ -60,7 +61,7 @@ export const LEGAL_DOCS: readonly LegalDoc[] = [
     summary: $localize`:@@legal.terms.summary:The agreement for using the service: business use only, who is responsible for widget content, AI features, billing, liability and how changes work.`,
     group: 'agreements',
     version: LEGAL_TERMS_VERSION,
-    load: () => import('./docs/terms.md').then((m) => m.default),
+    load: () => import('./docs/terms.md').then((m) => withPaymentProcessor('terms', m.default)),
   },
   {
     slug: 'dpa',
@@ -76,7 +77,7 @@ export const LEGAL_DOCS: readonly LegalDoc[] = [
     summary: $localize`:@@legal.privacy.summary:What we collect about you and your team, why, where it is stored, how long we keep it and your rights.`,
     group: 'policies',
     version: '2026-10-25',
-    load: () => import('./docs/privacy.md').then((m) => m.default),
+    load: () => import('./docs/privacy.md').then((m) => withPaymentProcessor('privacy', m.default)),
   },
   {
     slug: 'cookies',
@@ -84,7 +85,7 @@ export const LEGAL_DOCS: readonly LegalDoc[] = [
     summary: $localize`:@@legal.cookies.summary:The few cookies on our website, the opt-in analytics, and what widgets store on your visitors’ devices.`,
     group: 'policies',
     version: '2026-10-11',
-    load: () => import('./docs/cookies.md').then((m) => m.default),
+    load: () => import('./docs/cookies.md').then((m) => withPaymentProcessor('cookies', m.default)),
   },
   {
     slug: 'acceptable-use',
@@ -116,7 +117,10 @@ export const LEGAL_DOCS: readonly LegalDoc[] = [
     summary: $localize`:@@legal.subprocessors.summary:Every company that processes personal data for us, what for, and where.`,
     group: 'transparency',
     version: '2026-10-25',
-    load: () => import('./docs/subprocessors.md').then((m) => m.default),
+    load: () =>
+      import('./docs/subprocessors.md').then((m) =>
+        withPaymentProcessor('subprocessors', m.default),
+      ),
   },
 ];
 

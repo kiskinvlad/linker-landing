@@ -31,3 +31,18 @@ export const PRO_PLAN = {
     $localize`:@@plans.pro.ai:AI assistant: 1,000 credits a month to draft widgets from a sentence`,
   ],
 } as const;
+
+/**
+ * What a paid plan adds beyond its limits, which the cards read from
+ * `GET /billing/plans`. Keyed by plan code; a plan without an entry shows its
+ * limits only.
+ */
+export const PAID_PLAN_EXTRAS: Readonly<Record<string, readonly string[]>> = {
+  // Analytics and its history; the AI line comes from the plan's own credits.
+  pro: PRO_PLAN.features.slice(3, 5),
+  growth: [$localize`:@@plans.growth.everything:Everything in Pro`],
+  business: [
+    $localize`:@@plans.business.everythingGrowth:Everything in Growth`,
+    $localize`:@@plans.business.support:Priority support`,
+  ],
+};
