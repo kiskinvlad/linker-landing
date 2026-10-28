@@ -55,7 +55,8 @@ interface Option {
         }
       </fieldset>
       <p class="field__hint" i18n="@@account.changePlan.prorated">
-        You’re charged or credited the prorated difference today. Prices exclude tax.
+        You’re charged or credited the prorated difference today. Tax is included or added depending
+        on your country.
       </p>
       @if (error(); as message) {
         <p class="notice notice--error" role="alert">{{ message }}</p>
