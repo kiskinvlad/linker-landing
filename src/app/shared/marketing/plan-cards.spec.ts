@@ -198,7 +198,7 @@ describe('PlanCards', () => {
 
     const alert = el.querySelector('[role="alert"]')!;
     expect(alert.textContent).toContain('Accept the current Terms of Service');
-    expect(alert.querySelector('a[href="/account"]')).not.toBeNull();
+    expect(alert.querySelector('a[href="/account#privacy"]')).not.toBeNull();
     expect(upgrade('Pro').disabled).toBe(false);
   });
 

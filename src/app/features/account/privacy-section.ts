@@ -16,8 +16,8 @@ import { ConsentService } from '../../core/consent/consent.service';
 import { describeError } from '../auth/auth-messages';
 
 /**
- * Plan §10 "Privacy": cookie choices, the accepted terms version, and account
- * deletion. Deleting takes two proofs: the email typed out (against a slip of
+ * Plan §10 "Privacy": cookie choices, the accepted terms version (and accepting
+ * a newer one, which checkout requires), and account deletion. Deleting takes two proofs: the email typed out (against a slip of
  * the finger) and the password (against someone else at an open session; the
  * API requires it too).
  */
@@ -46,7 +46,27 @@ import { describeError } from '../auth/auth-messages';
             You accepted version {{ legal.termsVersionAccepted }} on
             {{ longDate(legal.termsAcceptedAt) }}.
           </p>
-        } @else {
+        }
+        @if (legal.requiresTermsAcceptance) {
+          <p class="panel__lead" i18n="@@account.privacy.termsRequired">
+            Version {{ legal.termsVersionCurrent }} of the Terms of Service is now in effect. Read
+            it, then accept it to upgrade your plan.
+          </p>
+          @if (termsError(); as message) {
+            <p class="notice notice--error" role="alert">{{ message }}</p>
+          }
+          <div class="panel__actions">
+            <button
+              class="btn btn--primary"
+              type="button"
+              [disabled]="accepting()"
+              [attr.aria-busy]="accepting()"
+              (click)="acceptTerms(legal.termsVersionCurrent)"
+            >
+              <ng-container i18n="@@account.privacy.acceptTerms">Accept the Terms</ng-container>
+            </button>
+          </div>
+        } @else if (!legal.termsVersionAccepted) {
           <p class="panel__lead" i18n="@@account.privacy.termsPending">
             You’ll be asked to accept them the first time you open the editor.
           </p>
@@ -145,6 +165,8 @@ export class PrivacySection {
   protected readonly busy = signal(false);
   protected readonly wrongPassword = signal(false);
   protected readonly error = signal<string | null>(null);
+  protected readonly accepting = signal(false);
+  protected readonly termsError = signal<string | null>(null);
 
   protected readonly form = inject(NonNullableFormBuilder).group({
     email: [''],
@@ -168,6 +190,19 @@ export class PrivacySection {
 
   protected longDate(iso: string): string {
     return this.dates.format(new Date(iso));
+  }
+
+  /** The version the API reports as current; the refreshed session then hides the button. */
+  protected async acceptTerms(version: string): Promise<void> {
+    this.accepting.set(true);
+    this.termsError.set(null);
+    try {
+      await this.account.acceptTerms(version);
+    } catch (e) {
+      this.termsError.set(describeError(e));
+    } finally {
+      this.accepting.set(false);
+    }
   }
 
   protected cancel(): void {
