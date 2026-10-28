@@ -539,6 +539,8 @@
     "plans.interval.save": "2 місяці безкоштовно",
     "plans.paid.ai": " ШІ-помічник: {$INTERPOLATION} кредитів на місяць ",
     "plans.growth.everything": "Усе, що є в Pro",
-    "plans.business.everythingGrowth": "Усе, що є в Growth"
+    "plans.business.everythingGrowth": "Усе, що є в Growth",
+    "account.privacy.termsRequired": " Набула чинності версія {$INTERPOLATION} Умов користування. Ознайомтеся з нею і прийміть її, щоб змінити тариф. ",
+    "account.privacy.acceptTerms": "Прийняти Умови"
   }
 }

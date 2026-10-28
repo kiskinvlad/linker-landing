@@ -74,6 +74,8 @@
     "account.privacy.cookieSettings": "Cookie settings",
     "account.privacy.termsTitle": "Terms of Service",
     "account.privacy.termsAccepted": " You accepted version {$INTERPOLATION} on {$INTERPOLATION_1}. ",
+    "account.privacy.termsRequired": " Version {$INTERPOLATION} of the Terms of Service is now in effect. Read it, then accept it to upgrade your plan. ",
+    "account.privacy.acceptTerms": "Accept the Terms",
     "account.privacy.termsPending": " You’ll be asked to accept them the first time you open the editor. ",
     "account.privacy.readTerms": "Read the Terms",
     "account.privacy.readPrivacy": "Privacy Policy",

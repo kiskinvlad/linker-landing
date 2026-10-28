@@ -161,7 +161,9 @@ import { FREE_PLAN, PAID_PLAN_EXTRAS, PRO_PLAN } from './plans.content';
       <p class="notice notice--error plans__error" role="alert">
         {{ message }}
         @if (termsMissing()) {
-          <a routerLink="/account" i18n="@@plans.paid.openAccount">Open your account</a>
+          <a routerLink="/account" fragment="privacy" i18n="@@plans.paid.openAccount"
+            >Open your account</a
+          >
         }
       </p>
     }
