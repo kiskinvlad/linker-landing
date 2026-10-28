@@ -90,8 +90,8 @@ API is the boundary. `returnUrl` only accepts same-origin paths (`safeReturnUrl`
 and `/editor/` is reached by a full page load.
 
 The API URL comes from `APP_IDENTITY.apiUrl`: `http://localhost:3000/api/v1` in dev,
-**none in production until the real domain exists (M8)** — the `linker.com`
-placeholder belongs to someone else, so a production build calls no API at all.
+**none in production until the API is deployed at `api.getkitlet.com` (M8)**, so a
+production build calls no API at all yet.
 
 Sign-up lands on `/verify-email` ("check your inbox"); the email's link opens
 `/verify-email/confirm`, which works signed out too. An unverified visitor can use
@@ -161,5 +161,5 @@ URL at a time with `lhci collect --additive` if it keeps happening.
 (`scripts/generate-seo-files.mjs`), built from the canonical URL of each
 prerendered page, so `noindex` pages are left out automatically.
 
-The domain comes from `APP_IDENTITY` (`src/app/core/config/app-identity.ts`) and is
-the `linker.com` placeholder until the Kitlet domain is registered (plan milestone M8).
+The domain comes from `APP_IDENTITY` (`src/app/core/config/app-identity.ts`):
+`https://getkitlet.com`.

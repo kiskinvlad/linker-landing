@@ -4,7 +4,7 @@ Status: **draft v4** · 2026-09-27
 
 The portal is the public face of Linker: a marketing landing page, auth (login / register / password reset), the user's account cabinet, legal pages, and the entry point into the widget editor. It inherits the editor's visual language but speaks to business owners, not developers.
 
-> **Naming:** the product name is **Kitlet** (web search 2026-09-27 found no software product using it; owner checked domains/handles). "Linker" stays the technical/repo name, and **`linker.com` is a placeholder domain** throughout this plan until the Kitlet domain is registered in milestone **M8 (pre-production)**. Until then, no domain, brand name or email address is hardcoded — see §14 "Configurable identity".
+> **Naming:** the product name is **Kitlet** (web search 2026-09-27 found no software product using it; owner checked domains/handles). "Linker" stays the technical/repo name, and the production domain is **`getkitlet.com`** (registered in milestone **M8**, 2026-10-28; DNS on Cloudflare). Earlier revisions of this plan used `linker.com` as a placeholder. The domain, brand name and email addresses still live in one place per repo — see §14 "Configurable identity".
 
 Sources this plan builds on (not restated here — follow the links):
 
@@ -20,7 +20,7 @@ Sources this plan builds on (not restated here — follow the links):
 |---|---|---|---|
 | D1 | Portal stack | **Angular (latest stable) with SSR tooling, marketing routes prerendered** | Same skills as the editor; per-route render modes give static SEO pages and client-only auth pages from one app. |
 | D2 | Editor integration | **Separate app, served same-origin at `/editor/`** | Zero coupling of Angular versions (editor is on 19, EOL blocker in `dependency-triage.md`); independent deploys; shares the session cookie for free. |
-| D3 | Domains | **`linker.com` (portal + `/editor/`) · `api.linker.com` (API)** | Same registrable site → `sameSite: 'lax'` session cookie works and the backend's "no CSRF token" decision (planning.md §5) stays valid. |
+| D3 | Domains | **`getkitlet.com` (portal + `/editor/`) · `api.getkitlet.com` (API)** | Same registrable site → `sameSite: 'lax'` session cookie works and the backend's "no CSRF token" decision (planning.md §5) stays valid. |
 | D4 | Languages | **English only, i18n-ready** | All copy through translation keys; adding a locale is config + a JSON file. |
 | D5 | Cookies | **Necessary (session, consent) + Google Analytics 4** | GA4 is opt-in only; see §7. |
 | D6 | Terms acceptance | **Versioned backend record, gated on first editor open** | Legal proof of *which* version was accepted *when*; survives devices. |
@@ -30,7 +30,7 @@ Sources this plan builds on (not restated here — follow the links):
 | D10 | Legal footing | **Ukrainian operator, B2B-only service, GDPR as the global baseline** | Serving the EU triggers GDPR regardless of where the company sits; meeting it covers most of US/LatAm/Asia too. See §9a. |
 | D11 | Analytics scope | **GA4 on portal pages only — never inside `/editor/`** | Keeps the product surface tracker-free; fewer cookies to disclose. |
 
-> **Heads-up for the backend docs:** planning.md §5 names the editor host as `app.linker.com`. D2/D3 move it to `linker.com/editor/`. Still same-site, so nothing breaks — but update that paragraph so the next reader isn't misled.
+> **Backend docs:** planning.md §5 named the editor host as `app.linker.com`, a placeholder. D2/D3 move it to `getkitlet.com/editor/`, still same-site as the API; §5 says so since 2026-10-28.
 
 ---
 
@@ -46,15 +46,15 @@ Sources this plan builds on (not restated here — follow the links):
 flowchart LR
   B[Browser] -->|"/  /pricing  /how-it-works  /legal/*"| P["Portal (static prerender + client routes)"]
   B -->|"/editor/*"| E["Editor SPA (base-href /editor/)"]
-  P -->|"fetch, credentials: include"| A["API — api.linker.com /api/v1"]
+  P -->|"fetch, credentials: include"| A["API — api.getkitlet.com /api/v1"]
   E -->|"fetch, credentials: include"| A
   A --> R[(Redis sessions)]
   A --> PG[(Postgres)]
 ```
 
-- **The portal can be fully static.** Marketing routes are prerendered at build time; auth and account routes render client-side (they depend on the session, which SSR can't see — the cookie is host-only on `api.linker.com`). So no Node server in production: a CDN/nginx serves both apps.
+- **The portal can be fully static.** Marketing routes are prerendered at build time; auth and account routes render client-side (they depend on the session, which SSR can't see — the cookie is host-only on `api.getkitlet.com`). So no Node server in production: a CDN/nginx serves both apps.
 - Routing at the edge: `/editor/*` → editor bundle (SPA fallback to `/editor/index.html`); everything else → portal (SPA fallback to the portal shell for client routes, real `404.html` for unknown paths so crawlers get a 404 status).
-- API: add `https://linker.com` to `CORS_ORIGINS`. The session cookie stays host-only on `api.linker.com`; no `domain=` widening needed.
+- API: add `https://getkitlet.com` to `CORS_ORIGINS`. The session cookie stays host-only on `api.getkitlet.com`; no `domain=` widening needed.
 
 ### Dev setup
 
@@ -175,7 +175,7 @@ Semantic skeleton: `header > nav`, `main > section[aria-labelledby]` ×N, `foote
 
 | Category | Cookies | Legal basis |
 |---|---|---|
-| Necessary | API session cookie (`api.linker.com`), `linker_consent` | Strictly necessary — no consent required, disclosed in cookie policy |
+| Necessary | API session cookie (`api.getkitlet.com`), `linker_consent` | Strictly necessary — no consent required, disclosed in cookie policy |
 | Analytics | GA4 (`_ga`, `_ga_*`) | **Opt-in** |
 
 **Banner behaviour**
@@ -342,7 +342,7 @@ Pulled forward from planning.md Phase 3 / Phase 5, plus the consent addition:
 5. **Email verification** — `email_verification_tokens` table mirroring `password_reset_tokens` (32 CSPRNG bytes emailed raw, sha256 stored, single use; TTL 24 h). Register sends the mail after the transaction commits. `POST /auth/email/verify` *(public)* `{ token }` sets `users.email_verified_at`; `POST /auth/email/resend` (auth, throttled per user + IP). `emailVerified` added to the `/auth/me` response. Reuse the existing `token-hash.ts` and the reset-token repository shape — ideally extract one generic single-use-token service both flows use (**template method**: shared issue/consume, per-flow TTL and mail template).
 5a. **Manual verification for dev/debug** — a CLI command, not an HTTP endpoint: `pnpm cli users:verify <email>` (tsx script using the app's `DataSource`, same as the migration CLI). No admin role or admin routes exist yet, and a CLI adds no attack surface. It logs who ran it. When an admin panel arrives later, the same `UsersService.markEmailVerified()` backs it.
 5b. Optional: `RegisterDto.planCode?` accepting only `'free'`, for forward compatibility with paid plans.
-6. Config: `CORS_ORIGINS` gains `https://linker.com` (+ dev origins); `LEGAL_TERMS_VERSION`.
+6. Config: `CORS_ORIGINS` gains `https://getkitlet.com` (+ dev origins); `LEGAL_TERMS_VERSION`.
 7. Docs: update planning.md §4 tables and the §5 host note.
 
 ---
@@ -368,7 +368,7 @@ Pulled forward from planning.md Phase 3 / Phase 5, plus the consent addition:
 | M5 | Cabinet + feedback | Profile, security, plan, privacy sections; `/feedback` page, feedback module, feature grants in entitlements (§10a) |
 | M6 | Editor integration | §12 done; `/editor/` routing in dev proxy and edge config; terms gate e2e |
 | M7 | Launch hardening | Terms, privacy, cookie policy and DPA drafted from templates (§9a); EU/UK representative arranged; axe a11y pass; 404/error pages; OG images |
-| M8 | Pre-production identity | Product name chosen (basic trademark search in US/EU registers); domain registered; DNS on Route 53; email aliases `privacy@`, `support@`, `noreply@` (forwarding via SES receiving rules or a forwarding service); SES domain verified (SPF/DKIM/DMARC) + production access; TLS certificates (ACM); env config switched; legal pages updated with final name and contacts |
+| M8 | Pre-production identity | **Done (2026-10-28):** product name Kitlet; domain `getkitlet.com` registered, DNS on Cloudflare; mailbox `support@` with its aliases and groups (§14); portal `APP_IDENTITY` and legal contacts switched; backend production values documented. **Open:** SES domain verification with the SPF/DKIM/DMARC records in §14 "DNS records to add"; SES production access; TLS certificates (ACM) for `getkitlet.com` and `api.getkitlet.com`; the API deployed and the portal's production `apiUrl` set; legal entity's form and full postal address, then `LEGAL_TEXTS_FINAL` flipped |
 
 **Testing**: Vitest for facades, guards, interceptors, consent service; Playwright e2e for the funnel *landing → register → verify email (via Mailpit) → open editor → terms → editor loads* and for consent (no GA before opt-in, cookies removed on withdrawal); Lighthouse CI + axe in the pipeline.
 
@@ -380,12 +380,23 @@ Pulled forward from planning.md Phase 3 / Phase 5, plus the consent addition:
 
 - **One data region, not two.** Postgres, Redis and the API live in a single primary region. Recommended: `eu-central-1` (Frankfurt), because EU data then never leaves the EU and US traffic is still fast via CloudFront. Running live data in two regions (per-user residency) is a large project — defer until a customer actually requires it.
 - If the primary ends up in a US region instead: EU→US transfers are lawful via the AWS DPA + SCCs (AWS also participates in the EU-US Data Privacy Framework). Disclose it in the privacy policy either way.
-- **CloudFront** serves the portal and `/editor/` from S3 globally and fronts `api.linker.com`.
+- **CloudFront** serves the portal and `/editor/` from S3 globally and fronts `api.getkitlet.com`.
 
 **Controller & privacy contact** (goes into the privacy policy and terms):
 
 - Controller: **Vladyslav Kiskin, Kyiv, Ukraine** — confirm whether it's as an individual or a registered sole proprietor (ФОП); the policy should name the legal form.
-- Contact: until the production domain exists, dev/staging legal pages use the owner's personal inbox. At M8, switch to **`privacy@<domain>`** forwarding to that inbox, so the personal address stays off crawled pages and survives a change of inbox.
+- Contact: **`privacy@getkitlet.com`**, an alias of the `support@` mailbox, so the owner's personal address stays off crawled pages and survives a change of inbox.
+
+**Domain and mail (M8, 2026-10-28):** `getkitlet.com`, DNS on **Cloudflare** (not Route 53 as first planned).
+
+| Address | Kind | Used for |
+|---|---|---|
+| `support@getkitlet.com` | mailbox | Everything below lands here |
+| `legal@`, `privacy@`, `copyright@`, `security@` | aliases → `support@` | The legal pages' contacts (`APP_IDENTITY.legal.contacts`) |
+| `notifications@` | alias → `support@` | **From** address of every Kitlet email (backend `MAIL_FROM`); replies reach a person |
+| `abuse-protection@` | alias → `support@` | Not referenced by the code yet |
+| `abuse@`, `postmaster@` | groups | RFC 2142 role addresses; `abuse@` is the legal pages' abuse contact |
+| `kitlet-team@` | group | Internal notices (backend `FEEDBACK_NOTIFY_TO`) |
 
 **Configurable identity** — so the M8 rename is config, not a refactor:
 
@@ -397,9 +408,23 @@ Pulled forward from planning.md Phase 3 / Phase 5, plus the consent addition:
 
 - Same AWS account and region as the API; IAM-scoped credentials, no extra vendor or DPA.
 - **No code change to start:** the backend's `MailerPort` already has an SMTP adapter, and SES exposes SMTP. A native SES API adapter can come later.
-- Setup tasks (M8, once the domain exists): verify the domain; SPF, DKIM and DMARC records; a `mail.linker.com` custom MAIL FROM; request production access (new accounts start in the SES sandbox, which only sends to verified addresses); wire bounce/complaint notifications (SNS) → mark the address undeliverable so resend stops.
+- Setup tasks (M8, still open): verify the domain with the records below; a `mail.getkitlet.com` custom MAIL FROM; request production access (new accounts start in the SES sandbox, which only sends to verified addresses); wire bounce/complaint notifications (SNS) → mark the address undeliverable so resend stops.
 - Alternative if deliverability becomes a problem: Postmark (transactional-only, strong inbox placement, higher price).
 - Mailpit stays the local/CI transport.
+
+**DNS records to add (owner, in Cloudflare).** None are added yet. The exact tokens and targets come from the AWS consoles when each identity is created; region shown for `eu-central-1`. Every AWS record is **DNS only** (grey cloud): Cloudflare's proxy would break SES and ACM validation, and in front of CloudFront it would add a second proxy hop the API's `trust proxy = 1` doesn't expect (linker-backend README, "Deployment notes").
+
+| Purpose | Type | Name | Value |
+|---|---|---|---|
+| SES DKIM (also verifies the domain) | CNAME ×3 | `<token>._domainkey` | `<token>.dkim.amazonses.com` |
+| SES custom MAIL FROM | MX | `mail` | `10 feedback-smtp.eu-central-1.amazonses.com` |
+| SPF for the MAIL FROM domain | TXT | `mail` | `v=spf1 include:amazonses.com ~all` |
+| DMARC | TXT | `_dmarc` | `v=DMARC1; p=none; rua=mailto:postmaster@getkitlet.com` — tighten to `p=quarantine` once reports are clean |
+| TLS (ACM, DNS validation) | CNAME | `_<token>` (one per name) | `_<token>.acm-validations.aws` |
+| Portal | CNAME (flattened at the apex) | `@` | the CloudFront distribution's `*.cloudfront.net` |
+| API | CNAME | `api` | the CloudFront distribution (or load balancer) for the API |
+
+The root domain's own SPF record belongs to the mailbox provider and stays as it is: with a custom MAIL FROM, SES mail passes SPF on `mail.getkitlet.com` and DMARC aligns on the DKIM signature. Keep exactly one SPF and one DMARC record per name; if the mailbox provider's setup already added a `_dmarc` record, edit it rather than adding a second. The ACM certificate for CloudFront must be requested in `us-east-1`.
 
 ## 15. Open questions
 
@@ -407,7 +432,6 @@ Pulled forward from planning.md Phase 3 / Phase 5, plus the consent addition:
 2. **How-to home** — keep guides in the portal (SEO value) or point to the GitHub wiki?
 3. **Legal form** of the controller (individual vs ФОП).
 4. **Primary AWS region** — confirm `eu-central-1`.
-5. **Kitlet domain** — which TLD (kitlet.com / .io / .app) is registered in M8.
 
 ### Resolved
 
@@ -418,3 +442,4 @@ Pulled forward from planning.md Phase 3 / Phase 5, plus the consent addition:
 - Hosting: AWS, single data region + CloudFront → §14.
 - Email provider: Amazon SES via the existing SMTP adapter → §14.
 - Product name: **Kitlet**.
+- Kitlet domain (was Q5): **`getkitlet.com`**, registered 2026-10-28, DNS on Cloudflare → §14.

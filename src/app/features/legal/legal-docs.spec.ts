@@ -20,6 +20,16 @@ describe('legal documents', () => {
     }
   });
 
+  it('name the getkitlet.com contacts and no placeholder domain', async () => {
+    const docs = await Promise.all(LEGAL_DOCS.map((d) => render(d.slug)));
+    const html = docs.map((d) => d.html).join('\n');
+    for (const contact of ['legal', 'privacy', 'abuse', 'copyright', 'security']) {
+      expect(html, contact).toContain(`${contact}@getkitlet.com`);
+    }
+    expect(html).toContain('https://getkitlet.com');
+    expect(html).not.toMatch(/kitlet\.example|linker\.com/);
+  });
+
   describe('AI features (ai-assistant, AI-0)', () => {
     it('the Terms have an AI features section on credits and responsibility', async () => {
       const { html, toc } = await render('terms');

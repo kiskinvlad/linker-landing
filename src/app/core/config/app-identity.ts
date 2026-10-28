@@ -8,8 +8,8 @@ declare const ngDevMode: unknown;
 
 /**
  * Everything that names the product or points at a domain (plan §14 "Configurable
- * identity"). Templates, SEO and JSON-LD read from here so the M8 switch from the
- * `linker.com` placeholder to the registered Kitlet domain is config, not a refactor.
+ * identity"). Templates, SEO and JSON-LD read from here, so the domain and contacts
+ * are config, not something to hunt for in templates.
  */
 export interface AppIdentity {
   productName: string;
@@ -80,13 +80,13 @@ export const APP_IDENTITY = new InjectionToken<AppIdentity>('APP_IDENTITY', {
   providedIn: 'root',
   factory: () => ({
     productName: 'Kitlet',
-    // Placeholder until the Kitlet domain is registered in milestone M8.
-    siteUrl: 'https://linker.com',
+    // The Kitlet domain, registered in milestone M8 (plan §14).
+    siteUrl: 'https://getkitlet.com',
     // Dev: the backend's `pnpm start:dev` on :3000. localhost:4000 → localhost:3000
     // is same-site, so cookies behave as in production (plan §2 "Dev setup").
-    // Production: none until the API is deployed on the real domain (M8). NOT
-    // api.linker.com — linker.com is a placeholder owned by someone else, and every
-    // page load would send them a request.
+    // Production: none until the API is deployed at api.getkitlet.com (M8, plan D3);
+    // until then a request there would only fail, so the portal reports the service
+    // unavailable instead.
     apiUrl: typeof ngDevMode !== 'undefined' && ngDevMode ? 'http://localhost:3000/api/v1' : null,
     editorPath: '/editor/',
     analyticsPath: analyticsPathFor(localeById(inject(LOCALE_ID)).prefix),
@@ -97,14 +97,13 @@ export const APP_IDENTITY = new InjectionToken<AppIdentity>('APP_IDENTITY', {
       address: 'Kyiv, Ukraine',
       // Plan §14 recommends eu-central-1; confirm before publishing (§15 Q4).
       dataRegion: 'the European Union (Frankfurt, Germany)',
-      // `.example` is reserved (RFC 2606) and can never receive mail: obviously a
-      // placeholder, and nobody else's inbox. Replaced by the real aliases in M8.
+      // Aliases of support@getkitlet.com; abuse@ is a group (plan §14).
       contacts: {
-        legal: 'legal@kitlet.example',
-        privacy: 'privacy@kitlet.example',
-        abuse: 'abuse@kitlet.example',
-        copyright: 'copyright@kitlet.example',
-        security: 'security@kitlet.example',
+        legal: 'legal@getkitlet.com',
+        privacy: 'privacy@getkitlet.com',
+        abuse: 'abuse@getkitlet.com',
+        copyright: 'copyright@getkitlet.com',
+        security: 'security@getkitlet.com',
       },
       euRepresentative: null,
       ukRepresentative: null,
