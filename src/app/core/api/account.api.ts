@@ -46,10 +46,23 @@ export interface Plan {
    * Absent from an API before payments, which reads as not for sale.
    */
   purchasable?: boolean;
+  /** Per year, minor units; 0 when not sold yearly. Absent before annual prices. */
+  annualPriceCents?: number;
+  /** The intervals this server sells the plan at. Absent before intervals. */
+  intervals?: BillingInterval[];
+}
+
+/** How often a paid plan is billed. */
+export type BillingInterval = 'month' | 'year';
+
+/** `GET /billing/config`: what `/checkout` initializes Paddle.js with. */
+export interface BillingClientConfig {
+  provider: 'internal' | 'paddle' | 'stripe';
+  paddle: { clientToken: string; environment: 'sandbox' | 'production' } | null;
 }
 
 /** Who bills a subscription: `internal` for Free and plans set by an operator. */
-export type BillingProvider = 'internal' | 'stripe';
+export type BillingProvider = 'internal' | 'paddle' | 'stripe';
 
 /** `POST /billing/checkout` and `/billing/portal`: a page on the payment provider. */
 export interface BillingRedirect {
@@ -77,6 +90,10 @@ export interface Subscription {
   provider?: BillingProvider;
   /** The account can open self-service billing (`POST /billing/portal`). */
   manageable?: boolean;
+  /** How often the provider bills it; null when nobody does. */
+  interval?: BillingInterval | null;
+  /** This month's usage; absent from older APIs. */
+  usage?: { widgets: number; monthlyViews: number; periodStart: string };
 }
 
 /**
@@ -99,7 +116,19 @@ export interface AccountApi {
    * `EMAIL_NOT_VERIFIED` / `TERMS_NOT_ACCEPTED` / `ACCOUNT_RESTRICTED`; 409
    * `ALREADY_SUBSCRIBED`.
    */
-  checkout(planCode: string, locale: BillingLocale): Observable<BillingRedirect>;
+  checkout(
+    planCode: string,
+    interval: BillingInterval,
+    locale: BillingLocale,
+  ): Observable<BillingRedirect>;
+  /** 204, prorated. 400 `PLAN_NOT_PURCHASABLE`; 409 `NO_BILLING_ACCOUNT`. */
+  changePlan(planCode: string, interval: BillingInterval): Observable<void>;
+  /** 204: ends at the period's end. 409 `NO_BILLING_ACCOUNT`. */
+  cancel(): Observable<void>;
+  /** 204: undoes a scheduled cancellation. 409 `NO_BILLING_ACCOUNT`. */
+  resume(): Observable<void>;
+  /** Public: the provider and Paddle.js's client token. */
+  billingConfig(): Observable<BillingClientConfig>;
   /** 200 with the Stripe Customer Portal URL. 409 `NO_BILLING_ACCOUNT`. */
   portal(locale: BillingLocale): Observable<BillingRedirect>;
 }
@@ -139,9 +168,37 @@ export class HttpAccountApi implements AccountApi {
     return this.apiUrl ? this.http.get<AiUsage>(`${this.apiUrl}/ai/usage`) : this.noApi();
   }
 
-  checkout(planCode: string, locale: BillingLocale): Observable<BillingRedirect> {
+  checkout(
+    planCode: string,
+    interval: BillingInterval,
+    locale: BillingLocale,
+  ): Observable<BillingRedirect> {
     return this.apiUrl
-      ? this.http.post<BillingRedirect>(`${this.apiUrl}/billing/checkout`, { planCode, locale })
+      ? this.http.post<BillingRedirect>(`${this.apiUrl}/billing/checkout`, {
+          planCode,
+          interval,
+          locale,
+        })
+      : this.noApi();
+  }
+
+  changePlan(planCode: string, interval: BillingInterval): Observable<void> {
+    return this.apiUrl
+      ? this.http.post<void>(`${this.apiUrl}/billing/change-plan`, { planCode, interval })
+      : this.noApi();
+  }
+
+  cancel(): Observable<void> {
+    return this.apiUrl ? this.http.post<void>(`${this.apiUrl}/billing/cancel`, {}) : this.noApi();
+  }
+
+  resume(): Observable<void> {
+    return this.apiUrl ? this.http.post<void>(`${this.apiUrl}/billing/resume`, {}) : this.noApi();
+  }
+
+  billingConfig(): Observable<BillingClientConfig> {
+    return this.apiUrl
+      ? this.http.get<BillingClientConfig>(`${this.apiUrl}/billing/config`)
       : this.noApi();
   }
 

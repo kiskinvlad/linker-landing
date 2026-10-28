@@ -2,7 +2,7 @@ import { renderLegalMarkdown } from './legal-markdown';
 import { LEGAL_DOCS } from './legal.content';
 import { PAYMENT_PROCESSOR_LISTED, withPaymentProcessor } from './payment-processor';
 
-const source = (slug: 'subprocessors' | 'privacy') =>
+const source = (slug: 'subprocessors' | 'privacy' | 'terms' | 'cookies') =>
   import(`./docs/${slug}.md`).then((m: { default: string }) => m.default);
 
 describe('the payment processor switch', () => {
@@ -12,17 +12,34 @@ describe('the payment processor switch', () => {
     const privacy = await LEGAL_DOCS.find((d) => d.slug === 'privacy')!.load();
 
     expect(subprocessors).toContain('Paid plans are not available yet');
-    expect(subprocessors).not.toContain('Stripe');
+    expect(subprocessors).not.toContain('Paddle');
     expect(privacy).toContain('(when paid plans are available)');
   });
 
-  it('names Stripe on the Subprocessors page once listed', async () => {
+  it('names Paddle as reseller on the Subprocessors page once listed', async () => {
     const markdown = withPaymentProcessor('subprocessors', await source('subprocessors'), true);
     const { html } = renderLegalMarkdown(markdown);
 
     expect(markdown).not.toContain('Paid plans are not available yet');
-    expect(html).toContain('<strong>Stripe</strong>');
+    expect(html).toContain('<strong>Paddle</strong>');
     expect(html).toContain('never reach us');
+  });
+
+  it('makes Paddle the merchant of record in the Terms once listed', async () => {
+    const before = await LEGAL_DOCS.find((d) => d.slug === 'terms')!.load();
+    expect(before).not.toContain('Paddle');
+
+    const markdown = withPaymentProcessor('terms', await source('terms'), true);
+    expect(markdown).toContain('Paddle.com is the Merchant of Record for all our orders');
+    expect(markdown).toContain('do not receive or store your payment card details');
+  });
+
+  it('lists the checkout cookies in the Cookie Policy once listed', async () => {
+    const markdown = withPaymentProcessor('cookies', await source('cookies'), true);
+    const { html } = renderLegalMarkdown(markdown);
+
+    expect(html).toContain('Checkout cookies');
+    expect(html).toContain('only on our checkout page');
   });
 
   it('drops the Privacy Policy’s condition on billing data once listed', async () => {

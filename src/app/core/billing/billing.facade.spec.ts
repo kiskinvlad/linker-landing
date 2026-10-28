@@ -5,11 +5,17 @@ import { ACCOUNT_API } from '../api/account.api';
 import { ApiError } from '../api/api-error';
 import { BILLING_REDIRECT, BillingFacade } from './billing.facade';
 
-function setup(checkout: () => unknown, locale = 'en-US') {
+function setup(
+  checkout: () => unknown = () => of({ url: '/checkout?_ptxn=txn_1' }),
+  locale = 'en-US',
+) {
   const redirect = vi.fn();
   const api = {
     checkout: vi.fn(checkout),
-    portal: vi.fn(() => of({ url: 'https://billing.stripe.test/p/1' })),
+    changePlan: vi.fn(() => of(undefined)),
+    cancel: vi.fn(() => of(undefined)),
+    resume: vi.fn(() => of(undefined)),
+    portal: vi.fn(() => of({ url: 'https://customer-portal.paddle.test/cpl_1' })),
   };
   TestBed.configureTestingModule({
     providers: [
@@ -22,35 +28,49 @@ function setup(checkout: () => unknown, locale = 'en-US') {
 }
 
 describe('BillingFacade', () => {
-  it('sends the browser to Stripe Checkout in the portal’s language', async () => {
-    const { facade, api, redirect } = setup(
-      () => of({ url: 'https://checkout.stripe.test/c/1' }),
-      'uk',
-    );
+  it('sends the browser to checkout at the chosen interval, in the portal’s language', async () => {
+    const { facade, api, redirect } = setup(undefined, 'uk');
+
+    await facade.checkout('growth', 'year');
+
+    expect(api.checkout).toHaveBeenCalledWith('growth', 'year', 'uk');
+    expect(redirect).toHaveBeenCalledWith('/checkout?_ptxn=txn_1');
+  });
+
+  it('bills monthly unless told otherwise', async () => {
+    const { facade, api } = setup();
 
     await facade.checkout('pro');
 
-    expect(api.checkout).toHaveBeenCalledWith('pro', 'uk');
-    expect(redirect).toHaveBeenCalledWith('https://checkout.stripe.test/c/1');
+    expect(api.checkout).toHaveBeenCalledWith('pro', 'month', 'en');
   });
 
-  it('opens billing instead when Stripe already bills the account', async () => {
-    const { facade, api, redirect } = setup(() =>
-      throwError(() => new ApiError(409, 'Already subscribed', [], null, 'ALREADY_SUBSCRIBED')),
-    );
-
-    await facade.checkout('business');
-
-    expect(api.portal).toHaveBeenCalledWith('en');
-    expect(redirect).toHaveBeenCalledWith('https://billing.stripe.test/p/1');
-  });
-
-  it('leaves any other refusal to the caller, going nowhere', async () => {
+  it('leaves a refusal to the caller, going nowhere', async () => {
     const { facade, redirect } = setup(() =>
-      throwError(() => new ApiError(403, 'Verify', [], null, 'EMAIL_NOT_VERIFIED')),
+      throwError(() => new ApiError(409, 'x', [], null, 'ALREADY_SUBSCRIBED')),
     );
 
-    await expect(facade.checkout('pro')).rejects.toMatchObject({ code: 'EMAIL_NOT_VERIFIED' });
+    await expect(facade.checkout('pro')).rejects.toMatchObject({ code: 'ALREADY_SUBSCRIBED' });
     expect(redirect).not.toHaveBeenCalled();
+  });
+
+  it('changes plan, cancels and resumes through the API', async () => {
+    const { facade, api } = setup();
+
+    await facade.changePlan('business', 'month');
+    await facade.cancel();
+    await facade.resume();
+
+    expect(api.changePlan).toHaveBeenCalledWith('business', 'month');
+    expect(api.cancel).toHaveBeenCalled();
+    expect(api.resume).toHaveBeenCalled();
+  });
+
+  it('opens the provider’s portal', async () => {
+    const { facade, redirect } = setup();
+
+    await facade.manage();
+
+    expect(redirect).toHaveBeenCalledWith('https://customer-portal.paddle.test/cpl_1');
   });
 });

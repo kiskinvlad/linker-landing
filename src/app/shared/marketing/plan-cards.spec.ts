@@ -13,20 +13,23 @@ const plan = (code: string, name: string, priceCents: number, purchasable: boole
   code,
   name,
   priceCents,
+  annualPriceCents: priceCents * 10,
   currency: 'USD',
   limits: {
-    maxWidgets: code === 'business' ? 100 : 10,
-    monthlyViews: 250_000,
+    maxWidgets: { pro: 10, growth: 25, business: 100 }[code] ?? 1,
+    monthlyViews: { pro: 100_000, growth: 500_000, business: 2_000_000 }[code] ?? 10_000,
     maxVersionsPerWidget: 50,
-    aiCreditsPerMonth: 1000,
+    aiCreditsPerMonth: { pro: 1000, growth: 2500, business: 5000 }[code] ?? 0,
     features: ['analytics', 'ai_assistant'],
   },
   purchasable,
+  intervals: purchasable ? ['month', 'year'] : [],
 });
 
 const ON_SALE = [
   plan('free', 'Free', 0, false),
   plan('pro', 'Pro', 1900, true),
+  plan('growth', 'Growth', 4900, true),
   plan('business', 'Business', 9900, true),
 ];
 
@@ -70,7 +73,7 @@ async function render(options: Options = {}) {
     [...el.querySelectorAll('button')].find((b) =>
       b.textContent?.includes(`Upgrade to ${name}`),
     ) as HTMLButtonElement;
-  return { el, billing, navigate, settle, upgrade };
+  return { el, billing, navigate, settle, upgrade, fixture };
 }
 
 describe('PlanCards', () => {
@@ -93,14 +96,58 @@ describe('PlanCards', () => {
     const { el } = await render({ plans: [...ON_SALE].reverse() });
 
     const cards = [...el.querySelectorAll('.plan--paid')];
-    expect(cards.map((c) => c.querySelector('h3')?.textContent)).toEqual(['Pro', 'Business']);
+    expect(cards.map((c) => c.querySelector('h3')?.textContent)).toEqual([
+      'Pro',
+      'Growth',
+      'Business',
+    ]);
     expect(cards[0]?.textContent).toContain('$19');
     expect(cards[0]?.textContent).toContain('10 live widgets');
-    expect(cards[0]?.textContent).toContain('250,000 widget views a month');
+    expect(cards[0]?.textContent).toContain('100,000 widget views a month');
     expect(cards[0]?.textContent).toContain('AI assistant: 1,000 credits a month');
-    expect(cards[1]?.textContent).toContain('$99');
-    expect(cards[1]?.textContent).toContain('Priority support');
+    expect(cards[1]?.textContent).toContain('$49');
+    expect(cards[1]?.textContent).toContain('AI assistant: 2,500 credits a month');
+    expect(cards[1]?.textContent).toContain('Everything in Pro');
+    expect(cards[2]?.textContent).toContain('$99');
+    expect(cards[2]?.textContent).toContain('Priority support');
     expect(el.textContent).not.toContain('Coming soon');
+  });
+
+  it('switches every card to yearly prices, and buys yearly', async () => {
+    const { el, billing, settle, upgrade, fixture } = await render({
+      plans: ON_SALE,
+      signedIn: true,
+    });
+
+    const yearly = [...el.querySelectorAll('.plans__interval-option')].find((b) =>
+      b.textContent?.includes('Yearly'),
+    ) as HTMLButtonElement;
+    yearly.click();
+    fixture.detectChanges();
+
+    const pro = el.querySelector('.plan--paid')!;
+    expect(pro.textContent).toContain('$190');
+    expect(pro.textContent).toContain('/ year');
+    expect(yearly.getAttribute('aria-pressed')).toBe('true');
+
+    upgrade('Pro').click();
+    await settle();
+    expect(billing.checkout).toHaveBeenCalledWith('pro', 'year');
+  });
+
+  it('sends an account that already pays to Change plan on the account page', async () => {
+    const { navigate, settle, upgrade } = await render({
+      plans: ON_SALE,
+      signedIn: true,
+      checkout: () => Promise.reject(new ApiError(409, 'x', [], null, 'ALREADY_SUBSCRIBED')),
+    });
+
+    upgrade('Growth').click();
+    await settle();
+
+    expect(navigate).toHaveBeenCalledWith(['/account'], {
+      queryParams: { changePlan: 'growth', interval: 'month' },
+    });
   });
 
   it('sends a signed-out visitor to sign up first, coming back to pricing', async () => {
@@ -121,7 +168,7 @@ describe('PlanCards', () => {
     upgrade('Business').click();
     await settle();
 
-    expect(billing.checkout).toHaveBeenCalledWith('business');
+    expect(billing.checkout).toHaveBeenCalledWith('business', 'month');
   });
 
   it('sends an unverified account to confirm its address', async () => {

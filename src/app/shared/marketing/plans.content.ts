@@ -38,10 +38,11 @@ export const PRO_PLAN = {
  * limits only.
  */
 export const PAID_PLAN_EXTRAS: Readonly<Record<string, readonly string[]>> = {
-  // Analytics, its history and the AI assistant: the coming-soon list minus its vague limits.
-  pro: PRO_PLAN.features.slice(3),
+  // Analytics and its history; the AI line comes from the plan's own credits.
+  pro: PRO_PLAN.features.slice(3, 5),
+  growth: [$localize`:@@plans.growth.everything:Everything in Pro`],
   business: [
-    $localize`:@@plans.business.everything:Everything in Pro`,
+    $localize`:@@plans.business.everythingGrowth:Everything in Growth`,
     $localize`:@@plans.business.support:Priority support`,
   ],
 };

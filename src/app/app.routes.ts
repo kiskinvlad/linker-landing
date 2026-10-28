@@ -106,6 +106,12 @@ export const routes: Routes = [
     data: authSeo($localize`:@@account.title:Your account`),
   },
   {
+    // Paddle opens its checkout here (stripe-payments D1): the only page that loads Paddle.js.
+    path: 'checkout',
+    loadComponent: () => import('./features/checkout/checkout-page').then((m) => m.CheckoutPage),
+    data: authSeo($localize`:@@checkout.seoTitle:Checkout`),
+  },
+  {
     // Prerendered to /404/index.html; the edge serves it with a real 404 status (plan §2).
     path: '404',
     loadComponent: notFound,

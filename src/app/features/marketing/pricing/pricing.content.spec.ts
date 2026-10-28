@@ -10,8 +10,9 @@ describe('pricing content', () => {
 
   it('has the billing answers ready for launch', () => {
     const text = BILLING_FAQ.map((item) => item.a).join(' ');
-    expect(text).toContain('through Stripe');
+    expect(text).toContain('sold by Paddle');
     expect(text).toContain('never reach us');
+    expect(text).toContain('monthly or yearly');
     expect(text).toContain('Prices exclude tax');
     expect(text).toContain('until the end of the period');
     expect(text).toContain('Nothing you built is deleted');

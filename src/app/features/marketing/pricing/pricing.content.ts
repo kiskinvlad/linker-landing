@@ -34,15 +34,15 @@ const COMING_SOON_FAQ = [
 export const BILLING_FAQ = [
   {
     q: $localize`:@@pricing.faq.paying.q:How does paying work?`,
-    a: $localize`:@@pricing.faq.paying.a:Paid plans are billed monthly in advance, by card, through Stripe, our payment processor. Your card details go to Stripe and never reach us. Prices exclude tax; where tax applies, it’s added at checkout.`,
+    a: $localize`:@@pricing.faq.paying.a:Paid plans are billed monthly or yearly in advance. Our plans are sold by Paddle, our reseller and merchant of record: you pay Paddle at checkout, and your card details never reach us. Prices exclude tax; where tax applies, Paddle adds it at checkout.`,
   },
   {
     q: $localize`:@@pricing.faq.cancel.q:Can I change plans or cancel?`,
-    a: $localize`:@@pricing.faq.cancel.a:Yes, any time, under Manage billing in your account. Moving between Pro and Business is prorated. If you cancel, you keep your plan until the end of the period you’ve paid for. Nothing you built is deleted: back on Free, your widgets stay, and only new ones beyond Free’s limits wait for an upgrade.`,
+    a: $localize`:@@pricing.faq.cancel.a:Yes, any time, under Plan & billing in your account. Moving between Pro, Growth and Business, or between monthly and yearly, is prorated. If you cancel, you keep your plan until the end of the period you’ve paid for. Nothing you built is deleted: back on Free, your widgets stay, and only new ones beyond Free’s limits wait for an upgrade.`,
   },
   {
     q: $localize`:@@pricing.faq.invoices.q:Where are my invoices?`,
-    a: $localize`:@@pricing.faq.invoices.a:Under Manage billing in your account, along with your billing details and tax ID.`,
+    a: $localize`:@@pricing.faq.invoices.a:Paddle emails a receipt for every payment. All your invoices, your card and your billing details are under Manage billing in your account.`,
   },
 ];
 

@@ -61,7 +61,7 @@ export const LEGAL_DOCS: readonly LegalDoc[] = [
     summary: $localize`:@@legal.terms.summary:The agreement for using the service: business use only, who is responsible for widget content, AI features, billing, liability and how changes work.`,
     group: 'agreements',
     version: LEGAL_TERMS_VERSION,
-    load: () => import('./docs/terms.md').then((m) => m.default),
+    load: () => import('./docs/terms.md').then((m) => withPaymentProcessor('terms', m.default)),
   },
   {
     slug: 'dpa',
@@ -85,7 +85,7 @@ export const LEGAL_DOCS: readonly LegalDoc[] = [
     summary: $localize`:@@legal.cookies.summary:The few cookies on our website, the opt-in analytics, and what widgets store on your visitors’ devices.`,
     group: 'policies',
     version: '2026-10-11',
-    load: () => import('./docs/cookies.md').then((m) => m.default),
+    load: () => import('./docs/cookies.md').then((m) => withPaymentProcessor('cookies', m.default)),
   },
   {
     slug: 'acceptable-use',
