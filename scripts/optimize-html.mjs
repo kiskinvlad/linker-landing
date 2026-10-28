@@ -14,6 +14,15 @@
 // 2. Load the Angular bundle at low fetch priority. Pages are fully prerendered,
 //    so JS only hydrates (mobile menu, scroll reveal, client navigation) and
 //    shouldn't compete with the HTML and fonts on a slow link. FCP 2.26 s → 1.36 s.
+//
+// 3. Don't request that bundle until the page has loaded and painted. Low priority
+//    still started all ~160 kB of it alongside the HTML, and Lighthouse's simulated
+//    slow 4G charges every request in flight before the first paint to LCP: the
+//    hero text painted at ~70 ms in the trace but scored 2.56–2.86 s, all of it
+//    "render delay". Now a tiny inline script adds the modulepreloads and module
+//    scripts (in their original order) after `load` and the first contentful
+//    paint. Clicks in between aren't lost: withEventReplay replays them once the
+//    app hydrates.
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
@@ -72,6 +81,15 @@ async function headFor(lang, root) {
   return head;
 }
 
+// Starts once the page has loaded (HTML, fonts and the full stylesheet are in) AND
+// the browser has reported its first contentful paint, which on these pages is the
+// hero text: the LCP. Without paint timing it starts straight after `load`; the 3 s
+// timer covers a paint that's never reported (a tab opened in the background).
+// async = false keeps the scripts executing in document order, polyfills before main.
+function hydrateAfterPaint(preloads, scripts) {
+  return `<script data-kit-hydrate>addEventListener('load',function(){var d=document,started=0;function go(){if(started++)return;${JSON.stringify(preloads)}.forEach(function(h){var l=d.createElement('link');l.rel='modulepreload';l.fetchPriority='low';l.href=h;d.head.appendChild(l)});${JSON.stringify(scripts)}.forEach(function(s){var e=d.createElement('script');e.type='module';e.async=false;e.fetchPriority='low';e.src=s;d.body.appendChild(e)})}var P=window.PerformanceObserver;if(!P||(P.supportedEntryTypes||[]).indexOf('paint')<0)return go();setTimeout(go,3000);new P(function(list){if(list.getEntriesByName('first-contentful-paint').length)setTimeout(go)}).observe({type:'paint',buffered:true})})</script>`;
+}
+
 async function* htmlFiles(dir) {
   for (const entry of await readdir(dir, { withFileTypes: true })) {
     const path = join(dir, entry.name);
@@ -95,19 +113,26 @@ for await (const file of htmlFiles(OUT)) {
   const at = base.index + base[0].length;
   html = html.slice(0, at) + head + html.slice(at);
 
+  const preloads = [];
+  const scripts = [];
   html = html
-    .replace(
-      /<script src="([^"]+)" type="module">/g,
-      '<script src="$1" type="module" fetchpriority="low">',
-    )
-    .replace(
-      /<link rel="modulepreload" href="([^"]+)">/g,
-      '<link rel="modulepreload" href="$1" fetchpriority="low">',
-    );
+    .replace(/<link rel="modulepreload" href="([^"]+)">/g, (_, href) => {
+      preloads.push(href);
+      return '';
+    })
+    .replace(/<script src="([^"]+)" type="module"><\/script>/g, (_, src) => {
+      scripts.push(src);
+      return '';
+    });
+  if (!scripts.length || !html.includes('</body>')) {
+    console.error(`${file}: no module scripts or </body> to defer.`);
+    process.exit(1);
+  }
+  html = html.replace('</body>', `${hydrateAfterPaint(preloads, scripts)}</body>`);
 
   await writeFile(file, html);
   count++;
 }
 console.log(
-  `optimize-html: font preloads + inline @font-face + low-priority JS on ${count} page(s)`,
+  `optimize-html: font preloads + inline @font-face + JS after first paint on ${count} page(s)`,
 );

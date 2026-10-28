@@ -150,8 +150,9 @@ into view (`RevealDirective`), and Lighthouse never scrolls, so its colour-contr
 audit skips them. Check contrast on new below-the-fold content by hand.
 
 `pnpm build` also runs `scripts/optimize-html.mjs` (font preloads with their
-`@font-face` rules inlined, low-priority JS). Each change there was measured with
-Lighthouse; the numbers are in its header.
+`@font-face` rules inlined; the hydration JS requested only after the first
+contentful paint). Each change there was measured with Lighthouse; the numbers
+are in its header.
 
 On Windows, Lighthouse CI can abort mid-run with `EPERM` while Chrome cleans up
 its temp profile — a local flake, not a page problem; CI runs on Linux. Collect one
