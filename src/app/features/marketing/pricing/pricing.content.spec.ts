@@ -13,7 +13,7 @@ describe('pricing content', () => {
     expect(text).toContain('sold by Paddle');
     expect(text).toContain('never reach us');
     expect(text).toContain('monthly or yearly');
-    expect(text).toContain('Prices exclude tax');
+    expect(text).toContain('ours include it too');
     expect(text).toContain('until the end of the period');
     expect(text).toContain('Nothing you built is deleted');
   });

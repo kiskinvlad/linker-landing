@@ -31,7 +31,7 @@ const TERMS_BEFORE =
   '**Payment.** Fees are billed in advance through the payment processor named on our [Subprocessors](/legal/subprocessors) page. We do not store full payment card details. Prices exclude taxes unless stated; you are responsible for applicable taxes, except where the payment processor acts as merchant of record and collects them.';
 
 const TERMS_AFTER =
-  "**Payment.** Our order process is conducted by our online reseller Paddle.com. Paddle.com is the Merchant of Record for all our orders: it sells you the subscription, charges the fees in advance, calculates and collects applicable taxes, issues invoices and handles payment questions, under [Paddle's Buyer Terms](https://www.paddle.com/legal/checkout-buyer-terms). We do not receive or store your payment card details. Prices on our pricing page exclude taxes, which Paddle adds at checkout where they apply.";
+  "**Payment.** Our order process is conducted by our online reseller Paddle.com. Paddle.com is the Merchant of Record for all our orders: it sells you the subscription, charges the fees in advance, calculates and collects applicable taxes, issues invoices and handles payment questions, under [Paddle's Buyer Terms](https://www.paddle.com/legal/checkout-buyer-terms). We do not receive or store your payment card details. Prices on our pricing page include VAT or GST where that is usual in your country, such as in the EU, the UK and Ukraine; elsewhere Paddle adds applicable taxes at checkout.";
 
 const COOKIES_BEFORE =
   '| `kit_lang` | Us | Remembers the language you picked | Strictly necessary | 12 months |';

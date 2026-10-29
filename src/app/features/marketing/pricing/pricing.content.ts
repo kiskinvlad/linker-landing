@@ -34,7 +34,7 @@ const COMING_SOON_FAQ = [
 export const BILLING_FAQ = [
   {
     q: $localize`:@@pricing.faq.paying.q:How does paying work?`,
-    a: $localize`:@@pricing.faq.paying.a:Paid plans are billed monthly or yearly in advance. Our plans are sold by Paddle, our reseller and merchant of record: you pay Paddle at checkout, and your card details never reach us. Prices exclude tax; where tax applies, Paddle adds it at checkout.`,
+    a: $localize`:@@pricing.faq.paying.a:Paid plans are billed monthly or yearly in advance. Our plans are sold by Paddle, our reseller and merchant of record: you pay Paddle at checkout, and your card details never reach us. Where prices usually include VAT or GST, as in the EU, the UK and Ukraine, ours include it too; elsewhere Paddle adds any sales tax at checkout. Checkout shows the tax before you pay.`,
   },
   {
     q: $localize`:@@pricing.faq.cancel.q:Can I change plans or cancel?`,

@@ -101,7 +101,9 @@ import { FREE_PLAN, PAID_PLAN_EXTRAS, PRO_PLAN } from './plans.content';
               <span i18n="@@plans.paid.period">/ month</span>
             }
           </p>
-          <p class="plan__tax" i18n="@@plans.paid.tax">Plus tax where it applies</p>
+          <p class="plan__tax" i18n="@@plans.paid.tax">
+            Tax included or added at checkout, depending on your country
+          </p>
           <ul class="plan__features">
             <li i18n="@@plans.paid.widgets">
               {plan.limits.maxWidgets, plural,
