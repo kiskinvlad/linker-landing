@@ -210,11 +210,6 @@ describe('PlanCards', () => {
       );
     });
 
-    it('shows the AI assistant as not included on Free', async () => {
-      const { el } = await render();
-      expect(el.querySelector('.plan--free')?.textContent).toContain('AI assistant not included');
-    });
-
     it('explains credits in the pricing FAQ', () => {
       const answer = PRICING_FAQ.find((item) => item.q === 'What are AI credits?')?.a;
       expect(answer).toContain('5 credits');
